@@ -61,5 +61,6 @@ module.exports = {
     '**/.next',
     // Do not ingore
     '**/!.eslintrc.cjs',
+    '**/!.eslintrc.js',
   ],
 };
