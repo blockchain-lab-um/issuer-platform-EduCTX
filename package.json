@@ -1,13 +1,10 @@
 {
   "name": "eductx-issuer-platform",
-  "private": true,
   "version": "1.0.0",
-  "license": "MIT",
+  "private": true,
   "description": "",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
+  "license": "MIT",
   "author": {
     "name": "Blockchain Lab:UM",
     "email": "blockchain-lab@um.si",
@@ -16,9 +13,12 @@
   "workspaces": [
     "apps/**/*"
   ],
-  "packageManager": "pnpm@8.7.6",
-  "engines": {
-    "node": ">=18.17.1"
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "pnpm prettier --ignore-path .ci.prettierignore && pnpm -r lint",
+    "lint:fix": "pnpm prettier --ignore-path .ci.prettierignore && pnpm -r lint:fix",
+    "prepare": "is-ci || husky install",
+    "prettier": "prettier --write ."
   },
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
@@ -37,11 +37,16 @@
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
     "prettier-plugin-packagejson": "^2.4.5",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "rimraf": "^5.0.1",
     "typescript": "^5.2.2"
+  },
+  "packageManager": "pnpm@8.7.6",
+  "engines": {
+    "node": ">=18.17.1"
   }
 }
