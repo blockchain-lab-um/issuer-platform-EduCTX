@@ -1,11 +1,12 @@
-import { test } from 'tap'
-import Fastify from 'fastify'
-import Support from '../../src/plugins/support.js'
+import Fastify from 'fastify';
+import { test } from 'tap';
 
-test('support works standalone', async (t) => {
-  const fastify = Fastify()
-  void fastify.register(Support)
-  await fastify.ready()
+import Support from '../../src/plugins/support.js';
 
-  t.equal(fastify.someSupport(), 'hugs')
-})
+await test('support works standalone', async (t) => {
+  const fastify = Fastify();
+  void fastify.register(Support);
+  await fastify.ready();
+
+  t.equal(fastify.someSupport(), 'hugs');
+});

@@ -9,6 +9,17 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'unused-imports'],
   parser: '@typescript-eslint/parser',
+  overrides: [
+    {
+      files: ['**/*.spec.ts', '**/test/**', '**/tests/**', '**/build.js'],
+      rules: {
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+      },
+    },
+  ],
   rules: {
     '@typescript-eslint/naming-convention': [
       'error',
@@ -51,6 +62,19 @@ module.exports = {
     'import/prefer-default-export': 0,
     'class-methods-use-this': 'off',
     'import/extensions': 'off',
+    'no-void': 'off',
+    // Test files only
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: [
+          '**/*.spec.ts',
+          '**/test/**',
+          '**/tests/**',
+          '**/build.js',
+        ],
+      },
+    ],
   },
   ignorePatterns: [
     '**/node_modules/**',

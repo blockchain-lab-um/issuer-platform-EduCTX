@@ -2,7 +2,7 @@ import { build } from 'esbuild';
 
 console.log('Building issuer service...');
 
-build({
+await build({
   entryPoints: ['src/**/*.ts'],
   outdir: 'dist',
   bundle: false,

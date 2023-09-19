@@ -2,7 +2,7 @@ import { test } from 'tap';
 
 import { build } from '../helper.js';
 
-test('example is loaded', async (t) => {
+await test('example is loaded', async (t) => {
   const app = await build(t);
 
   const res = await app.inject({
