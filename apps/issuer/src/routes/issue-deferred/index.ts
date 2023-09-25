@@ -9,7 +9,7 @@ const issueDeferred: FastifyPluginAsync = async (
     connectionString: fastify.config.DATABASE_URL,
   });
 
-  const { pool } = fastify.pg;
+  // const { pool } = fastify.pg;
 
   fastify.get('/', async (request, reply) => 'Issue Deferred');
 };
