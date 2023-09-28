@@ -1,14 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { fastifyPostgres } from '@fastify/postgres';
 import { FastifyPluginAsync } from 'fastify';
 
 import { CredentialsTable } from '../../db/types/index.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
-  await fastify.register(fastifyPostgres, {
-    connectionString: fastify.config.DATABASE_URL,
-  });
-
   const { pool } = fastify.pg;
 
   fastify.get('/', async () => {
