@@ -36,6 +36,6 @@ done
 export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}
 
 # Run migrations
-bb migrate --dsn $DATABASE_URL -f ./migrations/create_credentials_table.sql
+bb migrate --dsn $DATABASE_URL -f ../migrations/create_credentials_table.sql
 
 >&2 echo "Postgres has been migrated, ready to go!"
