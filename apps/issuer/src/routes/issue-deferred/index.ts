@@ -20,21 +20,11 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
 
     const { pool } = fastify.pg;
     const id = randomUUID();
-    const { rows } = await pool.query<CredentialsTable>(
+    await pool.query<CredentialsTable>(
       'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
       [id, vc.credentialSubject.id, vc, vc.issuanceDate]
     );
-const issueDeferred: FastifyPluginAsync = async (
-  fastify,
-  opts
-): Promise<void> => {
-  await fastify.register(fastifyPostgres, {
-    connectionString: fastify.config.DATABASE_URL,
-  });
 
-  // const { pool } = fastify.pg;
-
-  fastify.get('/', async (request, reply) => 'Issue Deferred');
     await reply.code(201).send({ id });
   });
 };
