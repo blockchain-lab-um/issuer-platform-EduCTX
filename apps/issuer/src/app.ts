@@ -23,7 +23,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
 ): Promise<void> => {
   // Place here your custom code!
   await fastify.register(fastifyPostgres, {
-    connectionString: fastify.config.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL,
   });
 
   // This loads all plugins defined in plugins
