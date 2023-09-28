@@ -16,7 +16,7 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
       proofFormat: data.proofFormat,
     });
 
-    await reply.code(200).send({ data, vc });
+    await reply.code(200).send({ credential: vc });
   });
 };
 
