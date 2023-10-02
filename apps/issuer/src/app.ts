@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
-import { fastifyPostgres } from '@fastify/postgres';
 import { FastifyPluginAsync } from 'fastify';
 
 const filename = fileURLToPath(import.meta.url);
@@ -22,9 +21,6 @@ const app: FastifyPluginAsync<AppOptions> = async (
   opts
 ): Promise<void> => {
   // Place here your custom code!
-  await fastify.register(fastifyPostgres, {
-    connectionString: process.env.DATABASE_URL,
-  });
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
