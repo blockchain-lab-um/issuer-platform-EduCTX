@@ -1,10 +1,16 @@
+export const DidSchema = {
+  type: 'object',
+  properties: {
+    did: {
+      type: 'string'
+    }
+  },
+  required: ['did']
+}
+
 export const CredentialSchema = {
   type: 'object',
   properties: {
-    proofFormat: {
-      type: 'string',
-      enum: ['jwt']
-    },
     credential: {
       type: 'object',
       properties: {
@@ -76,5 +82,5 @@ export const CredentialSchema = {
       required: ['@context', 'type', 'credentialSubject', 'credentialSchema']
     }
   },
-  required: ['proofFormat', 'credential']
+  required: ['credential']
 }

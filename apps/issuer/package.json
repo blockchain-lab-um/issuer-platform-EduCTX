@@ -48,6 +48,7 @@
     "fastify": "^4.0.0",
     "fastify-cli": "^5.8.0",
     "fastify-plugin": "^4.0.0",
+    "fastify-schema-constraint": "^3.0.0",
     "pg": "^8.11.3"
   },
   "devDependencies": {
