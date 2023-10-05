@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "build": "pnpm -r build",
+    "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-base",
     "lint": "pnpm prettier --ignore-path .ci.prettierignore && pnpm -r lint",
     "lint:fix": "pnpm prettier --ignore-path .ci.prettierignore && pnpm -r lint:fix",
     "prepare": "is-ci || husky install",
