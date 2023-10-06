@@ -1,17 +1,14 @@
 export const testCredential = {
-  "@context": [
+  '@context': [
     'https://www.w3.org/2018/credentials/v1',
-    'https://beta.api.schemas.serto.id/v1/public/program-completion-certificate/1.0/ld-context.json'
+    'https://beta.api.schemas.serto.id/v1/public/program-completion-certificate/1.0/ld-context.json',
   ],
-  type: [
-    'VerifiableCredential',
-    'ProgramCompletionCertificate'
-  ],
+  type: ['VerifiableCredential', 'ProgramCompletionCertificate'],
   credentialSubject: {
     accomplishmentType: 'ProgramCompletionCertificate',
     learnerName: 'John Doe',
     achievement: 'Introduction to Blockchain',
     courseProvider: 'Serto',
-    id: 'did:example:123'
-  }
-}
+    id: 'did:example:123',
+  },
+};
