@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@nextui-org/react';
 
 import { useGeneralStore, useMascaStore } from '@/stores';
 
@@ -37,7 +38,7 @@ export const ClaimView = () => {
         <ul>
           {CREDENTIALS.map((credential) => (
             <li key={credential}>
-              {credential} <button>Claim</button>
+              {credential} <Button color="primary">Claim</Button>
             </li>
           ))}
         </ul>
