@@ -1,7 +1,6 @@
-'use client';
-
-import { NextUIProvider } from '@nextui-org/react';
 import clsx from 'clsx';
+
+import { Providers } from './providers';
 
 import '../styles/globals.css';
 
@@ -15,15 +14,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body>
-        <NextUIProvider>
-          <div
-            className={clsx(inter.className, 'flex w-screen justify-center')}
-          >
-            <div className="w-full max-w-6xl bg-red-100">{children}</div>
-          </div>
-        </NextUIProvider>
+        <Providers>
+          {
+            <div
+              className={clsx(inter.className, 'flex w-screen justify-center')}
+            >
+              <div className="w-full max-w-6xl bg-red-900">{children}</div>
+            </div>
+          }
+        </Providers>
       </body>
     </html>
   );

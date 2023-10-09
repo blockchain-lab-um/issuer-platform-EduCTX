@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button } from '@nextui-org/react';
 
 import ConnectButton from './MetaMaskConnectButton';
 
@@ -11,9 +12,9 @@ export const LoginView = () => {
       {userType === 0 && (
         <div>
           <button onClick={() => setUserType(1)}>Course Provider Login</button>
-          <button onClick={() => setUserType(2)}>
+          <Button onClick={() => setUserType(2)}>
             Course Participant Login
-          </button>
+          </Button>
         </div>
       )}
       {userType === 2 && (
