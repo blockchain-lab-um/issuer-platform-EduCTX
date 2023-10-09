@@ -1,12 +1,17 @@
 import clsx from 'clsx';
 
-import { Providers } from './providers';
-
 import '../styles/globals.css';
 
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
+import { Providers } from './providers';
+
 const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'EduCTX Dashboard',
+};
 
 export default function RootLayout({
   children,
@@ -15,15 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body>
+      <head />
+      <body className={clsx(inter.className, 'w-screen')}>
         <Providers>
-          {
-            <div
-              className={clsx(inter.className, 'flex w-screen justify-center')}
-            >
-              <div className="w-full max-w-6xl bg-red-900">{children}</div>
-            </div>
-          }
+          <div>{children}</div>
         </Providers>
       </body>
     </html>

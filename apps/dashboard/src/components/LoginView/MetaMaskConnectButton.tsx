@@ -78,10 +78,12 @@ const ConnectButton = () => {
   const connectHandler = async () => {
     if (window.ethereum) {
       console.log('here');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const result: unknown = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
 
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       const chain = (await window.ethereum.request({
         method: 'eth_chainId',
       })) as string;
@@ -93,6 +95,7 @@ const ConnectButton = () => {
       changeAddress((result as string[])[0]);
       return (result as string[])[0];
     }
+    return null;
   };
 
   const enableMascaHandler = async () => {
