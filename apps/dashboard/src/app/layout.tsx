@@ -1,4 +1,6 @@
-import './globals.css';
+import clsx from 'clsx';
+
+import '../styles/globals.css';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -17,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={clsx(inter.className, 'flex w-screen justify-center')}>
+        <div className="w-full max-w-6xl bg-red-100">{children}</div>
+      </body>
     </html>
   );
 }
