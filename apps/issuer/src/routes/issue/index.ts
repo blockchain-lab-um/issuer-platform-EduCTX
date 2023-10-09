@@ -1,20 +1,13 @@
 import { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
 
-import { testCredential } from '../../utils/constants.js';
-import { routeSchemas } from '../config/schemas/index.js';
+import { routeSchemas } from '../../utils/schemas/index.js';
 
 const constraint = {
   body: {
     constraint(request: any) {
-      switch (request.headers.schematype) {
-        case 'did':
-          return '#didSchema';
-        case 'programCompletion':
-          return '#programCompletionSchema';
-        default:
-          throw new Error();
-      }
+      if (request.headers.schematype) return request.headers.schematype as string;
+      throw new Error();
     },
     statusCode: 412, // Optionally define a custom status code in case of errors
     errorMessage: 'Request body not matching selected validation schema.', // Optionally define a custom error message
@@ -39,12 +32,11 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
         provider: 'did:key',
       });
 
-      testCredential.credentialSubject.id = data.did;
       const vc = await agent.createVerifiableCredential({
         proofFormat: 'jwt',
         credential: {
           issuer: issuerIdentifier.did,
-          ...testCredential,
+          ...data,
         },
       });
 
