@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { enableMasca, isError } from '@blockchain-lab-um/masca-connector';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { Button } from '@nextui-org/react';
 
 import { useGeneralStore, useMascaStore } from '@/stores';
 
@@ -99,6 +100,7 @@ const ConnectButton = () => {
   };
 
   const enableMascaHandler = async () => {
+    changeIsConnecting(true);
     const address = await connectHandler();
     if (!address) return;
     const enableResult = await enableMasca(address, {
@@ -149,7 +151,17 @@ const ConnectButton = () => {
     router.push('/claim');
   };
 
-  return <button onClick={() => enableMascaHandler()}>Connect MetaMask</button>;
+  return (
+    <div className="w-full text-center">
+      <Button
+        color="primary"
+        onClick={() => enableMascaHandler()}
+        isLoading={isConnecting}
+      >
+        Connect MetaMask
+      </Button>
+    </div>
+  );
 };
 
 export default ConnectButton;

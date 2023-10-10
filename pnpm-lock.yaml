@@ -86,6 +86,9 @@ importers:
       '@blockchain-lab-um/masca-connector':
         specifier: ^1.1.0
         version: 1.1.0(typescript@5.2.2)
+      '@heroicons/react':
+        specifier: ^2.0.18
+        version: 2.0.18(react@18.2.0)
       '@metamask/detect-provider':
         specifier: ^2.0.0
         version: 2.0.0
@@ -119,6 +122,9 @@ importers:
       '@nextui-org/system':
         specifier: 2.0.7
         version: 2.0.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/table':
+        specifier: 2.0.18
+        version: 2.0.18(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
       '@nextui-org/theme':
         specifier: 2.1.6
         version: 2.1.6(tailwindcss@3.3.3)
@@ -1469,6 +1475,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@heroicons/react@2.0.18(react@18.2.0):
+    resolution: {integrity: sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /@humanwhocodes/config-array@0.11.11:
     resolution: {integrity: sha512-N2brEuAadi0CcdeMXUkhbZB84eskAc8MEX1By6qEchoVywSgXPIjou4rYsl0V3Hj0ZnuGycGCjdNgockbzeWNA==}
     engines: {node: '>=10.10.0'}
@@ -1939,6 +1953,30 @@ packages:
       react: 18.2.0
     transitivePeerDependencies:
       - framer-motion
+      - react-dom
+      - tailwindcss
+    dev: false
+
+  /@nextui-org/checkbox@2.0.17(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-18l8IgifPLtlP5CjOmru0Qqgpfg+1UoqPGnyITh8qtvsKuiUjj5tsMRjbO70XgkrlEgATbSQJZuZt+etGGwCww==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/react-utils': 2.0.7(react@18.2.0)
+      '@nextui-org/shared-utils': 2.0.2(react@18.2.0)
+      '@nextui-org/system': 2.0.6(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.1.4(tailwindcss@3.3.3)
+      '@react-aria/checkbox': 3.11.1(react@18.2.0)
+      '@react-aria/focus': 3.14.2(react@18.2.0)
+      '@react-aria/interactions': 3.19.0(react@18.2.0)
+      '@react-aria/utils': 3.21.0(react@18.2.0)
+      '@react-aria/visually-hidden': 3.8.5(react@18.2.0)
+      '@react-stately/checkbox': 3.5.1(react@18.2.0)
+      '@react-stately/toggle': 3.6.3(react@18.2.0)
+      '@react-types/checkbox': 3.5.2(react@18.2.0)
+      '@react-types/shared': 3.21.0(react@18.2.0)
+      react: 18.2.0
+    transitivePeerDependencies:
       - react-dom
       - tailwindcss
     dev: false
@@ -2708,6 +2746,20 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/spacer@2.0.14(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-fdF0xc2znSjyifWz5z9Aujd3iyjBqjoQNv95qppiYYw7PTHpPKRdIAI5/81ma5Y4B+4PDCYWfEQy4HiB3vfWtA==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/react-utils': 2.0.7(react@18.2.0)
+      '@nextui-org/shared-utils': 2.0.2(react@18.2.0)
+      '@nextui-org/system-rsc': 2.0.3(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.1.4(tailwindcss@3.3.3)
+      react: 18.2.0
+    transitivePeerDependencies:
+      - tailwindcss
+    dev: false
+
   /@nextui-org/spacer@2.0.19(react@18.2.0)(tailwindcss@3.3.3):
     resolution: {integrity: sha512-43998t3Bf/vqmAXJVpDa7gWMcxAey+c7ZDB/urfV4GmO10bpp86xS00jV2INpqT6N4rjXTiRfjMdU82GZFz9+w==}
     peerDependencies:
@@ -2794,6 +2846,18 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/system-rsc@2.0.3(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-CfWl1JkHPtgSvq/Szz4oWQAg7b6L7wxxHEFzKcvNdhbX61IfE5PvnQMl5z8T9UTSIIwFv4P0ntP5kpKE895w2w==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      tailwind-variants: 0.1.14(tailwindcss@3.3.3)
+    transitivePeerDependencies:
+      - tailwindcss
+    dev: false
+
   /@nextui-org/system-rsc@2.0.4(react@18.2.0)(tailwindcss@3.3.3):
     resolution: {integrity: sha512-qC1AgyFsYizEXTXgrAYGe393FzwkcPmr96F35fKcXtqu9KcIXf4Eac0EpXqu3niYMtfQu1uN7WYGXSQABmoDDw==}
     peerDependencies:
@@ -2832,6 +2896,20 @@ packages:
       - tailwindcss
     dev: false
 
+  /@nextui-org/system@2.0.6(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-uXLcatb0B2uiw+a4yb0Ab9kmTmvB3Rzo/cdkoM8ncaXMTRumproSVhjY0OM4nxdXvmC3oYEmKd0d3f+j7T7Vsg==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/system-rsc': 2.0.3(react@18.2.0)(tailwindcss@3.3.3)
+      '@react-aria/i18n': 3.8.3(react@18.2.0)
+      '@react-aria/overlays': 3.18.0(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+    transitivePeerDependencies:
+      - react-dom
+      - tailwindcss
+    dev: false
+
   /@nextui-org/system@2.0.7(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
     resolution: {integrity: sha512-aClgN+hvY5BcqYOrZjIQN4cfYV2esVsMPLPkvmzoGul87s+Lk3bBE0tZYQXgkqYRlpxk0sHZNk/dW6skvZQegA==}
     peerDependencies:
@@ -2840,6 +2918,33 @@ packages:
       '@nextui-org/system-rsc': 2.0.4(react@18.2.0)(tailwindcss@3.3.3)
       '@react-aria/i18n': 3.8.3(react@18.2.0)
       '@react-aria/overlays': 3.18.0(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+    transitivePeerDependencies:
+      - react-dom
+      - tailwindcss
+    dev: false
+
+  /@nextui-org/table@2.0.18(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-0M/KtTMFw9P9cFnkEp3mP70rsBtbRxqji0f6cQ3YPdXIgrpZYWpBkpQwZjQ6PC3/jy+7lZSvDECuq8dru23DSQ==}
+    peerDependencies:
+      react: '>=18'
+    dependencies:
+      '@nextui-org/checkbox': 2.0.17(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/react-utils': 2.0.7(react@18.2.0)
+      '@nextui-org/shared-icons': 2.0.3(react@18.2.0)
+      '@nextui-org/shared-utils': 2.0.2(react@18.2.0)
+      '@nextui-org/spacer': 2.0.14(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/system': 2.0.6(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.3.3)
+      '@nextui-org/theme': 2.1.4(tailwindcss@3.3.3)
+      '@react-aria/focus': 3.14.2(react@18.2.0)
+      '@react-aria/interactions': 3.19.0(react@18.2.0)
+      '@react-aria/table': 3.13.0(react-dom@18.2.0)(react@18.2.0)
+      '@react-aria/utils': 3.21.0(react@18.2.0)
+      '@react-aria/visually-hidden': 3.8.5(react@18.2.0)
+      '@react-stately/table': 3.11.2(react@18.2.0)
+      '@react-stately/virtualizer': 3.6.3(react@18.2.0)
+      '@react-types/grid': 3.2.2(react@18.2.0)
+      '@react-types/table': 3.9.0(react@18.2.0)
       react: 18.2.0
     transitivePeerDependencies:
       - react-dom
@@ -2900,6 +3005,31 @@ packages:
     transitivePeerDependencies:
       - react-dom
       - tailwindcss
+    dev: false
+
+  /@nextui-org/theme@2.1.4(tailwindcss@3.3.3):
+    resolution: {integrity: sha512-BDOP+/kA00yX+nDMWCP+YupdO841AO8OpT7fEE34XGVhkojc8LScVJfbAPkOIKs5fTPnt2uYsHCrijMkx/L44g==}
+    peerDependencies:
+      tailwindcss: '*'
+    dependencies:
+      '@types/color': 3.0.4
+      '@types/flat': 5.0.3
+      '@types/lodash.foreach': 4.5.7
+      '@types/lodash.get': 4.4.7
+      '@types/lodash.kebabcase': 4.1.7
+      '@types/lodash.mapkeys': 4.6.7
+      '@types/lodash.omit': 4.5.7
+      color: 4.2.3
+      color2k: 2.0.2
+      deepmerge: 4.3.1
+      flat: 5.0.2
+      lodash.foreach: 4.5.0
+      lodash.get: 4.4.2
+      lodash.kebabcase: 4.1.1
+      lodash.mapkeys: 4.6.0
+      lodash.omit: 4.5.0
+      tailwind-variants: 0.1.14(tailwindcss@3.3.3)
+      tailwindcss: 3.3.3(ts-node@10.9.1)
     dev: false
 
   /@nextui-org/theme@2.1.6(tailwindcss@3.3.3):
