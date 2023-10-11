@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { FastifyPluginAsync } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
 import { CredentialsTable } from '../../db/types/index.js';
 
@@ -9,6 +9,18 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.get('/', async () => {
     const { rows } = await pool.query<CredentialsTable>(
       'SELECT * FROM credentials'
+    );
+
+    return rows;
+  });
+
+  fastify.get('/:did', { schema: { params: { did: { type: 'string' } } } }, async (request: FastifyRequest<{
+    Params: { did: string }
+  }>) => {
+    const { did } = request.params;
+    const { rows } = await pool.query<CredentialsTable>(
+      'SELECT * FROM credentials WHERE did = $1',
+      [did]
     );
 
     return rows;
