@@ -20,7 +20,7 @@ export const LoginView = () => {
       }}
     >
       <div className="flex h-screen w-screen items-center justify-center text-gray-900">
-        <div className="mx-auto flex h-3/5 w-8/12 overflow-hidden rounded-xl bg-white shadow-lg">
+        <div className="mx-auto flex h-3/5 w-8/12 max-w-7xl overflow-hidden rounded-xl bg-white shadow-lg">
           {userType === 0 && (
             <>
               <div className="flex w-1/3 flex-col items-center justify-center">

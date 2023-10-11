@@ -37,7 +37,7 @@ export const ClaimView = () => {
         backgroundImage: 'linear-gradient(115deg, #9F7AEA, #FEE2FE)',
       }}
     >
-      <div className="w-3/4 rounded-3xl bg-white p-4 text-gray-900">
+      <div className="w-3/4 max-w-7xl rounded-3xl bg-white p-4 text-gray-900">
         <div className="flex justify-between">
           <div>Connected with: {currDID.substring(0, 16).concat('...')}</div>
           <Button
