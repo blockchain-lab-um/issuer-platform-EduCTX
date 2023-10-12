@@ -1,6 +1,6 @@
-import { DidSchema } from './didSchema.js';
-import { ProgramSchema} from './programSchema.js';
 import { de4aSchema } from './de4aSchema.js';
+import { DidSchema } from './didSchema.js';
+import { ProgramSchema } from './programSchema.js';
 
 export const routeSchemas = {
   oneOf: [

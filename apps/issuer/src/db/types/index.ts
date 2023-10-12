@@ -4,3 +4,9 @@ export interface CredentialsTable {
   credential: string;
   created_at: string;
 }
+
+export interface NoncesTable {
+  did: string;
+  nonce: string;
+  created_at: string;
+}

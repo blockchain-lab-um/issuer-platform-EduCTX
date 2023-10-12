@@ -1,10 +1,15 @@
-import { VerificationMethod } from 'did-resolver';
-import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
-import { _ExtendedVerificationMethod, bytesToBase64url, extractPublicKeyHex } from '@veramo/utils';
-import elliptic from 'elliptic';
 import { JsonWebKey } from 'node:crypto';
-import { ProofOfPossesionArgs } from '../types/index.js';
+import {
+  _ExtendedVerificationMethod,
+  bytesToBase64url,
+  extractPublicKeyHex,
+} from '@veramo/utils';
+import { VerificationMethod } from 'did-resolver';
+import elliptic from 'elliptic';
+import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
+
 import { Agent } from '../plugins/veramoAgent.js';
+import { ProofOfPossesionArgs } from '../types/index.js';
 
 const { ec: EC } = elliptic;
 
@@ -17,17 +22,21 @@ export async function proofOfPossession(
   if (!proof) throw new Error('invalid_or_missing_proof: Proof is required.');
 
   // Check proof format
-  if (proof.proof_type !== 'jwt') throw new Error('invalid_or_missing_proof. Proof format missing or not supported.');
+  if (proof.proof_type !== 'jwt')
+    throw new Error(
+      'invalid_or_missing_proof. Proof format missing or not supported.'
+    );
 
   // Check if jwt is present
-  if (!proof.jwt) throw new Error('invalid_or_missing_proof: Missing or invalid jwt.');
+  if (!proof.jwt)
+    throw new Error('invalid_or_missing_proof: Missing or invalid jwt.');
 
   // Decode protected header to get algorithm and key
   let protectedHeader;
   try {
     protectedHeader = decodeProtectedHeader(proof.jwt);
   } catch (e) {
-    throw new Error('invalid_request: Invalid jwt header.')
+    throw new Error('invalid_request: Invalid jwt header.');
   }
 
   // Check if more than 1 is present (kid, jwk, x5c)
@@ -35,14 +44,21 @@ export async function proofOfPossession(
     [protectedHeader.kid, protectedHeader.jwk, protectedHeader.x5c].filter(
       (value) => value != null
     ).length !== 1
-  ) throw new Error('invalid_request: Exactly one of kid, jwk, x5c must be present.');
+  )
+    throw new Error(
+      'invalid_request: Exactly one of kid, jwk, x5c must be present.'
+    );
 
   let payload;
   let publicKey;
   let did;
 
   if (protectedHeader.typ !== 'TODO') {
-    throw new Error(`invalid_request: Invalid JWT typ. Expected "TODO" but got "${protectedHeader.typ ?? 'undefined'}".`)
+    throw new Error(
+      `invalid_request: Invalid JWT typ. Expected "TODO" but got "${
+        protectedHeader.typ ?? 'undefined'
+      }".`
+    );
   }
 
   // Check kid
@@ -52,12 +68,17 @@ export async function proofOfPossession(
     did = extractedDid;
 
     // Check if did and keyId are present
-    if (!did || !extractedKeyId) throw new Error('invalid_request: Invalid kid.');
+    if (!did || !extractedKeyId)
+      throw new Error('invalid_request: Invalid kid.');
 
     const resolvedDid = await agent.resolveDid({ didUrl: did });
     if (resolvedDid.didResolutionMetadata.error || !resolvedDid.didDocument) {
-      throw new Error(`invalid_request: Error resolving did. Reason: ${resolvedDid.didResolutionMetadata.error ?? 'Unknown error'}.`);
-    };
+      throw new Error(
+        `invalid_request: Error resolving did. Reason: ${
+          resolvedDid.didResolutionMetadata.error ?? 'Unknown error'
+        }.`
+      );
+    }
 
     let fragment;
 
@@ -79,7 +100,9 @@ export async function proofOfPossession(
       );
 
       if (publicKeyHex === '') {
-        throw new Error('invalid_request: Invalid kid or no public key present.');
+        throw new Error(
+          'invalid_request: Invalid kid or no public key present.'
+        );
       }
 
       const supportedTypes = ['EcdsaSecp256k1VerificationKey2019'];
@@ -134,7 +157,8 @@ export async function proofOfPossession(
   // Check if session contains cNonce
   if (cNonce) {
     // Check if nonce is valid
-    if (nonce !== cNonce) throw new Error('invalid_or_missing_proof: Invalid or missing nonce.');
+    if (nonce !== cNonce)
+      throw new Error('invalid_or_missing_proof: Invalid or missing nonce.');
 
     // Check if cNonce is expired
     if (cNonceExpiresIn && cNonceExpiresIn < Date.now()) {

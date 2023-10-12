@@ -1,126 +1,121 @@
 export const de4aSchema = {
-  $id: "#de4aSchema",
-  type: "object",
+  $id: '#de4aSchema',
+  type: 'object',
   properties: {
     credentialSubject: {
-      type: "object",
+      type: 'object',
       properties: {
         currentFamilyName: {
-          type: "string"
+          type: 'string',
         },
         currentGivenName: {
-          type: "string"
+          type: 'string',
         },
         dateOfBirth: {
-          type: "string"
+          type: 'string',
         },
         personIdentifier: {
-          type: "string"
+          type: 'string',
         },
         achieved: {
-          type: "object",
+          type: 'object',
           properties: {
             id: {
-              type: "string"
+              type: 'string',
             },
             title: {
-              type: "string"
+              type: 'string',
             },
             specifiedBy: {
-              type: "object",
+              type: 'object',
               properties: {
                 id: {
-                  type: "string"
+                  type: 'string',
                 },
                 title: {
-                  type: "string"
+                  type: 'string',
                 },
                 volumeOfLearning: {
-                  type: "string"
+                  type: 'string',
                 },
                 iSCEDFCode: {
-                  type: "string"
+                  type: 'string',
                 },
                 eCTSCreditPoints: {
-                  type: "number"
+                  type: 'number',
                 },
               },
               required: [
-                "id",
-                "title",
-                "volumeOfLearning",
-                "iSCEDFCode",
-                "eCTSCreditPoints"
+                'id',
+                'title',
+                'volumeOfLearning',
+                'iSCEDFCode',
+                'eCTSCreditPoints',
               ],
             },
             wasAwardedBy: {
-              type: "object",
+              type: 'object',
               properties: {
                 id: {
-                  type: "string"
+                  type: 'string',
                 },
                 awardingBody: {
-                  type: "string"
+                  type: 'string',
                 },
                 awardingDate: {
-                  type: "string"
+                  type: 'string',
                 },
                 awardingLocation: {
-                  type: "string"
+                  type: 'string',
                 },
               },
               required: [
-                "id",
-                "awardingBody",
-                "awardingDate",
-                "awardingLocation"
+                'id',
+                'awardingBody',
+                'awardingDate',
+                'awardingLocation',
               ],
             },
             wasDerivedFrom: {
-              type: "object",
+              type: 'object',
               properties: {
                 id: {
-                  type: "string"
+                  type: 'string',
                 },
                 title: {
-                  type: "string"
+                  type: 'string',
                 },
                 grade: {
-                  type: "string"
+                  type: 'string',
                 },
                 issuedDate: {
-                  type: "string"
+                  type: 'string',
                 },
               },
-              required: [
-                "id",
-                "title",
-                "grade",
-                "issuedDate"
-              ],
+              required: ['id', 'title', 'grade', 'issuedDate'],
             },
             associatedLearningOpportunity: {
-              type: "string"
+              type: 'string',
             },
           },
           required: [
-            "id",
-            "title",
-            "specifiedBy",
-            "wasAwardedBy",
-            "wasDerivedFrom",
-            "associatedLearningOpportunity"
+            'id',
+            'title',
+            'specifiedBy',
+            'wasAwardedBy',
+            'wasDerivedFrom',
+            'associatedLearningOpportunity',
           ],
         },
       },
       required: [
-        "currentFamilyName",
-        "currentGivenName",
-        "dateOfBirth",
-        "personIdentifier",
-        "achieved"
+        'currentFamilyName',
+        'currentGivenName',
+        'dateOfBirth',
+        'personIdentifier',
+        'achieved',
       ],
     },
   },
-  required: ["credentialSubject"]
-}
+  required: ['credentialSubject'],
+};

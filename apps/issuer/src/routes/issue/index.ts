@@ -6,7 +6,8 @@ import { routeSchemas } from '../../utils/schemas/index.js';
 const constraint = {
   body: {
     constraint(request: any) {
-      if (request.headers.schematype) return request.headers.schematype as string;
+      if (request.headers.schematype)
+        return request.headers.schematype as string;
       throw new Error();
     },
     statusCode: 412, // Optionally define a custom status code in case of errors
