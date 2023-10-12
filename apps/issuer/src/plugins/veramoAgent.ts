@@ -35,7 +35,7 @@ import { Resolver } from 'did-resolver';
 import { FastifyPluginOptions } from 'fastify';
 import fp from 'fastify-plugin';
 
-type Agent = TAgent<
+export type Agent = TAgent<
   IDIDManager &
     IKeyManager &
     IDataStore &
