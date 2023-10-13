@@ -61,9 +61,9 @@ export const LoginView = () => {
                     </h2>
                     <p className="mt-4 text-center">
                       This is a demo application for the EduCTX Issuer. If
-                      you're a Professor or an Administrator, please login using
-                      the Course Provider Login. If you're a Student, please
-                      login using the Course Participant Login.
+                      you&apos;re a Professor or an Administrator, please login
+                      using the Course Provider Login. If you&apos;re a Student,
+                      please login using the Course Participant Login.
                     </p>
                   </div>
                 </div>

@@ -45,7 +45,7 @@ export const IssueView = () => {
     selectedSchema.fields.forEach((field) => {
       newInputs[field.title] = undefined;
     });
-    newInputs['subject'] = undefined;
+    newInputs.subject = undefined;
     setInputs(newInputs);
     setIsFilled(false);
     setNext(true);
