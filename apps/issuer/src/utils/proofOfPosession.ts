@@ -165,7 +165,8 @@ export async function proofOfPossession(
     throw new Error(`invalid_or_missing_proof: ${(e as Error).toString()}`);
   }
 
-  if(nonceRows.rowCount === 0) throw new Error('invalid_or_missing_proof: No matching nonce.');
+  if (nonceRows.rowCount === 0)
+    throw new Error('invalid_or_missing_proof: No matching nonce.');
 
   const cNonce = nonceRows.rows[0]?.nonce;
   const cNonceExpiresIn = nonceRows.rows[0]?.expires_at;
