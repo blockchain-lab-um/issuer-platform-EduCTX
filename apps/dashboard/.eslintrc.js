@@ -9,5 +9,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-misused-promises': 0,
     'global-require': 0,
+    'import/no-extraneous-dependencies': 0,
   },
 };
