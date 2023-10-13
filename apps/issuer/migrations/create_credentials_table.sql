@@ -5,3 +5,10 @@ CREATE TABLE credentials(
   credential text NOT NULL,
   created_at timestamp with time zone NOT NULL DEFAULT now()
 );
+
+CREATE TABLE nonces(
+  did text NOT NULL,
+  PRIMARY KEY (did),
+  nonce text NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now()
+);

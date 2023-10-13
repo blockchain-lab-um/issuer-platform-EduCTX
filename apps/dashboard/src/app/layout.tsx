@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import { Providers } from './providers';
+import NextAuthProvider from '@/components/NextAuthProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,9 +23,10 @@ export default function RootLayout({
     <html lang="en" className="light">
       <head />
       <body className={clsx(inter.className, 'w-screen')}>
-        <Providers>
+      <NextAuthProvider><Providers>
           <div>{children}</div>
         </Providers>
+        </NextAuthProvider>
       </body>
     </html>
   );
