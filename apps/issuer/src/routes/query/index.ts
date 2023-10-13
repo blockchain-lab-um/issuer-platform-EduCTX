@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
 import { CredentialsTable, NoncesTable } from '../../db/types/index.js';
+import { JWTProof } from '../../types/index.js';
+import { proofOfPossession } from '../../utils/proofOfPosession.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   const { pool } = fastify.pg;
@@ -11,9 +13,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       'SELECT * FROM credentials'
     );
 
-    const nonces = await pool.query<NoncesTable>(
-      'SELECT * FROM nonces'
-    );
+    const nonces = await pool.query<NoncesTable>('SELECT * FROM nonces');
 
     return { credentials: credentials.rows, nonces: nonces.rows };
   });
@@ -30,7 +30,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       const nonce = randomUUID();
       await pool.query<NoncesTable>(
-        'INSERT INTO nonces (did, nonce) VALUES ($1, $2)',
+        'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce',
         [did, nonce]
       );
       return nonce;
@@ -46,6 +46,45 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       }>
     ) => {
       const { did } = request.params;
+      const didRows = await pool.query<CredentialsTable>(
+        'SELECT * FROM credentials WHERE did = $1',
+        [did]
+      );
+
+      return didRows.rows;
+    }
+  );
+
+  fastify.post(
+    '/test_proof',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            proof: { type: 'string' },
+          },
+          required: ['proof'],
+        },
+      },
+    },
+    async (
+      request: FastifyRequest<{
+        Body: { proof: string };
+      }>
+    ) => {
+      const { proof } = request.body;
+
+      const proofArgs = {
+        proof: {
+          proof_type: 'jwt',
+          jwt: proof,
+        } as JWTProof,
+        pool,
+      };
+
+      const did = await proofOfPossession(proofArgs, fastify.veramoAgent());
+
       const didRows = await pool.query<CredentialsTable>(
         'SELECT * FROM credentials WHERE did = $1',
         [did]
