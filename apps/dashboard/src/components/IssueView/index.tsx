@@ -11,7 +11,7 @@ interface Schema {
   }[];
 }
 
-const SCHEMAS: Schema = [
+const SCHEMAS: Schema[] = [
   {
     title: 'Schema A',
     fields: [
@@ -29,19 +29,22 @@ const SCHEMAS: Schema = [
 ];
 
 export const IssueView = () => {
-  const [selectedSchema, setSelectedSchema] = useState(undefined);
+  const [selectedSchema, setSelectedSchema] = useState({} as Schema);
   const [next, setNext] = useState(false);
-  const [inputs, setInputs] = useState(undefined);
+  const [inputs, setInputs] = useState({});
   const [isFilled, setIsFilled] = useState(false);
 
-  const handleSelectionChange = (e) => {
-    setSelectedSchema(
-      SCHEMAS.find((schema) => schema.title === e.target.value)
+  const handleSelectionChange = (e: { target: { value: string } }) => {
+    const selectedShema = SCHEMAS.find(
+      (schema) => schema.title === e.target.value
     );
+    if (selectedShema) {
+      setSelectedSchema(selectedShema);
+    }
   };
 
   const handleNext = () => {
-    const newInputs = {};
+    const newInputs: Record<string, any> = {};
     selectedSchema.fields.forEach((field) => {
       newInputs[field.title] = undefined;
     });
@@ -51,7 +54,7 @@ export const IssueView = () => {
     setNext(true);
   };
 
-  const handleInputValueChange = (e, field) => {
+  const handleInputValueChange = (e: string, field: string) => {
     setInputs({ ...inputs, [field]: e });
   };
 
