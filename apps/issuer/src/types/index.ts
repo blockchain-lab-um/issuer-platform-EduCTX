@@ -1,5 +1,4 @@
 export interface JWTProof {
-  proof_type: 'jwt';
   jwt: string;
 }
 

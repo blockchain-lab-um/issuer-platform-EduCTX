@@ -24,12 +24,6 @@ export async function verifyProofOfPossession(
 
   if (!proof) throw new Error('invalid_or_missing_proof: Proof is required.');
 
-  // Check proof format
-  if (proof.proof_type !== 'jwt')
-    throw new Error(
-      'invalid_or_missing_proof. Proof format missing or not supported.'
-    );
-
   // Check if jwt is present
   if (!proof.jwt)
     throw new Error('invalid_or_missing_proof: Missing or invalid jwt.');
