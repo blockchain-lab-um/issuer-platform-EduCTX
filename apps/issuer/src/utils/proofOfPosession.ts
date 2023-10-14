@@ -7,6 +7,7 @@ import {
 import { VerificationMethod } from 'did-resolver';
 import elliptic from 'elliptic';
 import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
+import type { Pool } from 'pg';
 
 import { NoncesTable } from '../db/types/index.js';
 import { Agent } from '../plugins/veramoAgent.js';
@@ -14,11 +15,12 @@ import { ProofOfPossesionArgs } from '../types/index.js';
 
 const { ec: EC } = elliptic;
 
-export async function proofOfPossession(
+export async function verifyProofOfPossession(
   args: ProofOfPossesionArgs,
+  pool: Pool,
   agent: Agent
 ): Promise<string> {
-  const { proof, pool } = args;
+  const { proof } = args;
 
   if (!proof) throw new Error('invalid_or_missing_proof: Proof is required.');
 
@@ -154,16 +156,11 @@ export async function proofOfPossession(
 
   // Check if jwt is valid
   const { nonce } = payload;
-  let nonceRows;
 
-  try {
-    nonceRows = await pool.query<NoncesTable>(
-      'SELECT * FROM nonces WHERE did = $1',
-      [did]
-    );
-  } catch (e: unknown) {
-    throw new Error(`invalid_or_missing_proof: ${(e as Error).toString()}`);
-  }
+  const nonceRows = await pool.query<NoncesTable>(
+    'SELECT * FROM nonces WHERE did = $1',
+    [did]
+  );
 
   if (nonceRows.rowCount === 0)
     throw new Error('invalid_or_missing_proof: No matching nonce.');

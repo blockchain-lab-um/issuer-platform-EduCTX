@@ -3,7 +3,7 @@ import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 
 import { CredentialsTable, NoncesTable } from '../../db/types/index.js';
 import { JWTProof } from '../../types/index.js';
-import { proofOfPossession } from '../../utils/proofOfPosession.js';
+import { verifyProofOfPossession } from '../../utils/proofOfPosession.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   const { pool } = fastify.pg;
@@ -77,13 +77,15 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       const proofArgs = {
         proof: {
-          proof_type: 'jwt',
           jwt: proof,
         } as JWTProof,
-        pool,
       };
 
-      const did = await proofOfPossession(proofArgs, fastify.veramoAgent());
+      const did = await verifyProofOfPossession(
+        proofArgs,
+        pool,
+        fastify.veramoAgent()
+      );
 
       const didRows = await pool.query<CredentialsTable>(
         'SELECT * FROM credentials WHERE did = $1',
