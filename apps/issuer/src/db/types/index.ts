@@ -9,4 +9,5 @@ export interface NoncesTable {
   did: string;
   nonce: string;
   created_at: string;
+  expires_at: string;
 }

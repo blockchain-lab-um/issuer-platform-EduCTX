@@ -7,25 +7,22 @@ import {
 import { VerificationMethod } from 'did-resolver';
 import elliptic from 'elliptic';
 import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
+import type { Pool } from 'pg';
 
+import { NoncesTable } from '../db/types/index.js';
 import { Agent } from '../plugins/veramoAgent.js';
 import { ProofOfPossesionArgs } from '../types/index.js';
 
 const { ec: EC } = elliptic;
 
-export async function proofOfPossession(
+export async function verifyProofOfPossession(
   args: ProofOfPossesionArgs,
+  pool: Pool,
   agent: Agent
 ): Promise<string> {
-  const { proof, cNonce, cNonceExpiresIn } = args;
+  const { proof } = args;
 
   if (!proof) throw new Error('invalid_or_missing_proof: Proof is required.');
-
-  // Check proof format
-  if (proof.proof_type !== 'jwt')
-    throw new Error(
-      'invalid_or_missing_proof. Proof format missing or not supported.'
-    );
 
   // Check if jwt is present
   if (!proof.jwt)
@@ -53,9 +50,9 @@ export async function proofOfPossession(
   let publicKey;
   let did;
 
-  if (protectedHeader.typ !== 'TODO') {
+  if (protectedHeader.typ !== 'JWT') {
     throw new Error(
-      `invalid_request: Invalid JWT typ. Expected "TODO" but got "${
+      `invalid_request: Invalid JWT typ. Expected "JWT" but got "${
         protectedHeader.typ ?? 'undefined'
       }".`
     );
@@ -144,7 +141,7 @@ export async function proofOfPossession(
   try {
     payload = (
       await jwtVerify(proof.jwt, publicKey, {
-        audience: process.env.PROOF_AUDIENCE, // TODO
+        audience: process.env.PROOF_AUDIENCE,
       })
     ).payload;
   } catch (e: unknown) {
@@ -154,14 +151,25 @@ export async function proofOfPossession(
   // Check if jwt is valid
   const { nonce } = payload;
 
-  // Check if session contains cNonce
+  const nonceRows = await pool.query<NoncesTable>(
+    'SELECT * FROM nonces WHERE did = $1',
+    [did]
+  );
+
+  if (nonceRows.rowCount === 0)
+    throw new Error('invalid_or_missing_proof: No matching nonce.');
+
+  const cNonce = nonceRows.rows[0]?.nonce;
+  const cNonceExpiresIn = nonceRows.rows[0]?.expires_at;
+
+  // Check if db contains cNonce
   if (cNonce) {
     // Check if nonce is valid
     if (nonce !== cNonce)
       throw new Error('invalid_or_missing_proof: Invalid or missing nonce.');
 
     // Check if cNonce is expired
-    if (cNonceExpiresIn && cNonceExpiresIn < Date.now()) {
+    if (cNonceExpiresIn && Date.parse(cNonceExpiresIn) < Date.now()) {
       throw new Error('invalid_or_missing_proof: nonce expired.');
     }
   }
