@@ -20,7 +20,7 @@ export const LoginView = () => {
       }}
     >
       <div className="flex h-screen w-screen items-center justify-center text-gray-900">
-        <div className="mx-auto flex h-3/5 w-8/12 overflow-hidden rounded-xl bg-white shadow-lg">
+        <div className="mx-auto flex h-3/5 w-8/12 max-w-7xl overflow-hidden rounded-xl bg-white shadow-lg">
           {userType === 0 && (
             <>
               <div className="flex w-1/3 flex-col items-center justify-center">
@@ -61,9 +61,9 @@ export const LoginView = () => {
                     </h2>
                     <p className="mt-4 text-center">
                       This is a demo application for the EduCTX Issuer. If
-                      you're a Professor or an Administrator, please login using
-                      the Course Provider Login. If you're a Student, please
-                      login using the Course Participant Login.
+                      you&apos;re a Professor or an Administrator, please login
+                      using the Course Provider Login. If you&apos;re a Student,
+                      please login using the Course Participant Login.
                     </p>
                   </div>
                 </div>
