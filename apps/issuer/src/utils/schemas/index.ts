@@ -1,10 +1,11 @@
 import { de4aSchema } from './de4aSchema.js';
-import { DidSchema } from './didSchema.js';
+import { DidSchema, DidSchemaBatch } from './didSchema.js';
 import { ProgramSchema } from './programSchema.js';
 
 export const routeSchemas = {
   oneOf: [
     DidSchema,
+    DidSchemaBatch,
     ProgramSchema,
     de4aSchema,
     // {$id: '#testSchema', type: 'object', properties: {test: {type: 'string'}}},
