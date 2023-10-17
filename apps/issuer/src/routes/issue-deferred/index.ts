@@ -31,16 +31,12 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
       const agent = fastify.veramoAgent();
-      const issuerIdentifier = await agent.didManagerGetByAlias({
-        alias: 'issuer-primary',
-        provider: 'did:key',
-      });
 
       const credentialArgs = {
         proofFormat: 'jwt',
         credential: {
-          issuer: issuerIdentifier.did,
-          ...data,
+          issuer: fastify.issuerIdentifier().did,
+          credentialSubject: data.credentialSubject,
         },
       };
       const vc = await agent.createVerifiableCredential(

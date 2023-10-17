@@ -13,6 +13,7 @@ import {
   ICredentialVerifier,
   IDataStore,
   IDIDManager,
+  IIdentifier,
   IKeyManager,
   IResolver,
   MinimalImportableKey,
@@ -99,12 +100,18 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
       } as MinimalImportableKey,
     ],
   });
+  const issuerIdentifier = await agent.didManagerGetByAlias({
+    alias: 'issuer-primary',
+    provider: 'did:key',
+  });
 
   fastify.decorate('veramoAgent', () => agent);
+  fastify.decorate('issuerIdentifier', () => issuerIdentifier);
 });
 
 declare module 'fastify' {
   export interface FastifyInstance {
     veramoAgent(): Agent;
+    issuerIdentifier(): IIdentifier;
   }
 }
