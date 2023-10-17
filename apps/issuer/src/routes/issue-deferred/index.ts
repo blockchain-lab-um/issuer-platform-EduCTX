@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { ICreateVerifiableCredentialArgs } from '@veramo/core';
+import {
+  CredentialSubject,
+  ICreateVerifiableCredentialArgs,
+  VerifiableCredential,
+} from '@veramo/core';
 import { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
+import format from 'pg-format';
 
 import { CredentialsTable } from '../../db/types/index.js';
 import { routeSchemas } from '../../utils/schemas/index.js';
@@ -51,6 +56,91 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       );
 
       await reply.code(201);
+    }
+  );
+
+  fastify.post(
+    '/batch',
+    {
+      schema: {
+        body: routeSchemas,
+      },
+    },
+    async (request, reply) => {
+      const data = request.body as any; // TODO: fix type
+
+      const agent = fastify.veramoAgent();
+
+      const promises: Promise<VerifiableCredential>[] =
+        data.credentialSubjects.map((subject: CredentialSubject) => {
+          const credentialArgs = {
+            proofFormat: 'jwt',
+            credential: {
+              issuer: fastify.issuerIdentifier().did,
+              ...subject,
+            },
+          };
+
+          return agent.createVerifiableCredential(
+            credentialArgs as ICreateVerifiableCredentialArgs
+          );
+        });
+
+      const promiseResults = await Promise.allSettled(promises);
+
+      const rejectedSubjects: {
+        credential: VerifiableCredential;
+        reason: Error;
+      }[] = [];
+      const rejectedIndices = promiseResults.flatMap((result, index) =>
+        result.status === 'rejected' ? index : []
+      );
+      
+      if (rejectedIndices.length > 0) {
+        rejectedIndices.forEach((index) =>
+          rejectedSubjects.push({
+            credential: data.credentialSubjects[index],
+            reason: (promiseResults[index] as PromiseRejectedResult)
+              .reason.message,
+          })
+        );
+      }
+
+      const fulfilled: (string | VerifiableCredential)[][] = [];
+      promiseResults.forEach((result) => {
+        if (result.status === 'fulfilled') {
+          const vc = result.value;
+          if (vc.credentialSubject.id)
+            fulfilled.push([
+              randomUUID(),
+              vc.credentialSubject.id,
+              vc,
+              vc.issuanceDate,
+            ]);
+        }
+      });
+
+      const { pool } = fastify.pg;
+
+      await pool.query<CredentialsTable>(
+        format(
+          'INSERT INTO credentials (id, did, credential, created_at) VALUES %L',
+          fulfilled
+        )
+      );
+
+      let status = 201;
+      if (rejectedSubjects.length) {
+        if (rejectedSubjects.length === data.credentialSubjects.length)
+          status = 400;
+        else status = 207;
+        await reply.code(status).send({
+          rejectedSubjects,
+        });
+        return;
+      }
+
+      await reply.code(status).send(true);
     }
   );
 };
