@@ -10,6 +10,6 @@ CREATE TABLE nonces(
   did text NOT NULL,
   PRIMARY KEY (did),
   nonce text NOT NULL,
-  created_at timestamp with time zone NOT NULL DEFAULT now()
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
   expires_at timestamp with time zone NOT NULL DEFAULT now() + interval '1 hour'
 );
