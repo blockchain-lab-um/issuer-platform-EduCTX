@@ -4,7 +4,6 @@ const root: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.get(
     '/',
     async (request, reply) => ({ root: true })
-    //
   );
 };
 

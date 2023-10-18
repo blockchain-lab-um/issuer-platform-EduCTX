@@ -1,5 +1,9 @@
 import { randomUUID } from 'node:crypto';
-import { ICreateVerifiableCredentialArgs } from '@veramo/core';
+import {
+  CredentialSubject,
+  ICreateVerifiableCredentialArgs,
+  VerifiableCredential,
+} from '@veramo/core';
 import { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
 
@@ -31,16 +35,12 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
       const agent = fastify.veramoAgent();
-      const issuerIdentifier = await agent.didManagerGetByAlias({
-        alias: 'issuer-primary',
-        provider: 'did:key',
-      });
 
       const credentialArgs = {
         proofFormat: 'jwt',
         credential: {
-          issuer: issuerIdentifier.did,
-          ...data,
+          issuer: fastify.issuerIdentifier().did,
+          credentialSubject: data.credentialSubject,
         },
       };
       const vc = await agent.createVerifiableCredential(
@@ -55,6 +55,76 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       );
 
       await reply.code(201);
+    }
+  );
+
+  fastify.post(
+    '/batch',
+    {
+      schema: {
+        body: routeSchemas,
+      },
+    },
+    async (request, reply) => {
+      const data = request.body as any; // TODO: fix type
+
+      const agent = fastify.veramoAgent();
+
+      const promises: Promise<VerifiableCredential>[] =
+        data.credentialSubjects.map((subject: CredentialSubject) => {
+          const credentialArgs = {
+            proofFormat: 'jwt',
+            credential: {
+              issuer: fastify.issuerIdentifier().did,
+              ...subject,
+            },
+          };
+
+          return agent.createVerifiableCredential(
+            credentialArgs as ICreateVerifiableCredentialArgs
+          );
+        });
+
+      const promiseResults = await Promise.allSettled(promises);
+
+      const rejectedSubjects: {
+        credential: VerifiableCredential;
+        reason: Error;
+      }[] = [];
+
+      const { pool } = fastify.pg;
+
+      promiseResults.forEach(async (result, index) => {
+        if (result.status === 'fulfilled') {
+          const vc = result.value;
+          if (vc.credentialSubject.id) {
+            const id = randomUUID();
+            await pool.query<CredentialsTable>(
+              'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
+              [id, vc.credentialSubject.id, vc, vc.issuanceDate]
+            );
+          }
+        } else if (result.status === 'rejected') {
+          rejectedSubjects.push({
+            credential: data.credentialSubjects[index],
+            reason: (promiseResults[index] as PromiseRejectedResult).reason
+              .message,
+          });
+        }
+      });
+
+      let status = 201;
+      if (rejectedSubjects.length) {
+        if (rejectedSubjects.length === data.credentialSubjects.length)
+          status = 400;
+        else status = 207;
+        await reply.code(status).send({
+          rejectedSubjects,
+        });
+        return;
+      }
+
+      await reply.code(status).send(true);
     }
   );
 };
