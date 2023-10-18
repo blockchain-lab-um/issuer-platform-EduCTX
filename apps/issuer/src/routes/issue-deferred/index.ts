@@ -6,7 +6,6 @@ import {
 } from '@veramo/core';
 import { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
-import format from 'pg-format';
 
 import { CredentialsTable } from '../../db/types/index.js';
 import { routeSchemas } from '../../utils/schemas/index.js';
@@ -92,42 +91,27 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
         credential: VerifiableCredential;
         reason: Error;
       }[] = [];
-      const rejectedIndices = promiseResults.flatMap((result, index) =>
-        result.status === 'rejected' ? index : []
-      );
-      
-      if (rejectedIndices.length > 0) {
-        rejectedIndices.forEach((index) =>
-          rejectedSubjects.push({
-            credential: data.credentialSubjects[index],
-            reason: (promiseResults[index] as PromiseRejectedResult)
-              .reason.message,
-          })
-        );
-      }
-
-      const fulfilled: (string | VerifiableCredential)[][] = [];
-      promiseResults.forEach((result) => {
-        if (result.status === 'fulfilled') {
-          const vc = result.value;
-          if (vc.credentialSubject.id)
-            fulfilled.push([
-              randomUUID(),
-              vc.credentialSubject.id,
-              vc,
-              vc.issuanceDate,
-            ]);
-        }
-      });
 
       const { pool } = fastify.pg;
 
-      await pool.query<CredentialsTable>(
-        format(
-          'INSERT INTO credentials (id, did, credential, created_at) VALUES %L',
-          fulfilled
-        )
-      );
+      promiseResults.forEach(async (result, index) => {
+        if (result.status === 'fulfilled') {
+          const vc = result.value;
+          if (vc.credentialSubject.id) {
+            const id = randomUUID();
+            await pool.query<CredentialsTable>(
+              'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
+              [id, vc.credentialSubject.id, vc, vc.issuanceDate]
+            );
+          }
+        } else if (result.status === 'rejected') {
+          rejectedSubjects.push({
+            credential: data.credentialSubjects[index],
+            reason: (promiseResults[index] as PromiseRejectedResult).reason
+              .message,
+          });
+        }
+      });
 
       let status = 201;
       if (rejectedSubjects.length) {

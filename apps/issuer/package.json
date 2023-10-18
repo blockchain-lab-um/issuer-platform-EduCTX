@@ -53,14 +53,12 @@
     "fastify-plugin": "^4.0.0",
     "fastify-schema-constraint": "^3.0.0",
     "jose": "^4.15.3",
-    "pg": "^8.11.3",
-    "pg-format": "^1.0.4"
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.15",
     "@types/node": "^20.4.4",
     "@types/pg": "^8.10.3",
-    "@types/pg-format": "^1.0.3",
     "@types/tap": "^15.0.5",
     "c8": "^7.13.0",
     "concurrently": "^7.0.0",
