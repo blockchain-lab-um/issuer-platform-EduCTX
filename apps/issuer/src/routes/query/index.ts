@@ -8,7 +8,7 @@ import { verifyProofOfPossession } from '../../utils/proofOfPosession.js';
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   const { pool } = fastify.pg;
 
-  fastify.get('/', async () => {
+  fastify.get('/test/all', async () => {
     const credentials = await pool.query<CredentialsTable>(
       'SELECT * FROM credentials'
     );
@@ -33,7 +33,10 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce',
         [did, nonce]
       );
-      return nonce;
+      return {
+        nonce,
+        audience: process.env.PROOF_AUDIENCE
+      };
     }
   );
 
@@ -56,7 +59,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   );
 
   fastify.post(
-    '/test_proof',
+    '/claim',
     {
       schema: {
         body: {
@@ -96,7 +99,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
     }
   );
 
-  fastify.post('/test_insert', async (request) => {
+  fastify.post('/test/insert', async (request) => {
     const data = request.body as Omit<CredentialsTable, 'id' | 'created_at'>;
 
     const { rows } = await pool.query<CredentialsTable>(
@@ -104,6 +107,11 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       [randomUUID(), data.did, data.credential]
     );
     return rows;
+  });
+
+  fastify.delete('/test', async (request, reply) => {
+    await pool.query<CredentialsTable>('TRUNCATE credentials');
+    await reply.code(204).send();
   });
 };
 
