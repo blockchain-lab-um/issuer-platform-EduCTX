@@ -54,7 +54,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
         [id, vc.credentialSubject.id, vc, vc.issuanceDate]
       );
 
-      await reply.code(201);
+      await reply.code(201).send(true);
     }
   );
 
@@ -70,8 +70,8 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       const agent = fastify.veramoAgent();
 
-      const promises: Promise<VerifiableCredential>[] =
-        data.credentialSubjects.map((subject: CredentialSubject) => {
+      const promises: Promise<VerifiableCredential>[] = data.map(
+        (subject: CredentialSubject) => {
           const credentialArgs = {
             proofFormat: 'jwt',
             credential: {
@@ -83,7 +83,8 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
           return agent.createVerifiableCredential(
             credentialArgs as ICreateVerifiableCredentialArgs
           );
-        });
+        }
+      );
 
       const promiseResults = await Promise.allSettled(promises);
 
@@ -106,7 +107,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
           }
         } else if (result.status === 'rejected') {
           rejectedSubjects.push({
-            credential: data.credentialSubjects[index],
+            credential: data[index],
             reason: (promiseResults[index] as PromiseRejectedResult).reason
               .message,
           });
@@ -115,8 +116,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       let status = 201;
       if (rejectedSubjects.length) {
-        if (rejectedSubjects.length === data.credentialSubjects.length)
-          status = 400;
+        if (rejectedSubjects.length === data.length) status = 400;
         else status = 207;
         await reply.code(status).send({
           rejectedSubjects,
