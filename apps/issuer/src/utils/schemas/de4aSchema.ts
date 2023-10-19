@@ -119,3 +119,9 @@ export const de4aSchema = {
   },
   required: ['credentialSubject'],
 };
+
+export const de4aSchemaBatch = {
+  $id: '#de4aSchemaBatch',
+  type: 'array',
+  items: { $ref: '#de4aSchema' },
+};
