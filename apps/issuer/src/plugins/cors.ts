@@ -7,5 +7,5 @@ import fp from 'fastify-plugin';
  * @see https://github.com/fastify/fastify-cors
  */
 export default fp<FastifyCorsOptions>(async (fastify) => {
-  await fastify.register(cors, { origin: 'http://127.0.0.1' });
+  await fastify.register(cors);
 });

@@ -33,7 +33,10 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce',
         [did, nonce]
       );
-      return nonce;
+      return {
+        nonce,
+        audience: process.env.PROOF_AUDIENCE,
+      };
     }
   );
 

@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import axios from 'axios';
 
 interface Schema {
+  type?: string;
   title: string;
   fields: {
     title: string;
@@ -14,16 +16,14 @@ interface Schema {
 const SCHEMAS: Schema[] = [
   {
     title: 'Schema A',
-    fields: [
-      { title: 'Field A', type: 'string' },
-      { title: 'Field B', type: 'string' },
-    ],
+    fields: [{ title: 'test', type: 'string' }],
+    type: '#didSchema',
   },
   {
     title: 'Schema B',
     fields: [
-      { title: 'Field A', type: 'string' },
-      { title: 'Field B', type: 'number' },
+      { title: 'fieldA', type: 'string' },
+      { title: 'fieldB', type: 'number' },
     ],
   },
 ];
@@ -33,6 +33,7 @@ export const IssueView = () => {
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState({});
   const [isFilled, setIsFilled] = useState(false);
+  const [credentialIssued, setCredentialIssued] = useState(false);
 
   const handleSelectionChange = (e: { target: { value: string } }) => {
     const selectedShema = SCHEMAS.find(
@@ -56,6 +57,45 @@ export const IssueView = () => {
 
   const handleInputValueChange = (e: string, field: string) => {
     setInputs({ ...inputs, [field]: e });
+  };
+
+  const issue = async () => {
+    console.log('issue');
+    const body = {};
+    body.credentialSubject = { id: inputs.subject };
+    body.credentialSubject = { ...body.credentialSubject, ...inputs };
+    console.log(body);
+
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:3000/issue-deferred',
+        JSON.stringify(body),
+        {
+          headers: {
+            schemaType: selectedSchema.type,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      console.log(response.data);
+      if (response.data === true) {
+        setCredentialIssued(true);
+      }
+    } catch (error) {
+      console.error('Error making POST request:', error.message);
+      if (error.response) {
+        // The request was made and the server responded with a status code outside the range of 2xx
+        console.error('Response Data:', error.response.data);
+        console.error('Response Status:', error.response.status);
+        console.error('Response Headers:', error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Axios config error:', error.config);
+      }
+    }
   };
 
   useEffect(() => {
@@ -155,9 +195,20 @@ export const IssueView = () => {
                 ))}
               </div>
               <div>
-                <Button color="primary" className="mt-8" isDisabled={!isFilled}>
-                  Issue
-                </Button>
+                {credentialIssued ? (
+                  <Button color="primary" className="mt-8" isDisabled={true}>
+                    Credential Issued
+                  </Button>
+                ) : (
+                  <Button
+                    color="primary"
+                    onClick={() => issue()}
+                    className="mt-8"
+                    isDisabled={!isFilled}
+                  >
+                    Issue
+                  </Button>
+                )}
               </div>
             </>
           )}
