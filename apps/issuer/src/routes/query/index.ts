@@ -43,7 +43,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       const nonce = randomUUID();
       await pool.query<NoncesTable>(
-        'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce',
+        'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce, created_at = NOW(), expires_at = NOW() + INTERVAL \'1 hour\'',
         [did, nonce]
       );
       return {
@@ -149,6 +149,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
     },
     async (request, reply) => {
       await pool.query<CredentialsTable>('TRUNCATE credentials');
+      await pool.query<NoncesTable>('TRUNCATE nonces');
       await reply.code(204).send();
     }
   );
