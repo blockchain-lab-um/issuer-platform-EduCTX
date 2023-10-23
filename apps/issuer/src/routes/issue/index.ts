@@ -24,6 +24,9 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
       schema: {
         body: routeSchemas,
       },
+      config: {
+        description: 'Issue a credential and return it',
+      },
     },
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type

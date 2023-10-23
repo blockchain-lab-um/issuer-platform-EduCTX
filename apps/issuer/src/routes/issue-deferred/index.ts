@@ -31,6 +31,9 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       schema: {
         body: routeSchemas,
       },
+      config: {
+        description: 'Issue Credential and store into DB',
+      },
     },
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
@@ -68,6 +71,9 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
     {
       schema: {
         body: routeSchemas,
+      },
+      config: {
+        description: 'Issue multiple Credentials and store them in DB',
       },
     },
     async (request, reply) => {
