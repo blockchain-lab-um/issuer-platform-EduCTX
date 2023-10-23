@@ -32,6 +32,7 @@
     ]
   },
   "dependencies": {
+    "@blockchain-lab-um/did-provider-ebsi": "^1.2.1-beta.0",
     "@blockchain-lab-um/did-provider-key": "^1.0.7",
     "@blockchain-lab-um/veramo-datamanager": "^1.0.0",
     "@fastify/autoload": "^5.0.0",
@@ -63,6 +64,7 @@
     "c8": "^7.13.0",
     "concurrently": "^7.0.0",
     "esbuild": "^0.19.3",
+    "fastify-print-routes": "^2.1.0",
     "fastify-tsconfig": "^1.0.1",
     "tap": "^16.1.0",
     "ts-node": "^10.4.0",

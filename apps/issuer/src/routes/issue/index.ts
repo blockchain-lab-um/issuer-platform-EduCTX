@@ -24,6 +24,9 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
       schema: {
         body: routeSchemas,
       },
+      config: {
+        description: 'Issue a credential and return it',
+      },
     },
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
@@ -33,11 +36,16 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
         proofFormat: 'jwt',
         credential: {
           issuer: fastify.issuerIdentifier().did,
+          type: ['VerifiableCredential', 'EducationCredential'],
+          '@context': [
+            'https://www.w3.org/2018/credentials/v1',
+            'https://schema.org',
+          ],
           ...data,
         },
       });
 
-      await reply.code(200).send({ credential: vc });
+      await reply.code(200).send(vc);
     }
   );
 };

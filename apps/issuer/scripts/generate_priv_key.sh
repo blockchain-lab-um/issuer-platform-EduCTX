@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Generate the Secp256k1 private key
+# Generate the P256 private key
 priv_key=$(
-  openssl ecparam -name secp256k1 -genkey -noout |
+  openssl ecparam -name prime256v1 -genkey -noout |
   openssl ec -text -noout |
   grep priv -A 3 |
   tail -n +2 |
@@ -11,3 +11,4 @@ priv_key=$(
 )
 
 echo "Private Key: $priv_key"
+echo "Save this generated ebsi id: $(echo $RANDOM | md5sum | head -c 32)"
