@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import {
   Button,
@@ -11,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
+import axios from 'axios';
 
 import { useGeneralStore, useMascaStore } from '@/stores';
 
@@ -22,9 +24,44 @@ const CREDENTIALS = [
 export const ClaimView = () => {
   const router = useRouter();
   const [isSelected, setIsSelected] = React.useState(true);
-  const { currDID } = useMascaStore((state) => ({
+  const { currDID, api } = useMascaStore((state) => ({
     currDID: state.currDID,
+    api: state.mascaApi,
   }));
+
+  const checkForCredentials = async () => {
+    console.log('checkForCredentials', currDID);
+
+    const res = await axios.get(`http://127.0.0.1:3000/query/${currDID}`);
+    console.log(res.data);
+
+    const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
+
+    const signedData = await api?.signData({
+      type: 'JWT',
+      data: { payload: { nonce: res.data.nonce, aud: res.data.audience, exp } },
+    });
+
+    if (isError(signedData!)) {
+      console.log('error signing data');
+      return;
+    }
+
+    const body2 = { proof: signedData?.data };
+    console.log(body2);
+
+    const credentials = await axios.post(
+      `http://127.0.0.1:3000/query/test_proof`,
+      body2
+    );
+
+    console.log(credentials.data);
+
+    // credentials array of objects
+    // get credential from object (JSON.parse)
+    // add credential to the list
+    // go to next page
+  };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
     changeIsConnected: state.changeIsConnected,
@@ -64,7 +101,16 @@ export const ClaimView = () => {
         </div>
         <div className="flex w-full items-center justify-center  py-16">
           {isSelected && (
-            <Button size="lg" color="primary" className="font-medium">
+            <Button
+              size="lg"
+              color="primary"
+              onClick={() => {
+                checkForCredentials()
+                  .then(() => {})
+                  .catch(() => {});
+              }}
+              className="font-medium"
+            >
               Check for New Credentials
             </Button>
           )}

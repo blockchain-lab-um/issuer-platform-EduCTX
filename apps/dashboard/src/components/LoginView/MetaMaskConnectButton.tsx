@@ -104,6 +104,7 @@ const ConnectButton = () => {
     const address = await connectHandler();
     if (!address) return;
     const enableResult = await enableMasca(address, {
+      version: '1.1.0-beta.2',
       supportedMethods: ['did:key'],
     });
     if (isError(enableResult)) {
