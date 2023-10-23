@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
@@ -16,14 +16,17 @@ import axios from 'axios';
 
 import { useGeneralStore, useMascaStore } from '@/stores';
 
-const CREDENTIALS = [
-  { title: 'MatLabUserScore', claimed: false },
-  { title: 'SuperCoolKidDiploma', claimed: true },
-];
+interface MappedCredentials {
+  credential: any;
+  claimed: boolean;
+  created_at: string;
+  id: string;
+}
 
 export const ClaimView = () => {
   const router = useRouter();
-  const [isSelected, setIsSelected] = React.useState(true);
+  const [isSelected, setIsSelected] = useState(true);
+  const [credentials, setCredentials] = useState<MappedCredentials[]>([]);
   const { currDID, api } = useMascaStore((state) => ({
     currDID: state.currDID,
     api: state.mascaApi,
@@ -50,17 +53,52 @@ export const ClaimView = () => {
     const body2 = { proof: signedData?.data };
     console.log(body2);
 
-    const credentials = await axios.post(
+    const issuedCredentials = await axios.post(
       `http://127.0.0.1:3000/query/test_proof`,
       body2
     );
 
-    console.log(credentials.data);
+    console.log(issuedCredentials.data);
 
-    // credentials array of objects
-    // get credential from object (JSON.parse)
-    // add credential to the list
-    // go to next page
+    if (issuedCredentials.data.length === 0) {
+      console.log('no credentials');
+      return;
+    }
+
+    const mappedCredentials: MappedCredentials[] = issuedCredentials.data.map(
+      (obj: any) => {
+        const parsedCredential = JSON.parse(obj.credential);
+        return {
+          credential: parsedCredential,
+          claimed: false,
+          date: obj.created_at,
+          id: obj.id,
+        };
+      }
+    );
+
+    setCredentials(mappedCredentials);
+    setIsSelected(false);
+  };
+
+  const claimCredential = async (credential: any, id: string) => {
+    console.log('claimCredential', credential);
+
+    const result = await api?.saveCredential(credential);
+
+    if (isError(result!)) {
+      console.log(result);
+      return;
+    }
+
+    const updatedCredentials = credentials.map((obj) => {
+      if (obj.id === id) {
+        return { ...obj, claimed: true };
+      }
+      return obj;
+    });
+
+    setCredentials(updatedCredentials);
   };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
@@ -76,7 +114,7 @@ export const ClaimView = () => {
     >
       <div className="w-3/4 max-w-7xl rounded-3xl bg-white p-4 text-gray-900">
         <div className="flex justify-between">
-          <div>Connected with: {currDID.substring(0, 16).concat('...')}</div>
+          <div>Connected with: {currDID}</div>
           <Button
             variant="bordered"
             onClick={() => {
@@ -135,12 +173,12 @@ export const ClaimView = () => {
                     <TableColumn>STATUS</TableColumn>
                   </TableHeader>
                   <TableBody>
-                    {CREDENTIALS.map((credential) => (
-                      <TableRow key={credential.title}>
-                        <TableCell>{credential.title}</TableCell>
+                    {credentials.map((obj) => (
+                      <TableRow key={obj.id}>
+                        <TableCell>{obj.credential.type.toString()}</TableCell>
                         <TableCell>Course Participant</TableCell>
                         <TableCell>
-                          {credential.claimed ? (
+                          {obj.claimed ? (
                             <Button
                               color="success"
                               endContent={<CheckIcon className="h-4 w-4" />}
@@ -149,7 +187,16 @@ export const ClaimView = () => {
                               Claimed
                             </Button>
                           ) : (
-                            <Button color="primary">Claim</Button>
+                            <Button
+                              color="primary"
+                              onClick={() => {
+                                claimCredential(obj.credential, obj.id)
+                                  .then(() => {})
+                                  .catch(() => {});
+                              }}
+                            >
+                              Claim
+                            </Button>
                           )}
                         </TableCell>
                       </TableRow>

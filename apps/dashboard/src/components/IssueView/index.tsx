@@ -31,7 +31,7 @@ const SCHEMAS: Schema[] = [
 export const IssueView = () => {
   const [selectedSchema, setSelectedSchema] = useState({} as Schema);
   const [next, setNext] = useState(false);
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState<any>({});
   const [isFilled, setIsFilled] = useState(false);
   const [credentialIssued, setCredentialIssued] = useState(false);
 
@@ -61,7 +61,7 @@ export const IssueView = () => {
 
   const issue = async () => {
     console.log('issue');
-    const body = {};
+    const body = { credentialSubject: {} };
     body.credentialSubject = { id: inputs.subject };
     body.credentialSubject = { ...body.credentialSubject, ...inputs };
     console.log(body);
@@ -81,7 +81,7 @@ export const IssueView = () => {
       if (response.data === true) {
         setCredentialIssued(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error making POST request:', error.message);
       if (error.response) {
         // The request was made and the server responded with a status code outside the range of 2xx
