@@ -8,19 +8,32 @@ import { verifyProofOfPossession } from '../../utils/proofOfPosession.js';
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   const { pool } = fastify.pg;
 
-  fastify.get('/test/all', async () => {
-    const credentials = await pool.query<CredentialsTable>(
-      'SELECT * FROM credentials'
-    );
+  fastify.get(
+    '/test/all',
+    {
+      config: {
+        description: 'Get all from the database',
+      },
+    },
+    async () => {
+      const credentials = await pool.query<CredentialsTable>(
+        'SELECT * FROM credentials'
+      );
 
-    const nonces = await pool.query<NoncesTable>('SELECT * FROM nonces');
+      const nonces = await pool.query<NoncesTable>('SELECT * FROM nonces');
 
-    return { credentials: credentials.rows, nonces: nonces.rows };
-  });
+      return { credentials: credentials.rows, nonces: nonces.rows };
+    }
+  );
 
   fastify.get(
     '/:did',
-    { schema: { params: { did: { type: 'string' } } } },
+    {
+      schema: { params: { did: { type: 'string' } } },
+      config: {
+        description: 'Get nonce and audience for the DID',
+      },
+    },
     async (
       request: FastifyRequest<{
         Params: { did: string };
@@ -35,14 +48,19 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       );
       return {
         nonce,
-        audience: process.env.PROOF_AUDIENCE
+        audience: process.env.PROOF_AUDIENCE,
       };
     }
   );
 
   fastify.get(
     '/test/:did',
-    { schema: { params: { did: { type: 'string' } } } },
+    {
+      schema: { params: { did: { type: 'string' } } },
+      config: {
+        description: 'Get all credentials for the DID',
+      },
+    },
     async (
       request: FastifyRequest<{
         Params: { did: string };
@@ -69,6 +87,10 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
           },
           required: ['proof'],
         },
+      },
+      config: {
+        description:
+          'Send a proof of possession to the issuer and get all credentials for the DID',
       },
     },
     async (
@@ -99,20 +121,37 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
     }
   );
 
-  fastify.post('/test/insert', async (request) => {
-    const data = request.body as Omit<CredentialsTable, 'id' | 'created_at'>;
+  fastify.post(
+    '/test/insert',
+    {
+      config: {
+        description:
+          'Send a credential to the issuer to be stored in the database',
+      },
+    },
+    async (request) => {
+      const data = request.body as Omit<CredentialsTable, 'id' | 'created_at'>;
 
-    const { rows } = await pool.query<CredentialsTable>(
-      'INSERT INTO credentials (id, did, credential) VALUES ($1, $2, $3) RETURNING *',
-      [randomUUID(), data.did, data.credential]
-    );
-    return rows;
-  });
+      const { rows } = await pool.query<CredentialsTable>(
+        'INSERT INTO credentials (id, did, credential) VALUES ($1, $2, $3) RETURNING *',
+        [randomUUID(), data.did, data.credential]
+      );
+      return rows;
+    }
+  );
 
-  fastify.delete('/test', async (request, reply) => {
-    await pool.query<CredentialsTable>('TRUNCATE credentials');
-    await reply.code(204).send();
-  });
+  fastify.delete(
+    '/test',
+    {
+      config: {
+        description: 'Delete all credentials from the database',
+      },
+    },
+    async (request, reply) => {
+      await pool.query<CredentialsTable>('TRUNCATE credentials');
+      await reply.code(204).send();
+    }
+  );
 };
 
 export default query;
