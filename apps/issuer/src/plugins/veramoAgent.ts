@@ -1,8 +1,11 @@
 import {
+  EbsiDIDProvider,
+  ebsiDidResolver,
+} from '@blockchain-lab-um/did-provider-ebsi';
+import {
   KeyDIDProvider,
   getDidKeyResolver as keyDidResolver,
 } from '@blockchain-lab-um/did-provider-key';
-import { EbsiDIDProvider, ebsiDidResolver } from '@blockchain-lab-um/did-provider-ebsi';
 import {
   AbstractDataStore,
   DataManager,
@@ -39,11 +42,11 @@ import fp from 'fastify-plugin';
 
 export type Agent = TAgent<
   IDIDManager &
-  IKeyManager &
-  IDataStore &
-  IResolver &
-  ICredentialIssuer &
-  ICredentialVerifier
+    IKeyManager &
+    IDataStore &
+    IResolver &
+    ICredentialIssuer &
+    ICredentialVerifier
 >;
 
 async function createVeramoAgent() {
@@ -57,11 +60,11 @@ async function createVeramoAgent() {
 
   return createAgent<
     IDIDManager &
-    IKeyManager &
-    IDataStore &
-    IResolver &
-    ICredentialIssuer &
-    ICredentialVerifier
+      IKeyManager &
+      IDataStore &
+      IResolver &
+      ICredentialIssuer &
+      ICredentialVerifier
   >({
     plugins: [
       new CredentialPlugin(),
@@ -91,7 +94,11 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
   const agent = await createVeramoAgent();
   let identifier: IIdentifier;
 
-  if (process.env.EBSI_BEARER_TOKEN && process.env.EBSI_PRIVATE_KEY && process.env.EBSI_ID) {
+  if (
+    process.env.EBSI_BEARER_TOKEN &&
+    process.env.EBSI_PRIVATE_KEY &&
+    process.env.EBSI_ID
+  ) {
     identifier = await agent.didManagerCreate({
       provider: 'did:ebsi',
       alias: 'ebsi',
@@ -100,7 +107,7 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
         bearer: process.env.EBSI_BEARER_TOKEN,
         privateKeyHex: process.env.EBSI_PRIVATE_KEY,
         keyType: 'P-256',
-        id: process.env.EBSI_ID
+        id: process.env.EBSI_ID,
       },
     });
 
@@ -127,7 +134,7 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
     });
   }
 
-  if (!identifier) throw new Error('Cannot generate valid identifier')
+  if (!identifier) throw new Error('Cannot generate valid identifier');
 
   fastify.decorate('veramoAgent', () => agent);
   fastify.decorate('issuerIdentifier', () => identifier);
