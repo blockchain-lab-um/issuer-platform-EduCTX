@@ -1,8 +1,8 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import axios from 'axios';
+import { signOut } from 'next-auth/react';
 
 interface Schema {
   type?: string;
@@ -34,6 +34,8 @@ export const IssueView = () => {
   const [inputs, setInputs] = useState<any>({});
   const [isFilled, setIsFilled] = useState(false);
   const [credentialIssued, setCredentialIssued] = useState(false);
+
+  const router = useRouter();
 
   const handleSelectionChange = (e: { target: { value: string } }) => {
     const selectedShema = SCHEMAS.find(
@@ -124,7 +126,17 @@ export const IssueView = () => {
       <div className="w-3/4 max-w-7xl rounded-3xl bg-white p-4 text-gray-900">
         <div className="flex w-full items-center justify-between">
           Welcome, Mr. Professor
-          <Button size="sm" variant="bordered">
+          <Button
+            size="sm"
+            variant="bordered"
+            onClick={() => {
+              signOut()
+                .then(() => {
+                  router.push('/');
+                })
+                .catch(() => {});
+            }}
+          >
             Logout
           </Button>
         </div>

@@ -1,11 +1,34 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { Button } from '@nextui-org/react';
+import { useSession } from 'next-auth/react';
+
 import { IssueView } from '@/components/IssueView';
 
-export default async function Page() {
+export default function Page() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  console.log('Sesh', session, status);
+
   return (
     <div className="">
-      <IssueView />
+      {session && <IssueView />}
+      {!session && (
+        <div>
+          Login to continue
+          <Button
+            variant="bordered"
+            size="sm"
+            onClick={() => {
+              router.push('/');
+            }}
+          >
+            Login
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import {
   Button,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -54,7 +53,7 @@ export const ClaimView = () => {
     console.log(body2);
 
     const issuedCredentials = await axios.post(
-      `http://127.0.0.1:3000/query/test_proof`,
+      `http://127.0.0.1:3000/query/claim`,
       body2
     );
 
@@ -105,6 +104,30 @@ export const ClaimView = () => {
     changeIsConnected: state.changeIsConnected,
   }));
 
+  const checkClaimedCredentials = async () => {
+    console.log('Checking claimed credentials');
+    const walletCredentials = await api?.queryCredentials();
+
+    if (isError(walletCredentials!)) {
+      console.log(walletCredentials);
+      return;
+    }
+    console.log(walletCredentials?.data);
+
+    const mappedCredentials = credentials.map((obj) => {
+      const found = walletCredentials?.data.find(
+        (cred: any) => cred.data.proof.jwt === obj.credential.proof.jwt
+      );
+      if (found) {
+        console.log('Credential found');
+        return { ...obj, claimed: true };
+      }
+      return obj;
+    });
+
+    setCredentials(mappedCredentials);
+  };
+
   return (
     <div
       className="flex min-h-screen w-screen items-center justify-center"
@@ -127,16 +150,6 @@ export const ClaimView = () => {
             Disconnect
           </Button>
         </div>
-        <div className="flex items-center">
-          <Switch
-            isSelected={isSelected}
-            onValueChange={setIsSelected}
-            size="sm"
-            defaultSelected
-            aria-label="Automatic updates"
-          />{' '}
-          Toggle test VCs
-        </div>
         <div className="flex w-full items-center justify-center  py-16">
           {isSelected && (
             <Button
@@ -156,10 +169,28 @@ export const ClaimView = () => {
             <div className="w-full">
               <div>
                 <div className="flex justify-between">
-                  <Button variant="bordered" size="sm" color="primary">
+                  <Button
+                    variant="bordered"
+                    size="sm"
+                    color="primary"
+                    onClick={() => {
+                      checkClaimedCredentials()
+                        .then(() => {})
+                        .catch(() => {});
+                    }}
+                  >
                     Mark claimed credentials
                   </Button>
-                  <Button variant="bordered" size="sm" color="secondary">
+                  <Button
+                    variant="bordered"
+                    size="sm"
+                    color="secondary"
+                    onClick={() => {
+                      checkForCredentials()
+                        .then(() => {})
+                        .catch(() => {});
+                    }}
+                  >
                     Refresh credentials
                   </Button>
                 </div>
@@ -168,14 +199,20 @@ export const ClaimView = () => {
                   aria-label="Example static collection table"
                 >
                   <TableHeader>
-                    <TableColumn>NAME</TableColumn>
+                    <TableColumn>TITLE</TableColumn>
                     <TableColumn>ROLE</TableColumn>
                     <TableColumn>STATUS</TableColumn>
                   </TableHeader>
                   <TableBody>
                     {credentials.map((obj) => (
                       <TableRow key={obj.id}>
-                        <TableCell>{obj.credential.type.toString()}</TableCell>
+                        <TableCell>
+                          {Array.isArray(obj.credential.type)
+                            ? obj.credential.type[
+                                obj.credential.type.length - 1
+                              ]
+                            : obj.credential.type.toString()}
+                        </TableCell>
                         <TableCell>Course Participant</TableCell>
                         <TableCell>
                           {obj.claimed ? (

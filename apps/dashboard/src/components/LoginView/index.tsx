@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 // import { Button } from '@nextui-org/react';
 import { Button } from '@nextui-org/react';
+import { signIn, useSession } from 'next-auth/react';
 
 import { useGeneralStore } from '@/stores';
 import { MascaDescription } from './MascaDescription';
 import ConnectButton from './MetaMaskConnectButton';
 
 export const LoginView = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [userType, setUserType] = useState<number>(0);
   const { hasMM } = useGeneralStore((state) => ({
     hasMM: state.hasMetaMask,
   }));
+
+  useEffect(() => {
+    if (session) {
+      router.push('/issue');
+    }
+  }, [session]);
 
   return (
     <div
@@ -71,9 +83,17 @@ export const LoginView = () => {
             </>
           )}
           {userType === 1 && (
-            <div>
-              <h2>Finish on other page...</h2>
-              <button onClick={() => setUserType(0)}>Back</button>
+            <div className="p-2">
+              <Button
+                size="sm"
+                variant="bordered"
+                onClick={() => setUserType(0)}
+              >
+                Back
+              </Button>
+              <Button size="sm" color="primary" onClick={() => signIn()}>
+                Login
+              </Button>
             </div>
           )}
 
