@@ -13,6 +13,14 @@ export const routeSchemas = {
   ],
 };
 
+export const Schemas = [
+  DidSchema,
+  DidSchemaBatch,
+  ProgramSchema,
+  de4aSchema,
+  de4aSchemaBatch,
+];
+
 export function getSchemaIds(schemas: typeof routeSchemas) {
   return schemas.oneOf.map((schema) => schema.$id);
 }
