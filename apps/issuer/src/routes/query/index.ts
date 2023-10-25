@@ -26,47 +26,48 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
     }
   );
 
-  fastify.get(
-    '/:did',
+  fastify.post(
+    '/nonce',
     {
-      schema: { params: { did: { type: 'string' } } },
+      schema: { body: { did: { type: 'string' } } },
       config: {
         description: 'Get nonce and audience for the DID',
       },
     },
     async (
       request: FastifyRequest<{
-        Params: { did: string };
+        Body: { did: string };
       }>
     ) => {
-      const { did } = request.params;
+      const { did } = request.body;
 
       const nonce = randomUUID();
       await pool.query<NoncesTable>(
-        'INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce, created_at = NOW(), expires_at = NOW() + INTERVAL \'1 hour\'',
+        "INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce, created_at = NOW(), expires_at = NOW() + INTERVAL '1 hour'",
         [did, nonce]
       );
+
       return {
         nonce,
-        audience: process.env.PROOF_AUDIENCE,
+        aud: process.env.PROOF_AUDIENCE,
       };
     }
   );
 
-  fastify.get(
+  fastify.post(
     '/test/:did',
     {
-      schema: { params: { did: { type: 'string' } } },
+      schema: { body: { did: { type: 'string' } } },
       config: {
         description: 'Get all credentials for the DID',
       },
     },
     async (
       request: FastifyRequest<{
-        Params: { did: string };
+        Body: { did: string };
       }>
     ) => {
-      const { did } = request.params;
+      const { did } = request.body;
       const didRows = await pool.query<CredentialsTable>(
         'SELECT * FROM credentials WHERE did = $1',
         [did]
