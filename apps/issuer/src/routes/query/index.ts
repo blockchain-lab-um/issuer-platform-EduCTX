@@ -55,7 +55,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   );
 
   fastify.post(
-    '/test/:did',
+    '/test/did',
     {
       schema: { body: { did: { type: 'string' } } },
       config: {
