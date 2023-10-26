@@ -13,7 +13,7 @@
   "scripts": {
     "build": "node build.js",
     "dev": "pnpm build && concurrently -k -p \"[{name}]\" -n \"Typescript,App\" -c \"yellow.bold,cyan.bold\" \"pnpm watch:tsc\" \"pnpm dev:start\"",
-    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js",
+    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -p 3001 -P dist/app.js",
     "lint": "pnpm lint:eslint && pnpm lint:tsc && pnpm lint:prettier",
     "lint:eslint": "eslint . --ext .js,.ts --fix",
     "lint:prettier": "prettier . --write",
