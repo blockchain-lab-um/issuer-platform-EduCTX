@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ISSUER_ENDPOINT } from '@/config/api';
 import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import {
@@ -32,35 +33,36 @@ export const ClaimView = () => {
   }));
 
   const checkForCredentials = async () => {
-    console.log('checkForCredentials', currDID);
+    const res = await axios.post(`${ISSUER_ENDPOINT}/query/nonce`, {
+      did: currDID,
+    });
 
-    const res = await axios.get(`http://127.0.0.1:3000/query/${currDID}`);
-    console.log(res.data);
-
+    // FIXME: do something with this
     const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
 
     const signedData = await api?.signData({
       type: 'JWT',
-      data: { payload: { nonce: res.data.nonce, aud: res.data.audience, exp } },
+      data: {
+        header: {
+          typ: 'JWT',
+        },
+        payload: res.data,
+      },
     });
 
     if (isError(signedData!)) {
-      console.log('error signing data');
+      console.error('Error signing data');
       return;
     }
 
-    const body2 = { proof: signedData?.data };
-    console.log(body2);
-
+    const proofBody = { proof: signedData?.data };
     const issuedCredentials = await axios.post(
-      `http://127.0.0.1:3000/query/claim`,
-      body2
+      `${ISSUER_ENDPOINT}/query/claim`,
+      proofBody
     );
 
-    console.log(issuedCredentials.data);
-
     if (issuedCredentials.data.length === 0) {
-      console.log('no credentials');
+      // TODO: handle this case
       return;
     }
 
@@ -81,12 +83,10 @@ export const ClaimView = () => {
   };
 
   const claimCredential = async (credential: any, id: string) => {
-    console.log('claimCredential', credential);
-
     const result = await api?.saveCredential(credential);
 
     if (isError(result!)) {
-      console.log(result);
+      console.error(result);
       return;
     }
 
@@ -105,21 +105,18 @@ export const ClaimView = () => {
   }));
 
   const checkClaimedCredentials = async () => {
-    console.log('Checking claimed credentials');
     const walletCredentials = await api?.queryCredentials();
 
     if (isError(walletCredentials!)) {
-      console.log(walletCredentials);
+      console.error(walletCredentials);
       return;
     }
-    console.log(walletCredentials?.data);
 
     const mappedCredentials = credentials.map((obj) => {
       const found = walletCredentials?.data.find(
         (cred: any) => cred.data.proof.jwt === obj.credential.proof.jwt
       );
       if (found) {
-        console.log('Credential found');
         return { ...obj, claimed: true };
       }
       return obj;

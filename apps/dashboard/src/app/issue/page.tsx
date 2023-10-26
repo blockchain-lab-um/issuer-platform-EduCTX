@@ -10,8 +10,6 @@ export default function Page() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  console.log('Sesh', session, status);
-
   return (
     <div className="">
       {session && <IssueView />}
