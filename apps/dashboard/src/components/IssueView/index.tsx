@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ISSUER_ENDPOINT } from '@/config/api';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import axios from 'axios';
 import { signOut } from 'next-auth/react';
@@ -70,7 +71,7 @@ export const IssueView = () => {
 
     try {
       const response = await axios.post(
-        'http://127.0.0.1:3000/issue-deferred',
+        `${ISSUER_ENDPOINT}}/issue-deferred`,
         JSON.stringify(body),
         {
           headers: {

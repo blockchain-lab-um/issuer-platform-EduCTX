@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ISSUER_ENDPOINT } from '@/config/api';
 import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import {
@@ -33,15 +34,22 @@ export const ClaimView = () => {
 
   const checkForCredentials = async () => {
     console.log('checkForCredentials', currDID);
-
-    const res = await axios.get(`http://127.0.0.1:3000/query/${currDID}`);
+    const res = await axios.post(`${ISSUER_ENDPOINT}/query/nonce`, {
+      did: currDID,
+    });
     console.log(res.data);
-
+    
+    // FIXME: do something with this 
     const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
 
     const signedData = await api?.signData({
       type: 'JWT',
-      data: { payload: { nonce: res.data.nonce, aud: res.data.audience, exp } },
+      data: {
+        header: {
+          typ: 'JWT',
+        },
+        payload: res.data,
+      },
     });
 
     if (isError(signedData!)) {
@@ -53,7 +61,7 @@ export const ClaimView = () => {
     console.log(body2);
 
     const issuedCredentials = await axios.post(
-      `http://127.0.0.1:3000/query/claim`,
+      `${ISSUER_ENDPOINT}/query/claim`,
       body2
     );
 
