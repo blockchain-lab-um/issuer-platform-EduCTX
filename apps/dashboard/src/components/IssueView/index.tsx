@@ -63,11 +63,9 @@ export const IssueView = () => {
   };
 
   const issue = async () => {
-    console.log('issue');
     const body = { credentialSubject: {} };
     body.credentialSubject = { id: inputs.subject };
     body.credentialSubject = { ...body.credentialSubject, ...inputs };
-    console.log(body);
 
     try {
       const response = await axios.post(
@@ -80,39 +78,32 @@ export const IssueView = () => {
           },
         }
       );
-      console.log(response.data);
       if (response.data === true) {
         setCredentialIssued(true);
       }
     } catch (error: any) {
       console.error('Error making POST request:', error.message);
       if (error.response) {
-        // The request was made and the server responded with a status code outside the range of 2xx
         console.error('Response Data:', error.response.data);
         console.error('Response Status:', error.response.status);
         console.error('Response Headers:', error.response.headers);
       } else if (error.request) {
-        // The request was made but no response was received
         console.error('No response received:', error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error('Axios config error:', error.config);
       }
     }
   };
 
   useEffect(() => {
-    console.log(inputs);
     if (
       inputs &&
       Object.values(inputs).every(
         (input) => input !== undefined && input !== ''
       )
     ) {
-      console.log('all filled');
       setIsFilled(true);
     } else {
-      console.log('not all filled');
       setIsFilled(false);
     }
   }, [inputs]);

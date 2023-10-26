@@ -33,11 +33,9 @@ export const ClaimView = () => {
   }));
 
   const checkForCredentials = async () => {
-    console.log('checkForCredentials', currDID);
     const res = await axios.post(`${ISSUER_ENDPOINT}/query/nonce`, {
       did: currDID,
     });
-    console.log(res.data);
 
     // FIXME: do something with this
     const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
@@ -53,22 +51,18 @@ export const ClaimView = () => {
     });
 
     if (isError(signedData!)) {
-      console.log('error signing data');
+      console.error('Error signing data');
       return;
     }
 
-    const body2 = { proof: signedData?.data };
-    console.log(body2);
-
+    const proofBody = { proof: signedData?.data };
     const issuedCredentials = await axios.post(
       `${ISSUER_ENDPOINT}/query/claim`,
-      body2
+      proofBody
     );
 
-    console.log(issuedCredentials.data);
-
     if (issuedCredentials.data.length === 0) {
-      console.log('no credentials');
+      // TODO: handle this case
       return;
     }
 
@@ -89,12 +83,10 @@ export const ClaimView = () => {
   };
 
   const claimCredential = async (credential: any, id: string) => {
-    console.log('claimCredential', credential);
-
     const result = await api?.saveCredential(credential);
 
     if (isError(result!)) {
-      console.log(result);
+      console.error(result);
       return;
     }
 
@@ -113,21 +105,18 @@ export const ClaimView = () => {
   }));
 
   const checkClaimedCredentials = async () => {
-    console.log('Checking claimed credentials');
     const walletCredentials = await api?.queryCredentials();
 
     if (isError(walletCredentials!)) {
-      console.log(walletCredentials);
+      console.error(walletCredentials);
       return;
     }
-    console.log(walletCredentials?.data);
 
     const mappedCredentials = credentials.map((obj) => {
       const found = walletCredentials?.data.find(
         (cred: any) => cred.data.proof.jwt === obj.credential.proof.jwt
       );
       if (found) {
-        console.log('Credential found');
         return { ...obj, claimed: true };
       }
       return obj;
