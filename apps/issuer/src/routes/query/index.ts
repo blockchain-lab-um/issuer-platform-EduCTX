@@ -149,14 +149,18 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         description: 'Delete a credential from the database',
       },
     },
-    async (request: FastifyRequest<{
-      Body: { id: string };
-    }>, reply) => {
+    async (
+      request: FastifyRequest<{
+        Body: { id: string };
+      }>,
+      reply
+    ) => {
       try {
         const { id } = request.body;
-        await pool.query<CredentialsTable>('DELETE FROM credentials WHERE id = $1', [
-          id,
-        ]);
+        await pool.query<CredentialsTable>(
+          'DELETE FROM credentials WHERE id = $1',
+          [id]
+        );
         return await reply.code(204).send();
       } catch (error) {
         return reply.code(500).send({ error: (error as Error).message });
@@ -167,14 +171,19 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.delete(
     '/batch',
     {
-      schema: { body: { $id: '#batchDelete', type: 'array', items: { type: 'string' } } },
+      schema: {
+        body: { $id: '#batchDelete', type: 'array', items: { type: 'string' } },
+      },
       config: {
         description: 'Delete all passed credentials from the database',
       },
     },
-    async (request: FastifyRequest<{
-      Body: [{ id: string }];
-    }>, reply) => {
+    async (
+      request: FastifyRequest<{
+        Body: [{ id: string }];
+      }>,
+      reply
+    ) => {
       try {
         const { body } = request;
         const res = await pool.query<CredentialsTable>(
