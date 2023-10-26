@@ -45,7 +45,7 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
         },
       });
 
-      await reply.code(200).send(vc);
+      return reply.code(200).send(vc);
     }
   );
 };

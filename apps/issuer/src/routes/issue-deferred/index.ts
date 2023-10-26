@@ -62,7 +62,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
         [id, vc.credentialSubject.id, vc, vc.issuanceDate]
       );
 
-      await reply.code(201).send(true);
+      return reply.code(201).send(true);
     }
   );
 
@@ -134,13 +134,12 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       if (rejectedSubjects.length) {
         if (rejectedSubjects.length === data.length) status = 400;
         else status = 207;
-        await reply.code(status).send({
+        return reply.code(status).send({
           rejectedSubjects,
         });
-        return;
       }
 
-      await reply.code(status).send(true);
+      return reply.code(status).send(true);
     }
   );
 };
