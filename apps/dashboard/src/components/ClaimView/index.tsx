@@ -38,8 +38,8 @@ export const ClaimView = () => {
       did: currDID,
     });
     console.log(res.data);
-    
-    // FIXME: do something with this 
+
+    // FIXME: do something with this
     const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
 
     const signedData = await api?.signData({
