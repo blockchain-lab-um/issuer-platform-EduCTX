@@ -142,16 +142,66 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   );
 
   fastify.delete(
+    '/',
+    {
+      schema: { body: { id: { type: 'string' } } },
+      config: {
+        description: 'Delete a credential from the database',
+      },
+    },
+    async (request: FastifyRequest<{
+      Body: { id: string };
+    }>, reply) => {
+      try {
+        const { id } = request.body;
+        await pool.query<CredentialsTable>('DELETE FROM credentials WHERE id = $1', [
+          id,
+        ]);
+        return await reply.code(204).send();
+      } catch (error) {
+        return reply.code(500).send({ error: (error as Error).message });
+      }
+    }
+  );
+
+  fastify.delete(
+    '/batch',
+    {
+      schema: { body: { $id: '#batchDelete', type: 'array', items: { type: 'string' } } },
+      config: {
+        description: 'Delete all passed credentials from the database',
+      },
+    },
+    async (request: FastifyRequest<{
+      Body: [{ id: string }];
+    }>, reply) => {
+      try {
+        const { body } = request;
+        const res = await pool.query<CredentialsTable>(
+          'DELETE FROM credentials WHERE id = ANY($1)',
+          [body]
+        );
+        if (!res) {
+          return await reply.code(404).send();
+        }
+        return await reply.code(204).send({ deleted: res.rowCount });
+      } catch (error) {
+        return reply.code(500).send({ error: (error as Error).message });
+      }
+    }
+  );
+
+  fastify.delete(
     '/test',
     {
       config: {
-        description: 'Delete all credentials from the database',
+        description: 'Delete all credentials and nonces from the database',
       },
     },
     async (request, reply) => {
       await pool.query<CredentialsTable>('TRUNCATE credentials');
       await pool.query<NoncesTable>('TRUNCATE nonces');
-      await reply.code(204).send();
+      return reply.code(204).send();
     }
   );
 };
