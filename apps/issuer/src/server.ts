@@ -1,10 +1,8 @@
-import * as dotenv from "dotenv";
-
-// Require the framework
-import Fastify from "fastify";
-
 // Require library to exit fastify process, gracefully (if possible)
-import closeWithGrace from "close-with-grace";
+import closeWithGrace from 'close-with-grace';
+import * as dotenv from 'dotenv';
+// Require the framework
+import Fastify from 'fastify';
 
 // Read the .env file.
 dotenv.config();
@@ -15,25 +13,31 @@ const app = Fastify({
 });
 
 // Register your application as a normal plugin.
-await app.register(import("./app.js"));
+await app.register(import('./app.js'));
 
 // delay is the number of milliseconds for the graceful close to finish
-const closeListeners = closeWithGrace({ delay: 500 }, (async ({ err })  => {
+const closeListeners = closeWithGrace({ delay: 500 }, (async ({ err }) => {
   if (err) {
-    app.log.error(err)
+    app.log.error(err);
   }
-  await app.close()
+  await app.close();
 }) as closeWithGrace.CloseWithGraceAsyncCallback);
 
 app.addHook('onClose', (_, done) => {
   closeListeners.uninstall();
   done();
-})
+});
 
 // Start listening.
-app.listen({ port: parseInt(process.env.PORT ?? "3001", 10) }, (err: any) => {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
+app.listen(
+  {
+    port: parseInt(process.env.PORT ?? '3001', 10),
+    host: process.env.HOST ?? 'localhost',
+  },
+  (err: any) => {
+    if (err) {
+      app.log.error(err);
+      process.exit(1);
+    }
   }
-});
+);

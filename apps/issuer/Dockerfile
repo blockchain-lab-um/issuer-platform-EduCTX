@@ -24,8 +24,7 @@ RUN pnpm i --frozen-lockfile --prod && pnpm store prune
 
 USER fastify
 
-ENV HOSTNAME "0.0.0.0"
-
-RUN ls -l apps/issuer/dist
+ENV HOST 0.0.0.0
+ENV PORT 3001
 
 CMD ["node", "apps/issuer/dist/server.js"]
