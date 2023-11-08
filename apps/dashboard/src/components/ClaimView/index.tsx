@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ISSUER_ENDPOINT } from '@/config/api';
 import { isError } from '@blockchain-lab-um/masca-connector';
 import { CheckIcon } from '@heroicons/react/24/solid';
 import {
@@ -14,6 +13,7 @@ import {
 } from '@nextui-org/react';
 import axios from 'axios';
 
+import { ISSUER_ENDPOINT } from '@/config/api';
 import { useGeneralStore, useMascaStore } from '@/stores';
 
 interface MappedCredentials {
