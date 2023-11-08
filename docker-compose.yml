@@ -22,7 +22,7 @@ services:
       - '127.0.0.1:5432:5432'
     restart: unless-stopped
   issuer:
-    build: ./apps/issuer
+    image: blockchain-lab-um/eductx-platform-issuer:latest
     container_name: eductx-issuer
     depends_on:
       - db
@@ -36,7 +36,7 @@ services:
       EBSI_ID: ${EBSI_ID}
     restart: unless-stopped
   dashboard:
-    build: ./apps/dashboard
+    image: blockchain-lab-um/eductx-platform-dashboard:latest
     container_name: eductx-dashboard
     ports:
       - '3000:3000'
