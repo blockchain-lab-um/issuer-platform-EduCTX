@@ -9,6 +9,14 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'unused-imports'],
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: [
+      './tsconfig.eslint.json',
+      './apps/dashboard/tsconfig.eslint.json',
+      './apps/issuer/tsconfig.eslint.json',
+    ],
+    tsconfigRootDir: __dirname,
+  },
   overrides: [
     {
       files: ['**/*.spec.ts', '**/test/**', '**/tests/**', '**/build.js'],
@@ -52,7 +60,6 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/require-await': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     'unused-imports/no-unused-imports': 'error',
@@ -60,6 +67,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'import/extensions': 'off',
     'no-void': 'off',
+    'import/order': 'off',
     // Test files only
     'import/no-extraneous-dependencies': [
       'error',

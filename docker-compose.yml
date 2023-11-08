@@ -1,0 +1,48 @@
+version: '3.6'
+
+volumes:
+  eductx-issuer-db:
+
+networks:
+  default:
+    name: eductx-network
+
+services:
+  db:
+    image: postgres:15.4-alpine3.18
+    container_name: eductx-issuer-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-credentials}
+      PGDATA: /data/postgres
+    volumes:
+      - eductx-issuer-db:/data/postgres
+    ports:
+      - '127.0.0.1:5432:5432'
+    restart: unless-stopped
+  issuer:
+    image: blockchain-lab-um/eductx-platform-issuer:latest
+    container_name: eductx-issuer
+    depends_on:
+      - db
+    ports:
+      - '3001:3001'
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-credentials}
+      PROOF_AUDIENCE: ${PROOF_AUDIENCE}
+      EBSI_BEARER_TOKEN: ${EBSI_BEARER_TOKEN}
+      EBSI_PRIVATE_KEY: ${EBSI_PRIVATE_KEY}
+      EBSI_ID: ${EBSI_ID}
+    restart: unless-stopped
+  dashboard:
+    image: blockchain-lab-um/eductx-platform-dashboard:latest
+    container_name: eductx-dashboard
+    ports:
+      - '3000:3000'
+    environment:
+      AZURE_AD_CLIENT_ID: ${AZURE_AD_CLIENT_ID}
+      AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      ISSUER_ENDPOINT: http://issuer:3001
+    restart: unless-stopped

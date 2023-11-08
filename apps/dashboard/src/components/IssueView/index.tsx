@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ISSUER_ENDPOINT } from '@/config/api';
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import axios from 'axios';
 import { signOut } from 'next-auth/react';
+
+import { ISSUER_ENDPOINT } from '@/config/api';
 
 interface Schema {
   type?: string;
@@ -69,7 +70,7 @@ export const IssueView = () => {
 
     try {
       const response = await axios.post(
-        `${ISSUER_ENDPOINT}}/issue-deferred`,
+        `${ISSUER_ENDPOINT}/issue-deferred`,
         JSON.stringify(body),
         {
           headers: {

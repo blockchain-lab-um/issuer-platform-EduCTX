@@ -1,1 +1,2 @@
-export const ISSUER_ENDPOINT = 'http://localhost:3001';
+export const ISSUER_ENDPOINT =
+  process.env.ISSUER_ENDPOINT || 'http://localhost:3001';

@@ -7,8 +7,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy root package.json + pnpm-lock.yaml + pnpm-workspace.yaml
-COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
+# Copy root package.json + pnpm-lock.yaml + pnpm-workspace.yaml + .npmrc
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml .npmrc ./
 
 ##########
 #  APPS  #
@@ -19,7 +19,7 @@ COPY ./apps/issuer/package.json ./apps/issuer/
 # Remove prepare script
 RUN npm pkg delete scripts.prepare
 
-RUN npm i -g pnpm@8.7.6 && pnpm i --frozen-lockfile;
+RUN npm i -g pnpm@8.7.6 && pnpm i --frozen-lockfile
 
 COPY . .
 
