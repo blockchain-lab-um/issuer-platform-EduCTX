@@ -70,7 +70,7 @@ export const IssueView = () => {
 
     try {
       const response = await axios.post(
-        `${ISSUER_ENDPOINT}}/issue-deferred`,
+        `${ISSUER_ENDPOINT}/issue-deferred`,
         JSON.stringify(body),
         {
           headers: {
