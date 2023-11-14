@@ -226,6 +226,7 @@ export const ClaimView = () => {
                     <TableColumn>TITLE</TableColumn>
                     <TableColumn>ROLE</TableColumn>
                     <TableColumn>STATUS</TableColumn>
+                    <TableColumn>REJECT</TableColumn>
                   </TableHeader>
                   <TableBody>
                     {credentials.map((obj) => (
@@ -257,6 +258,26 @@ export const ClaimView = () => {
                               }}
                             >
                               Claim
+                            </Button>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {!obj.claimed && (
+                            <Button
+                              color="danger"
+                              onClick={() => {
+                                requestDeletion(obj.id)
+                                  .then(() => {
+                                    const updatedCredentials =
+                                      credentials.filter(
+                                        (obj2) => obj2.id !== obj.id
+                                      );
+                                    setCredentials(updatedCredentials);
+                                  })
+                                  .catch(() => {});
+                              }}
+                            >
+                              Delete
                             </Button>
                           )}
                         </TableCell>
