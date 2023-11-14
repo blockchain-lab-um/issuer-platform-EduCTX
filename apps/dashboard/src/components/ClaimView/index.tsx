@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/react';
-import axios from 'axios';
 
 import { ISSUER_ENDPOINT } from '@/config/api';
 import { useGeneralStore, useMascaStore } from '@/stores';
@@ -31,11 +30,21 @@ export const ClaimView = () => {
     currDID: state.currDID,
     api: state.mascaApi,
   }));
+  const [noCredentials, setNoCredentials] = useState(false);
 
   const checkForCredentials = async () => {
-    const res = await axios.post(`${ISSUER_ENDPOINT}/query/nonce`, {
-      did: currDID,
+    setNoCredentials(false);
+
+    const url = `${ISSUER_ENDPOINT}/query/nonce`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ did: currDID }),
     });
+
+    const data = await res.json();
 
     // FIXME: do something with this
     const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
@@ -46,7 +55,7 @@ export const ClaimView = () => {
         header: {
           typ: 'JWT',
         },
-        payload: res.data,
+        payload: data,
       },
     });
 
@@ -55,31 +64,59 @@ export const ClaimView = () => {
       return;
     }
 
-    const proofBody = { proof: signedData?.data };
-    const issuedCredentials = await axios.post(
-      `${ISSUER_ENDPOINT}/query/claim`,
-      proofBody
-    );
+    const claimUrl = `${ISSUER_ENDPOINT}/query/claim`;
 
-    if (issuedCredentials.data.length === 0) {
-      // TODO: handle this case
+    const proofBody = { proof: signedData?.data };
+
+    const issuedCredentials = await fetch(claimUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(proofBody),
+    });
+
+    const credData = await issuedCredentials.json();
+
+    if (credData.length === 0) {
+      setNoCredentials(true);
       return;
     }
 
-    const mappedCredentials: MappedCredentials[] = issuedCredentials.data.map(
-      (obj: any) => {
-        const parsedCredential = JSON.parse(obj.credential);
-        return {
-          credential: parsedCredential,
-          claimed: false,
-          date: obj.created_at,
-          id: obj.id,
-        };
-      }
-    );
+    const mappedCredentials: MappedCredentials[] = credData.map((obj: any) => {
+      const parsedCredential = JSON.parse(obj.credential);
+      return {
+        credential: parsedCredential,
+        claimed: false,
+        date: obj.created_at,
+        id: obj.id,
+      };
+    });
 
     setCredentials(mappedCredentials);
     setIsSelected(false);
+  };
+
+  const requestDeletion = async (id: string) => {
+    console.log('Deleting...');
+    const url = `${ISSUER_ENDPOINT}/query`;
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        console.log('Deletion failed');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   };
 
   const claimCredential = async (credential: any, id: string) => {
@@ -87,6 +124,18 @@ export const ClaimView = () => {
 
     if (isError(result!)) {
       console.error(result);
+      if (result.error === 'Error: User rejected save credential request.') {
+        console.log('User rejected save credential request.');
+        requestDeletion(id)
+          .then(() => {
+            const updatedCredentials = credentials.filter(
+              (obj) => obj.id !== id
+            );
+            setCredentials(updatedCredentials);
+          })
+          .catch(() => {});
+        return;
+      }
       return;
     }
 
@@ -98,32 +147,15 @@ export const ClaimView = () => {
     });
 
     setCredentials(updatedCredentials);
+
+    requestDeletion(id)
+      .then(() => {})
+      .catch(() => {});
   };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
     changeIsConnected: state.changeIsConnected,
   }));
-
-  const checkClaimedCredentials = async () => {
-    const walletCredentials = await api?.queryCredentials();
-
-    if (isError(walletCredentials!)) {
-      console.error(walletCredentials);
-      return;
-    }
-
-    const mappedCredentials = credentials.map((obj) => {
-      const found = walletCredentials?.data.find(
-        (cred: any) => cred.data.proof.jwt === obj.credential.proof.jwt
-      );
-      if (found) {
-        return { ...obj, claimed: true };
-      }
-      return obj;
-    });
-
-    setCredentials(mappedCredentials);
-  };
 
   return (
     <div
@@ -149,35 +181,30 @@ export const ClaimView = () => {
         </div>
         <div className="flex w-full items-center justify-center  py-16">
           {isSelected && (
-            <Button
-              size="lg"
-              color="primary"
-              onClick={() => {
-                checkForCredentials()
-                  .then(() => {})
-                  .catch(() => {});
-              }}
-              className="font-medium"
-            >
-              Check for New Credentials
-            </Button>
+            <div className="flex flex-col items-center">
+              <Button
+                size="lg"
+                color="primary"
+                onClick={() => {
+                  checkForCredentials()
+                    .then(() => {})
+                    .catch(() => {});
+                }}
+                className="font-medium"
+              >
+                Check for New Credentials
+              </Button>
+              {noCredentials && (
+                <label className="mt-4 text-red-500">
+                  No Credentials found...
+                </label>
+              )}
+            </div>
           )}
           {!isSelected && (
             <div className="w-full">
               <div>
                 <div className="flex justify-between">
-                  <Button
-                    variant="bordered"
-                    size="sm"
-                    color="primary"
-                    onClick={() => {
-                      checkClaimedCredentials()
-                        .then(() => {})
-                        .catch(() => {});
-                    }}
-                  >
-                    Mark claimed credentials
-                  </Button>
                   <Button
                     variant="bordered"
                     size="sm"

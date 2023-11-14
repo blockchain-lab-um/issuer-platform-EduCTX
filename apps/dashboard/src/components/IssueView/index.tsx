@@ -169,6 +169,7 @@ export const IssueView = () => {
                   variant="bordered"
                   size="sm"
                   onClick={() => {
+                    setCredentialIssued(false);
                     setNext(false);
                   }}
                 >
