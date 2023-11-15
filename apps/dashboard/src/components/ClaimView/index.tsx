@@ -119,6 +119,15 @@ export const ClaimView = () => {
     }
   };
 
+  const deleteCredential = async (id: string) => {
+    requestDeletion(id)
+      .then(() => {
+        const updatedCredentials = credentials.filter((obj2) => obj2.id !== id);
+        setCredentials(updatedCredentials);
+      })
+      .catch(() => {});
+  };
+
   const claimCredential = async (credential: any, id: string) => {
     const result = await api?.saveCredential(credential);
 
@@ -126,14 +135,7 @@ export const ClaimView = () => {
       console.error(result);
       if (result.error === 'Error: User rejected save credential request.') {
         console.log('User rejected save credential request.');
-        requestDeletion(id)
-          .then(() => {
-            const updatedCredentials = credentials.filter(
-              (obj) => obj.id !== id
-            );
-            setCredentials(updatedCredentials);
-          })
-          .catch(() => {});
+        deleteCredential(id).catch(() => {});
         return;
       }
       return;
@@ -154,15 +156,6 @@ export const ClaimView = () => {
   const { changeIsConnected } = useGeneralStore((state) => ({
     changeIsConnected: state.changeIsConnected,
   }));
-
-  const deleteCredential = async (id: string) => {
-    requestDeletion(id)
-      .then(() => {
-        const updatedCredentials = credentials.filter((obj2) => obj2.id !== id);
-        setCredentials(updatedCredentials);
-      })
-      .catch(() => {});
-  };
 
   return (
     <div
