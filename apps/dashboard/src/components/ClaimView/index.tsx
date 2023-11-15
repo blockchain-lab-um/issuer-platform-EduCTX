@@ -148,14 +148,21 @@ export const ClaimView = () => {
 
     setCredentials(updatedCredentials);
 
-    requestDeletion(id)
-      .then(() => {})
-      .catch(() => {});
+    requestDeletion(id).catch(() => {});
   };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
     changeIsConnected: state.changeIsConnected,
   }));
+
+  const deleteCredential = async (id: string) => {
+    requestDeletion(id)
+      .then(() => {
+        const updatedCredentials = credentials.filter((obj2) => obj2.id !== id);
+        setCredentials(updatedCredentials);
+      })
+      .catch(() => {});
+  };
 
   return (
     <div
@@ -266,15 +273,7 @@ export const ClaimView = () => {
                             <Button
                               color="danger"
                               onClick={() => {
-                                requestDeletion(obj.id)
-                                  .then(() => {
-                                    const updatedCredentials =
-                                      credentials.filter(
-                                        (obj2) => obj2.id !== obj.id
-                                      );
-                                    setCredentials(updatedCredentials);
-                                  })
-                                  .catch(() => {});
+                                deleteCredential(obj.id).catch(() => {});
                               }}
                             >
                               Delete
