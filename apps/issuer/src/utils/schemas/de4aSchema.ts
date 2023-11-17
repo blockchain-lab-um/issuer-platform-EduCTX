@@ -46,11 +46,7 @@ export const de4aSchema = {
                 },
               },
               required: [
-                'id',
                 'title',
-                'volumeOfLearning',
-                'iSCEDFCode',
-                'eCTSCreditPoints',
               ],
             },
             wasAwardedBy: {
@@ -62,6 +58,9 @@ export const de4aSchema = {
                 awardingBody: {
                   type: 'string',
                 },
+                awardingBodyDescription: {
+                  type: 'string',
+                },
                 awardingDate: {
                   type: 'string',
                 },
@@ -70,10 +69,8 @@ export const de4aSchema = {
                 },
               },
               required: [
-                'id',
                 'awardingBody',
-                'awardingDate',
-                'awardingLocation',
+                'awardingBodyDescription',
               ],
             },
             wasDerivedFrom: {
@@ -92,27 +89,23 @@ export const de4aSchema = {
                   type: 'string',
                 },
               },
-              required: ['id', 'title', 'grade', 'issuedDate'],
+              required: ['title', 'grade'],
             },
             associatedLearningOpportunity: {
               type: 'string',
             },
           },
           required: [
-            'id',
             'title',
             'specifiedBy',
             'wasAwardedBy',
             'wasDerivedFrom',
-            'associatedLearningOpportunity',
           ],
         },
       },
       required: [
         'currentFamilyName',
         'currentGivenName',
-        'dateOfBirth',
-        'personIdentifier',
         'achieved',
       ],
     },
