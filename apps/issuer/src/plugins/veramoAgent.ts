@@ -42,12 +42,19 @@ import fp from 'fastify-plugin';
 
 export type Agent = TAgent<
   IDIDManager &
-    IKeyManager &
-    IDataStore &
-    IResolver &
-    ICredentialIssuer &
-    ICredentialVerifier
+  IKeyManager &
+  IDataStore &
+  IResolver &
+  ICredentialIssuer &
+  ICredentialVerifier
 >;
+
+declare module 'fastify' {
+  export interface FastifyInstance {
+    veramoAgent: Agent;
+    issuerIdentifier: IIdentifier;
+  }
+}
 
 async function createVeramoAgent() {
   const didProviders: Record<string, AbstractIdentifierProvider> = {};
@@ -60,11 +67,11 @@ async function createVeramoAgent() {
 
   return createAgent<
     IDIDManager &
-      IKeyManager &
-      IDataStore &
-      IResolver &
-      ICredentialIssuer &
-      ICredentialVerifier
+    IKeyManager &
+    IDataStore &
+    IResolver &
+    ICredentialIssuer &
+    ICredentialVerifier
   >({
     plugins: [
       new CredentialPlugin(),
@@ -136,13 +143,6 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
 
   if (!identifier) throw new Error('Cannot generate valid identifier');
 
-  fastify.decorate('veramoAgent', () => agent);
-  fastify.decorate('issuerIdentifier', () => identifier);
+  fastify.decorate('veramoAgent', agent);
+  fastify.decorate('issuerIdentifier', identifier);
 });
-
-declare module 'fastify' {
-  export interface FastifyInstance {
-    veramoAgent(): Agent;
-    issuerIdentifier(): IIdentifier;
-  }
-}

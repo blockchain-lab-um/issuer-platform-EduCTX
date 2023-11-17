@@ -1,8 +1,14 @@
 import envSchema, { JSONSchemaType } from 'env-schema';
 import fp from 'fastify-plugin';
 
-interface Env {
+export interface Env {
   DATABASE_URL: string;
+}
+
+declare module 'fastify' {
+  export interface FastifyInstance {
+    config: Env;
+  }
 }
 
 /**
@@ -28,9 +34,3 @@ export default fp(async (fastify, _) => {
 
   fastify.decorate('config', config);
 });
-
-declare module 'fastify' {
-  interface FastifyInstance {
-    config: Env;
-  }
-}
