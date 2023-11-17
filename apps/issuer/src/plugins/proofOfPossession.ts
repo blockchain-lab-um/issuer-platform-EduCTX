@@ -1,3 +1,4 @@
+import { FastifyInstance, FastifyReply, FastifyRequest, HookHandlerDoneFunction } from 'fastify';
 import { JsonWebKey } from 'node:crypto';
 import {
   _ExtendedVerificationMethod,
@@ -11,11 +12,12 @@ import type { Pool } from 'pg';
 
 import { NoncesTable } from '../db/types/index.js';
 import { Agent } from '../plugins/veramoAgent.js';
-import { ProofOfPossesionArgs } from '../types/index.js';
+import { JWTProof, ProofOfPossesionArgs } from '../types/index.js';
+import fp from 'fastify-plugin';
 
 const { ec: EC } = elliptic;
 
-export async function verifyProofOfPossession(
+async function verifyProofOfPossession(
   args: ProofOfPossesionArgs,
   pool: Pool,
   agent: Agent
@@ -52,8 +54,7 @@ export async function verifyProofOfPossession(
 
   if (protectedHeader.typ !== 'JWT') {
     throw new Error(
-      `invalid_request: Invalid JWT typ. Expected "JWT" but got "${
-        protectedHeader.typ ?? 'undefined'
+      `invalid_request: Invalid JWT typ. Expected "JWT" but got "${protectedHeader.typ ?? 'undefined'
       }".`
     );
   }
@@ -71,8 +72,7 @@ export async function verifyProofOfPossession(
     const resolvedDid = await agent.resolveDid({ didUrl: did });
     if (resolvedDid.didResolutionMetadata.error || !resolvedDid.didDocument) {
       throw new Error(
-        `invalid_request: Error resolving did. Reason: ${
-          resolvedDid.didResolutionMetadata.error ?? 'Unknown error'
+        `invalid_request: Error resolving did. Reason: ${resolvedDid.didResolutionMetadata.error ?? 'Unknown error'
         }.`
       );
     }
@@ -175,4 +175,36 @@ export async function verifyProofOfPossession(
   }
 
   return did;
+}
+
+export default fp(async (fastify: FastifyInstance, _) => {
+  // eslint-disable-next-line consistent-return, func-names
+  fastify.decorate('verifyProof', () => async function (request: FastifyRequest, reply: FastifyReply) {
+    const proof = request.headers['x-pop'];
+    if (!proof)
+      return reply.code(400).send({
+        error: 'invalid_or_missing_proof: Proof is required.',
+      });
+    if (typeof proof !== 'string')
+      return reply.code(400).send({
+        error: 'invalid_or_missing_proof: Proof must be a string.',
+      });
+    const proofArgs = {
+      proof: {
+        jwt: proof,
+      } as JWTProof,
+    };
+    const did = await verifyProofOfPossession(proofArgs, fastify.pg.pool, fastify.veramoAgent)
+    request.did = did;
+  });
+});
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    verifyProof: () => (request: FastifyRequest, reply: FastifyReply, done: HookHandlerDoneFunction) => void;
+  }
+
+  interface FastifyRequest {
+    did: string;
+  }
 }

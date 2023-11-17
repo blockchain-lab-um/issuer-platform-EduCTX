@@ -8,6 +8,7 @@ import { Schemas } from './utils/schemas/index.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+const ignored = ['proofOfPossession'];
 
 export type AppOptions = {
   // Place your custom options for app below here.
@@ -33,6 +34,9 @@ const app: FastifyPluginAsync<AppOptions> = async (
     dir: path.join(dirname, 'plugins'),
     options: opts,
     forceESM: true,
+    ignoreFilter(file) {
+      return ignored.some((i) => file.includes(i));
+    },
   });
 
   // This loads all plugins defined in routes
