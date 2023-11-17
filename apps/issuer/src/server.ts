@@ -19,10 +19,10 @@ const envToLogger = {
   },
   production: true,
   test: false,
-}
+};
 
-type logEnv = keyof typeof envToLogger;
-const env = (process.env.NODE_ENV ?? 'development') as logEnv;
+type LogEnv = keyof typeof envToLogger;
+const env = (process.env.NODE_ENV ?? 'development') as LogEnv;
 
 // Instantiate Fastify with some config
 const app = Fastify({

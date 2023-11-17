@@ -2,16 +2,16 @@
 
 ### Environment
 
-* Node.js v18.17.1
-* pnpm 8.7.6
+- Node.js v18.17.1
+- pnpm 8.7.6
 
 ### Docker
 
 We are using 3 images:
 
-* Base image for building everything in the monorepo: `blockchain-lab-um/eductx-platform-base`
-* Dashboard image: `blockchain-lab-um/eductx-platform-dashboard`
-* Issuer image: `blockchain-lab-um/eductx-platform-issuer`
+- Base image for building everything in the monorepo: `blockchain-lab-um/eductx-platform-base`
+- Dashboard image: `blockchain-lab-um/eductx-platform-dashboard`
+- Issuer image: `blockchain-lab-um/eductx-platform-issuer`
 
 > ⚠️ We urge you to set `POSTGRES_USER` and `POSTGRES_PASSWORD` .
 

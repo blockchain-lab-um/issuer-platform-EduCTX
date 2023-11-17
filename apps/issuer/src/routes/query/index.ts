@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
+import { FastifyReply } from 'fastify/types/reply.js';
 
 import { CredentialsTable, NoncesTable } from '../../db/types/index.js';
-import { FastifyReply } from 'fastify/types/reply.js';
 import verifyProofPlugin from '../../plugins/proofOfPossession.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
@@ -54,10 +54,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
           'Send a proof of possession to the issuer and get all credentials for the DID',
       },
     },
-    async (
-      request: FastifyRequest,
-      reply: FastifyReply
-    ) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       const { did } = request;
 
       const didRows = await pool.query<CredentialsTable>(
@@ -78,12 +75,11 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         description: 'Delete a credential from the database',
       },
     },
-    async (
-      request: FastifyRequest,
-      reply: FastifyReply
-    ) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const { id } = (request.params as FastifyRequest<{ Params: { id: string } }>);
+        const { id } = request.params as FastifyRequest<{
+          Params: { id: string };
+        }>;
         await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = $1',
           [id]
@@ -106,14 +102,11 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         description: 'Delete all passed credentials from the database',
       },
     },
-    async (
-      request: FastifyRequest,
-      reply: FastifyReply
-    ) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const { body } = (request as FastifyRequest<{
+        const { body } = request as FastifyRequest<{
           Body: string[];
-        }>);
+        }>;
         const res = await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = ANY($1)',
           [body]

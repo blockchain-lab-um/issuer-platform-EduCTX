@@ -45,9 +45,7 @@ export const de4aSchema = {
                   type: 'number',
                 },
               },
-              required: [
-                'title',
-              ],
+              required: ['title'],
             },
             wasAwardedBy: {
               type: 'object',
@@ -68,10 +66,7 @@ export const de4aSchema = {
                   type: 'string',
                 },
               },
-              required: [
-                'awardingBody',
-                'awardingBodyDescription',
-              ],
+              required: ['awardingBody', 'awardingBodyDescription'],
             },
             wasDerivedFrom: {
               type: 'object',
@@ -95,19 +90,10 @@ export const de4aSchema = {
               type: 'string',
             },
           },
-          required: [
-            'title',
-            'specifiedBy',
-            'wasAwardedBy',
-            'wasDerivedFrom',
-          ],
+          required: ['title', 'specifiedBy', 'wasAwardedBy', 'wasDerivedFrom'],
         },
       },
-      required: [
-        'currentFamilyName',
-        'currentGivenName',
-        'achieved',
-      ],
+      required: ['currentFamilyName', 'currentGivenName', 'achieved'],
     },
   },
   required: ['credentialSubject'],

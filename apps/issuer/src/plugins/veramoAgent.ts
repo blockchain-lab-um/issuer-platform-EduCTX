@@ -42,11 +42,11 @@ import fp from 'fastify-plugin';
 
 export type Agent = TAgent<
   IDIDManager &
-  IKeyManager &
-  IDataStore &
-  IResolver &
-  ICredentialIssuer &
-  ICredentialVerifier
+    IKeyManager &
+    IDataStore &
+    IResolver &
+    ICredentialIssuer &
+    ICredentialVerifier
 >;
 
 declare module 'fastify' {
@@ -67,11 +67,11 @@ async function createVeramoAgent() {
 
   return createAgent<
     IDIDManager &
-    IKeyManager &
-    IDataStore &
-    IResolver &
-    ICredentialIssuer &
-    ICredentialVerifier
+      IKeyManager &
+      IDataStore &
+      IResolver &
+      ICredentialIssuer &
+      ICredentialVerifier
   >({
     plugins: [
       new CredentialPlugin(),
@@ -118,6 +118,7 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
       },
     });
 
+    // eslint-disable-next-line no-console
     console.log(`Your issuer EBSI did is: ${identifier.did}`);
   } else {
     await agent.didManagerImport({
