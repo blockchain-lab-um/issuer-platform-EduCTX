@@ -30,12 +30,12 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
     },
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
-      const agent = fastify.veramoAgent();
+      const agent = fastify.veramoAgent;
 
       const vc = await agent.createVerifiableCredential({
         proofFormat: 'jwt',
         credential: {
-          issuer: fastify.issuerIdentifier().did,
+          issuer: fastify.issuerIdentifier.did,
           type: ['VerifiableCredential', 'EducationCredential'],
           '@context': [
             'https://www.w3.org/2018/credentials/v1',
