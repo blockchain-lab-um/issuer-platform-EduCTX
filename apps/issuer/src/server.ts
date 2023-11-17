@@ -7,9 +7,27 @@ import Fastify from 'fastify';
 // Read the .env file.
 dotenv.config();
 
+const envToLogger = {
+  development: {
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        translateTime: 'HH:MM:ss Z',
+        ignore: 'pid,hostname',
+      },
+    },
+  },
+  production: true,
+  test: false,
+}
+
+type logEnv = keyof typeof envToLogger;
+const env = (process.env.NODE_ENV ?? 'development') as logEnv;
+
 // Instantiate Fastify with some config
 const app = Fastify({
-  logger: true,
+  logger: envToLogger[env],
+  maxParamLength: 300,
 });
 
 // Register your application as a normal plugin.
