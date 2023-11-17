@@ -145,13 +145,24 @@ const ConnectButton = () => {
 
   return (
     <div className="w-full text-center">
-      <Button
-        color="primary"
-        onClick={() => enableMascaHandler()}
-        isLoading={isConnecting}
-      >
-        Connect MetaMask
-      </Button>
+      {hasMM && (
+        <Button
+          color="primary"
+          onClick={() => enableMascaHandler()}
+          isLoading={isConnecting}
+        >
+          Connect MetaMask
+        </Button>
+      )}
+      {!hasMM && (
+        <a
+          className="text-pink-500 underline"
+          href="https://metamask.io/download/"
+          target="_blank"
+        >
+          Install MetaMask to continue!
+        </a>
+      )}
     </div>
   );
 };
