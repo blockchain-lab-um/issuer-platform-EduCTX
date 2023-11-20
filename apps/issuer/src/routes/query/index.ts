@@ -39,15 +39,6 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.get(
     '/claim',
     {
-      /* schema: {
-        body: {
-          type: 'object',
-          properties: {
-            proof: { type: 'string' },
-          },
-          required: ['proof'],
-        },
-      }, */
       preHandler: [fastify.verifyProof()],
       config: {
         description:
@@ -61,6 +52,11 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         'SELECT * FROM credentials WHERE did = $1',
         [did]
       );
+
+      didRows.rows.forEach((row) => {
+        // json parse the credential
+        row.credential = JSON.parse(row.credential);
+      });
 
       return reply.send(didRows.rows);
     }

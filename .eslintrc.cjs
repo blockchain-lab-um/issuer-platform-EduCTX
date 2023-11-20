@@ -68,6 +68,7 @@ module.exports = {
     'import/extensions': 'off',
     'no-void': 'off',
     'import/order': 'off',
+    'consistent-return': 'off',
     // Test files only
     'import/no-extraneous-dependencies': [
       'error',

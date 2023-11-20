@@ -185,11 +185,10 @@ async function verifyProofOfPossession(
 }
 
 export default fp(async (fastify: FastifyInstance, _) => {
-  // eslint-disable-next-line consistent-return, func-names
   fastify.decorate(
     'verifyProof',
     () =>
-      async function (request: FastifyRequest, reply: FastifyReply) {
+      async function proofHeader(request: FastifyRequest, reply: FastifyReply) {
         const proof = request.headers['x-pop'];
         if (!proof)
           return reply.code(400).send({

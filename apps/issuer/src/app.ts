@@ -8,6 +8,7 @@ import { Schemas } from './utils/schemas/index.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+// Add plugins not to be registered globally.
 const ignored = ['proofOfPossession'];
 
 export type AppOptions = {
