@@ -1,5 +1,5 @@
-export const de4aSchema = {
-  $id: '#de4aSchema',
+export const educationCredential = {
+  $id: '#educationCredential',
   type: 'object',
   properties: {
     credentialSubject: {
@@ -99,8 +99,8 @@ export const de4aSchema = {
   required: ['credentialSubject'],
 };
 
-export const de4aSchemaBatch = {
-  $id: '#de4aSchemaBatch',
+export const educationCredentialBatch = {
+  $id: '#educationCredentialBatch',
   type: 'array',
-  items: { $ref: '#de4aSchema' },
+  items: { $ref: '#educationCredential' },
 };
