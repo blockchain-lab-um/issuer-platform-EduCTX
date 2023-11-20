@@ -51,14 +51,26 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
           credentialSubject: data.credentialSubject,
         },
       };
-      const vc = await agent.createVerifiableCredential(
-        credentialArgs as ICreateVerifiableCredentialArgs
-      );
+
+      let vc;
+      try {
+        vc = await agent.createVerifiableCredential(
+          credentialArgs as ICreateVerifiableCredentialArgs
+        );
+        if (!vc) {
+          throw new Error('Could not create Verifiable Credential');
+        }
+      } catch (error) {
+        await reply.code(400).send({
+          error: (error as Error).message,
+        });
+        return;
+      }
 
       const { pool } = fastify.pg;
       const id = randomUUID();
       await pool.query<CredentialsTable>(
-        'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
         [id, vc.credentialSubject.id, vc, vc.issuanceDate]
       );
 
