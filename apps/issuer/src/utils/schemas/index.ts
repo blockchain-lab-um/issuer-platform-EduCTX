@@ -1,7 +1,7 @@
 import { DidSchema, DidSchemaBatch } from './didSchema.js';
 import {
-  educationCredential,
-  educationCredentialBatch,
+  EducationCredential,
+  EducationCredentialBatch,
 } from './educationCredential.js';
 import { ProgramSchema } from './programSchema.js';
 
@@ -10,8 +10,8 @@ export const routeSchemas = {
     DidSchema,
     DidSchemaBatch,
     ProgramSchema,
-    educationCredential,
-    educationCredentialBatch,
+    EducationCredential,
+    EducationCredentialBatch,
     // {$id: '#testSchema', type: 'object', properties: {test: {type: 'string'}}},
   ],
 };
@@ -20,8 +20,8 @@ export const Schemas = [
   DidSchema,
   DidSchemaBatch,
   ProgramSchema,
-  educationCredential,
-  educationCredentialBatch,
+  EducationCredential,
+  EducationCredentialBatch,
 ];
 
 export function getSchemaIds(schemas: typeof routeSchemas) {

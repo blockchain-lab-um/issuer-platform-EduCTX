@@ -33,14 +33,8 @@ export const ClaimView = () => {
   const [noCredentials, setNoCredentials] = useState(false);
 
   async function getProof(): Promise<string | undefined> {
-    const url = `${ISSUER_ENDPOINT}/query/nonce`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ did: currDID }),
-    });
+    const url = `${ISSUER_ENDPOINT}/query/nonce/${currDID}`;
+    const res = await fetch(url);
 
     const data = await res.json();
 

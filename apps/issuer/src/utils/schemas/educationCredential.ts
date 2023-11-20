@@ -1,4 +1,4 @@
-export const educationCredential = {
+export const EducationCredential = {
   $id: '#educationCredential',
   type: 'object',
   properties: {
@@ -102,7 +102,7 @@ export const educationCredential = {
   required: ['credentialSubject'],
 };
 
-export const educationCredentialBatch = {
+export const EducationCredentialBatch = {
   $id: '#educationCredentialBatch',
   type: 'array',
   items: { $ref: '#educationCredential' },
