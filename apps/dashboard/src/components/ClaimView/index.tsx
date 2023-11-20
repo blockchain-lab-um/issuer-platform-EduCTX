@@ -32,6 +32,9 @@ export const ClaimView = () => {
   }));
   const [noCredentials, setNoCredentials] = useState(false);
 
+  async function getProof(): Promise<string | undefined> {
+    const url = `${ISSUER_ENDPOINT}/query/nonce/${currDID}`;
+    const res = await fetch(url);
   const checkForCredentials = async () => {
     setNoCredentials(false);
 
@@ -64,16 +67,31 @@ export const ClaimView = () => {
       return;
     }
 
+    const proof = signedData?.data;
+    if (!proof) {
+      console.error('No proof');
+      return;
+    }
+
+    return proof;
+  }
+
+  const checkForCredentials = async () => {
+    setNoCredentials(false);
+
     const claimUrl = `${ISSUER_ENDPOINT}/query/claim`;
 
-    const proofBody = { proof: signedData?.data };
+    const proof = await getProof();
+    if (!proof) {
+      console.error('No proof');
+      return;
+    }
 
     const issuedCredentials = await fetch(claimUrl, {
-      method: 'POST',
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'x-pop': proof,
       },
-      body: JSON.stringify(proofBody),
     });
 
     const credData = await issuedCredentials.json();
@@ -83,30 +101,31 @@ export const ClaimView = () => {
       return;
     }
 
-    const mappedCredentials: MappedCredentials[] = credData.map((obj: any) => {
-      const parsedCredential = JSON.parse(obj.credential);
-      return {
-        credential: parsedCredential,
-        claimed: false,
-        date: obj.created_at,
-        id: obj.id,
-      };
-    });
+    const mappedCredentials: MappedCredentials[] = credData.map((obj: any) => ({
+      credential: obj.credential,
+      claimed: false,
+      date: obj.created_at,
+      id: obj.id,
+    }));
 
     setCredentials(mappedCredentials);
     setIsSelected(false);
   };
 
   const requestDeletion = async (id: string) => {
+    const proof = await getProof();
+    if (!proof) {
+      console.error('No proof');
+      return;
+    }
     console.log('Deleting...');
-    const url = `${ISSUER_ENDPOINT}/query`;
+    const url = `${ISSUER_ENDPOINT}/query/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
         headers: {
-          'Content-Type': 'application/json',
+          'x-pop': proof,
         },
-        body: JSON.stringify({ id }),
       });
       if (!response.ok) {
         console.log('Deletion failed');
