@@ -33,7 +33,6 @@ export const ClaimView = () => {
   const [noCredentials, setNoCredentials] = useState(false);
 
   async function getProof(): Promise<string | undefined> {
-    setNoCredentials(false);
     const url = `${ISSUER_ENDPOINT}/query/nonce`;
     const res = await fetch(url, {
       method: 'POST',
@@ -44,9 +43,6 @@ export const ClaimView = () => {
     });
 
     const data = await res.json();
-
-    // FIXME: do something with this
-    const exp = Math.ceil(new Date().getTime() / 1000 + 60 * 60);
 
     const signedData = await api?.signData({
       type: 'JWT',
