@@ -11,6 +11,9 @@ export const educationCredential = {
         currentGivenName: {
           type: 'string',
         },
+        did: {
+          type: 'string',
+        },
         dateOfBirth: {
           type: 'string',
         },
@@ -93,7 +96,7 @@ export const educationCredential = {
           required: ['title', 'specifiedBy', 'wasAwardedBy', 'wasDerivedFrom'],
         },
       },
-      required: ['currentFamilyName', 'currentGivenName', 'achieved'],
+      required: ['currentFamilyName', 'currentGivenName', 'achieved', 'did'],
     },
   },
   required: ['credentialSubject'],

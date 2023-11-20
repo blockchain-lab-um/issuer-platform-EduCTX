@@ -1,5 +1,8 @@
-import { educationCredential, educationCredentialBatch } from './educationCredential.js';
 import { DidSchema, DidSchemaBatch } from './didSchema.js';
+import {
+  educationCredential,
+  educationCredentialBatch,
+} from './educationalCredential.js';
 import { ProgramSchema } from './programSchema.js';
 
 export const routeSchemas = {
