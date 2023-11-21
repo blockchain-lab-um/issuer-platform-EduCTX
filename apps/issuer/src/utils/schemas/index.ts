@@ -1,15 +1,16 @@
-import { DidSchema, DidSchemaBatch } from './didSchema.js';
+// import { DidSchema, DidSchemaBatch } from './didSchema.js';
 import {
   EducationCredential,
   EducationCredentialBatch,
 } from './educationCredential.js';
-import { ProgramSchema } from './programSchema.js';
+
+// import { ProgramSchema } from './programSchema.js';
 
 export const routeSchemas = {
   oneOf: [
-    DidSchema,
-    DidSchemaBatch,
-    ProgramSchema,
+    // DidSchema,
+    // DidSchemaBatch,
+    // ProgramSchema,
     EducationCredential,
     EducationCredentialBatch,
     // {$id: '#testSchema', type: 'object', properties: {test: {type: 'string'}}},
@@ -17,9 +18,9 @@ export const routeSchemas = {
 };
 
 export const Schemas = [
-  DidSchema,
-  DidSchemaBatch,
-  ProgramSchema,
+  // DidSchema,
+  // DidSchemaBatch,
+  // ProgramSchema,
   EducationCredential,
   EducationCredentialBatch,
 ];

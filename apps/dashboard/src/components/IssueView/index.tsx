@@ -1,33 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Input, Select, SelectItem } from '@nextui-org/react';
+import { Button, Select, SelectItem } from '@nextui-org/react';
 import axios from 'axios';
 import { signOut } from 'next-auth/react';
 
 import { ISSUER_ENDPOINT } from '@/config/api';
+import { CredentialForm } from './CredentialForm';
+import { EduCredentialSchema } from './educationCredential';
+
+interface SchemaNode {
+  title: string;
+  type: 'string' | 'number';
+  isCredentialSubject?: boolean;
+  required?: boolean;
+  propertyName: string;
+}
+
+interface SchemaObject {
+  title: string;
+  type: 'object';
+  fields: SchemaNode[] | SchemaObject[];
+  required?: boolean;
+  propertyName: string;
+}
 
 interface Schema {
-  type?: string;
   title: string;
-  fields: {
-    title: string;
-    type: 'string' | 'number';
-  }[];
+  type?: string;
+  fields: SchemaNode[] | SchemaObject[];
 }
 
 const SCHEMAS: Schema[] = [
   {
     title: 'Schema A',
-    fields: [{ title: 'test', type: 'string' }],
+    fields: [{ title: 'test', type: 'string', propertyName: 'test' }],
     type: '#didSchema',
   },
-  {
-    title: 'Schema B',
-    fields: [
-      { title: 'fieldA', type: 'string' },
-      { title: 'fieldB', type: 'number' },
-    ],
-  },
+  EduCredentialSchema,
 ];
 
 export const IssueView = () => {
@@ -49,24 +58,57 @@ export const IssueView = () => {
   };
 
   const handleNext = () => {
-    const newInputs: Record<string, any> = {};
-    selectedSchema.fields.forEach((field) => {
-      newInputs[field.title] = undefined;
-    });
-    newInputs.subject = undefined;
+    // Builds the input object with all the fields from the schema correctly nested
+    const buildInputObject = (schema: Schema) => {
+      const inputObject: Record<string, any> = {};
+      schema.fields.forEach((field) => {
+        if (field.type === 'object') {
+          inputObject[field.propertyName] = buildInputObject(field);
+        } else {
+          inputObject[field.propertyName] = undefined;
+        }
+      });
+      return inputObject;
+    };
+
+    console.log('Built Schema:', selectedSchema);
+    console.log(buildInputObject(selectedSchema));
+
+    const newInputs = buildInputObject(selectedSchema);
+
     setInputs(newInputs);
     setIsFilled(false);
     setNext(true);
   };
 
-  const handleInputValueChange = (e: string, field: string) => {
-    setInputs({ ...inputs, [field]: e });
+  const handleInputValueChange = (e: string, path: string) => {
+    console.log('e', e);
+    console.log('path', path);
+    // Update the correct field in inpuitsObject with the new value. Mind the path
+    const newInputs = { ...inputs };
+
+    console.log(newInputs);
+    const pathArray = path.split('/').filter((p) => p !== '');
+    console.log(pathArray);
+    let currentObject = newInputs;
+    pathArray.forEach((key, index) => {
+      if (index === pathArray.length - 1) {
+        currentObject[key] = e;
+      } else {
+        currentObject = currentObject[key];
+      }
+    });
+    console.log('Updated inputs:', newInputs);
+    setInputs(newInputs);
   };
 
   const issue = async () => {
-    const body = { credentialSubject: {} };
-    body.credentialSubject = { id: inputs.subject };
-    body.credentialSubject = { ...body.credentialSubject, ...inputs };
+    // const body = { credentialSubject: {} };
+    // body.credentialSubject = { id: inputs.subject };
+    // body.credentialSubject = { ...body.credentialSubject, ...inputs };
+    const body = inputs;
+    console.log('body', body);
+    console.log('type', selectedSchema.type);
 
     try {
       const response = await axios.post(
@@ -96,18 +138,9 @@ export const IssueView = () => {
     }
   };
 
-  useEffect(() => {
-    if (
-      inputs &&
-      Object.values(inputs).every(
-        (input) => input !== undefined && input !== ''
-      )
-    ) {
-      setIsFilled(true);
-    } else {
-      setIsFilled(false);
-    }
-  }, [inputs]);
+  // useEffect(() => {
+  //   checkIfFilled();
+  // }, [inputs]);
 
   return (
     <div
@@ -181,24 +214,11 @@ export const IssueView = () => {
                 </div>
               </div>
               <div className="mt-8">
-                <Input
-                  key=""
-                  label="Subject DID"
-                  type="text"
-                  className="mt-2"
-                  onValueChange={(e) => handleInputValueChange(e, 'subject')}
+                <CredentialForm
+                  schema={selectedSchema}
+                  handleInputValueChange={handleInputValueChange}
+                  submitForm={() => issue()}
                 />
-                {selectedSchema.fields.map((field) => (
-                  <Input
-                    key={field.title}
-                    label={field.title}
-                    type={field.type}
-                    className="mt-2"
-                    onValueChange={(e) =>
-                      handleInputValueChange(e, field.title)
-                    }
-                  />
-                ))}
               </div>
               <div>
                 {credentialIssued ? (
@@ -206,14 +226,7 @@ export const IssueView = () => {
                     Credential Issued
                   </Button>
                 ) : (
-                  <Button
-                    color="primary"
-                    onClick={() => issue()}
-                    className="mt-8"
-                    isDisabled={!isFilled}
-                  >
-                    Issue
-                  </Button>
+                  <div></div>
                 )}
               </div>
             </>
