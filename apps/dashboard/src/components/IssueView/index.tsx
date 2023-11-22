@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Select, SelectItem } from '@nextui-org/react';
-import axios from 'axios';
 import { signOut } from 'next-auth/react';
 
 import { ISSUER_ENDPOINT } from '@/config/api';
 import { CredentialForm } from './CredentialForm';
-import { EduCredentialSchema } from './educationCredential';
+import { EducationalCredentialSchema } from './educationCredential';
 
 interface SchemaNode {
   title: string;
@@ -36,7 +35,7 @@ const SCHEMAS: Schema[] = [
     fields: [{ title: 'test', type: 'string', propertyName: 'test' }],
     type: '#didSchema',
   },
-  EduCredentialSchema,
+  EducationalCredentialSchema,
 ];
 
 export const IssueView = () => {
@@ -58,15 +57,11 @@ export const IssueView = () => {
   };
 
   const handleNext = () => {
-    // Builds the input object with all the fields from the schema correctly nested
     const buildInputObject = (schema: Schema) => {
       const inputObject: Record<string, any> = {};
       schema.fields.forEach((field) => {
-        if (field.type === 'object') {
-          inputObject[field.propertyName] = buildInputObject(field);
-        } else {
-          inputObject[field.propertyName] = undefined;
-        }
+        inputObject[field.propertyName] =
+          field.type === 'object' ? buildInputObject(field) : null;
       });
       return inputObject;
     };
