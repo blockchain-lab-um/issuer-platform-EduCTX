@@ -1,5 +1,5 @@
-export const de4aSchema = {
-  $id: '#de4aSchema',
+export const EducationCredential = {
+  $id: '#educationCredential',
   type: 'object',
   properties: {
     credentialSubject: {
@@ -9,6 +9,9 @@ export const de4aSchema = {
           type: 'string',
         },
         currentGivenName: {
+          type: 'string',
+        },
+        id: {
           type: 'string',
         },
         dateOfBirth: {
@@ -45,13 +48,7 @@ export const de4aSchema = {
                   type: 'number',
                 },
               },
-              required: [
-                'id',
-                'title',
-                'volumeOfLearning',
-                'iSCEDFCode',
-                'eCTSCreditPoints',
-              ],
+              required: ['title'],
             },
             wasAwardedBy: {
               type: 'object',
@@ -62,6 +59,9 @@ export const de4aSchema = {
                 awardingBody: {
                   type: 'string',
                 },
+                awardingBodyDescription: {
+                  type: 'string',
+                },
                 awardingDate: {
                   type: 'string',
                 },
@@ -69,12 +69,7 @@ export const de4aSchema = {
                   type: 'string',
                 },
               },
-              required: [
-                'id',
-                'awardingBody',
-                'awardingDate',
-                'awardingLocation',
-              ],
+              required: ['awardingBody', 'awardingBodyDescription'],
             },
             wasDerivedFrom: {
               type: 'object',
@@ -92,36 +87,23 @@ export const de4aSchema = {
                   type: 'string',
                 },
               },
-              required: ['id', 'title', 'grade', 'issuedDate'],
+              required: ['title', 'grade'],
             },
             associatedLearningOpportunity: {
               type: 'string',
             },
           },
-          required: [
-            'id',
-            'title',
-            'specifiedBy',
-            'wasAwardedBy',
-            'wasDerivedFrom',
-            'associatedLearningOpportunity',
-          ],
+          required: ['title', 'specifiedBy', 'wasAwardedBy', 'wasDerivedFrom'],
         },
       },
-      required: [
-        'currentFamilyName',
-        'currentGivenName',
-        'dateOfBirth',
-        'personIdentifier',
-        'achieved',
-      ],
+      required: ['currentFamilyName', 'currentGivenName', 'achieved', 'id'],
     },
   },
   required: ['credentialSubject'],
 };
 
-export const de4aSchemaBatch = {
-  $id: '#de4aSchemaBatch',
+export const EducationCredentialBatch = {
+  $id: '#educationCredentialBatch',
   type: 'array',
-  items: { $ref: '#de4aSchema' },
+  items: { $ref: '#educationCredential' },
 };

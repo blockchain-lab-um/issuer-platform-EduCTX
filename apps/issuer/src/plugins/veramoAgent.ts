@@ -49,6 +49,13 @@ export type Agent = TAgent<
     ICredentialVerifier
 >;
 
+declare module 'fastify' {
+  export interface FastifyInstance {
+    veramoAgent: Agent;
+    issuerIdentifier: IIdentifier;
+  }
+}
+
 async function createVeramoAgent() {
   const didProviders: Record<string, AbstractIdentifierProvider> = {};
   const vcStorePlugins: Record<string, AbstractDataStore> = {};
@@ -111,6 +118,7 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
       },
     });
 
+    // eslint-disable-next-line no-console
     console.log(`Your issuer EBSI did is: ${identifier.did}`);
   } else {
     await agent.didManagerImport({
@@ -136,13 +144,6 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
 
   if (!identifier) throw new Error('Cannot generate valid identifier');
 
-  fastify.decorate('veramoAgent', () => agent);
-  fastify.decorate('issuerIdentifier', () => identifier);
+  fastify.decorate('veramoAgent', agent);
+  fastify.decorate('issuerIdentifier', identifier);
 });
-
-declare module 'fastify' {
-  export interface FastifyInstance {
-    veramoAgent(): Agent;
-    issuerIdentifier(): IIdentifier;
-  }
-}

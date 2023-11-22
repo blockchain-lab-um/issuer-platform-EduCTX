@@ -6,16 +6,23 @@ import {
 } from '@veramo/utils';
 import { VerificationMethod } from 'did-resolver';
 import elliptic from 'elliptic';
+import {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  HookHandlerDoneFunction,
+} from 'fastify';
+import fp from 'fastify-plugin';
 import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
 import type { Pool } from 'pg';
 
 import { NoncesTable } from '../db/types/index.js';
 import { Agent } from '../plugins/veramoAgent.js';
-import { ProofOfPossesionArgs } from '../types/index.js';
+import { JWTProof, ProofOfPossesionArgs } from '../types/index.js';
 
 const { ec: EC } = elliptic;
 
-export async function verifyProofOfPossession(
+async function verifyProofOfPossession(
   args: ProofOfPossesionArgs,
   pool: Pool,
   agent: Agent
@@ -175,4 +182,47 @@ export async function verifyProofOfPossession(
   }
 
   return did;
+}
+
+export default fp(async (fastify: FastifyInstance, _) => {
+  fastify.decorate(
+    'verifyProof',
+    () =>
+      async function proofHeader(request: FastifyRequest, reply: FastifyReply) {
+        const proof = request.headers['x-pop'];
+        if (!proof)
+          return reply.code(400).send({
+            error: 'invalid_or_missing_proof: Proof is required.',
+          });
+        if (typeof proof !== 'string')
+          return reply.code(400).send({
+            error: 'invalid_or_missing_proof: Proof must be a string.',
+          });
+        const proofArgs = {
+          proof: {
+            jwt: proof,
+          } as JWTProof,
+        };
+        const did = await verifyProofOfPossession(
+          proofArgs,
+          fastify.pg.pool,
+          fastify.veramoAgent
+        );
+        request.did = did;
+      }
+  );
+});
+
+declare module 'fastify' {
+  interface FastifyInstance {
+    verifyProof: () => (
+      request: FastifyRequest,
+      reply: FastifyReply,
+      done: HookHandlerDoneFunction
+    ) => void;
+  }
+
+  interface FastifyRequest {
+    did: string;
+  }
 }

@@ -1,45 +1,30 @@
 import { randomUUID } from 'node:crypto';
 import { FastifyPluginAsync, FastifyRequest } from 'fastify';
+import { FastifyReply } from 'fastify/types/reply.js';
 
 import { CredentialsTable, NoncesTable } from '../../db/types/index.js';
-import { JWTProof } from '../../types/index.js';
-import { verifyProofOfPossession } from '../../utils/proofOfPosession.js';
+import verifyProofPlugin from '../../plugins/proofOfPossession.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {
   const { pool } = fastify.pg;
 
+  await fastify.register(verifyProofPlugin, {});
+
   fastify.get(
-    '/test/all',
+    '/nonce/:did',
     {
-      config: {
-        description: 'Get all from the database',
-      },
-    },
-    async () => {
-      const credentials = await pool.query<CredentialsTable>(
-        'SELECT * FROM credentials'
-      );
-
-      const nonces = await pool.query<NoncesTable>('SELECT * FROM nonces');
-
-      return { credentials: credentials.rows, nonces: nonces.rows };
-    }
-  );
-
-  fastify.post(
-    '/nonce',
-    {
-      schema: { body: { did: { type: 'string' } } },
+      schema: { params: { did: { type: 'string' } } },
       config: {
         description: 'Get nonce and audience for the DID',
       },
     },
     async (
       request: FastifyRequest<{
-        Body: { did: string };
-      }>
+        Params: { did: string };
+      }>,
+      reply: FastifyReply
     ) => {
-      const { did } = request.body;
+      const { did } = request.params;
 
       const nonce = randomUUID();
       await pool.query<NoncesTable>(
@@ -47,116 +32,50 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         [did, nonce]
       );
 
-      return {
-        nonce,
-        aud: process.env.PROOF_AUDIENCE,
-      };
+      return reply.send({ nonce, aud: process.env.PROOF_AUDIENCE });
     }
   );
 
-  fastify.post(
-    '/test/did',
-    {
-      schema: { body: { did: { type: 'string' } } },
-      config: {
-        description: 'Get all credentials for the DID',
-      },
-    },
-    async (
-      request: FastifyRequest<{
-        Body: { did: string };
-      }>
-    ) => {
-      const { did } = request.body;
-      const didRows = await pool.query<CredentialsTable>(
-        'SELECT * FROM credentials WHERE did = $1',
-        [did]
-      );
-
-      return didRows.rows;
-    }
-  );
-
-  fastify.post(
+  fastify.get(
     '/claim',
     {
-      schema: {
-        body: {
-          type: 'object',
-          properties: {
-            proof: { type: 'string' },
-          },
-          required: ['proof'],
-        },
-      },
+      preHandler: [fastify.verifyProof()],
       config: {
         description:
           'Send a proof of possession to the issuer and get all credentials for the DID',
       },
     },
-    async (
-      request: FastifyRequest<{
-        Body: { proof: string };
-      }>
-    ) => {
-      const { proof } = request.body;
-
-      const proofArgs = {
-        proof: {
-          jwt: proof,
-        } as JWTProof,
-      };
-
-      const did = await verifyProofOfPossession(
-        proofArgs,
-        pool,
-        fastify.veramoAgent()
-      );
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const { did } = request;
 
       const didRows = await pool.query<CredentialsTable>(
         'SELECT * FROM credentials WHERE did = $1',
         [did]
       );
 
-      return didRows.rows;
-    }
-  );
+      didRows.rows.forEach((row) => {
+        // json parse the credential
+        row.credential = JSON.parse(row.credential);
+      });
 
-  fastify.post(
-    '/test/insert',
-    {
-      config: {
-        description:
-          'Send a credential to the issuer to be stored in the database',
-      },
-    },
-    async (request) => {
-      const data = request.body as Omit<CredentialsTable, 'id' | 'created_at'>;
-
-      const { rows } = await pool.query<CredentialsTable>(
-        'INSERT INTO credentials (id, did, credential) VALUES ($1, $2, $3) RETURNING *',
-        [randomUUID(), data.did, data.credential]
-      );
-      return rows;
+      return reply.send(didRows.rows);
     }
   );
 
   fastify.delete(
-    '/',
+    '/:id',
     {
-      schema: { body: { id: { type: 'string' } } },
+      preHandler: [fastify.verifyProof()],
+      schema: { params: { id: { type: 'string' } } },
       config: {
         description: 'Delete a credential from the database',
       },
     },
-    async (
-      request: FastifyRequest<{
-        Body: { id: string };
-      }>,
-      reply
-    ) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const { id } = request.body;
+        const { id } = request.params as FastifyRequest<{
+          Params: { id: string };
+        }>;
         await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = $1',
           [id]
@@ -168,24 +87,22 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
     }
   );
 
-  fastify.delete(
-    '/batch',
+  fastify.post(
+    '/delete',
     {
+      preHandler: [fastify.verifyProof()],
       schema: {
-        body: { $id: '#batchDelete', type: 'array', items: { type: 'string' } },
+        body: { type: 'array', items: { type: 'string' } },
       },
       config: {
         description: 'Delete all passed credentials from the database',
       },
     },
-    async (
-      request: FastifyRequest<{
-        Body: [{ id: string }];
-      }>,
-      reply
-    ) => {
+    async (request: FastifyRequest, reply: FastifyReply) => {
       try {
-        const { body } = request;
+        const { body } = request as FastifyRequest<{
+          Body: string[];
+        }>;
         const res = await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = ANY($1)',
           [body]
@@ -197,20 +114,6 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       } catch (error) {
         return reply.code(500).send({ error: (error as Error).message });
       }
-    }
-  );
-
-  fastify.delete(
-    '/test',
-    {
-      config: {
-        description: 'Delete all credentials and nonces from the database',
-      },
-    },
-    async (request, reply) => {
-      await pool.query<CredentialsTable>('TRUNCATE credentials');
-      await pool.query<NoncesTable>('TRUNCATE nonces');
-      return reply.code(204).send();
     }
   );
 };

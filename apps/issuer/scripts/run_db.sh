@@ -20,7 +20,7 @@ if [ ! "$(docker ps -a -q -f name=eductx-issuer-db -f status=running)" ]; then
         -e POSTGRES_DB=${DB_NAME} \
         -p "${DB_PORT}":5432 \
         --name eductx-issuer-db \
-        -d postgres \
+        -d postgres:15.4-alpine3.18 \
         postgres -N 1000
     # ^ Increased maximum number of connections for testing purposes
 fi

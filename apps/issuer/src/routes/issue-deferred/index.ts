@@ -37,12 +37,12 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
     },
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
-      const agent = fastify.veramoAgent();
+      const agent = fastify.veramoAgent;
 
       const credentialArgs = {
         proofFormat: 'jwt',
         credential: {
-          issuer: fastify.issuerIdentifier().did,
+          issuer: fastify.issuerIdentifier.did,
           type: ['VerifiableCredential', 'EducationCredential'],
           '@context': [
             'https://www.w3.org/2018/credentials/v1',
@@ -51,17 +51,28 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
           credentialSubject: data.credentialSubject,
         },
       };
-      const vc = await agent.createVerifiableCredential(
-        credentialArgs as ICreateVerifiableCredentialArgs
-      );
+
+      let vc;
+      try {
+        vc = await agent.createVerifiableCredential(
+          credentialArgs as ICreateVerifiableCredentialArgs
+        );
+        if (!vc) {
+          throw new Error('Could not create Verifiable Credential');
+        }
+      } catch (error) {
+        await reply.code(400).send({
+          error: (error as Error).message,
+        });
+        return;
+      }
 
       const { pool } = fastify.pg;
       const id = randomUUID();
       await pool.query<CredentialsTable>(
-        'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
         [id, vc.credentialSubject.id, vc, vc.issuanceDate]
       );
-
       return reply.code(201).send(true);
     }
   );
@@ -79,14 +90,14 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
     async (request, reply) => {
       const data = request.body as any; // TODO: fix type
 
-      const agent = fastify.veramoAgent();
+      const agent = fastify.veramoAgent;
 
       const promises: Promise<VerifiableCredential>[] = data.map(
         (subject: CredentialSubject) => {
           const credentialArgs = {
             proofFormat: 'jwt',
             credential: {
-              issuer: fastify.issuerIdentifier().did,
+              issuer: fastify.issuerIdentifier.did,
               type: ['VerifiableCredential', 'EducationCredential'],
               '@context': [
                 'https://www.w3.org/2018/credentials/v1',
