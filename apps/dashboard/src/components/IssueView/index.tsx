@@ -43,7 +43,7 @@ export const IssueView = () => {
   const [selectedSchema, setSelectedSchema] = useState({} as Schema);
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
-  const [isFilled, setIsFilled] = useState(false);
+  const [_, setIsFilled] = useState(false);
   const [credentialIssued, setCredentialIssued] = useState(false);
 
   const router = useRouter();
@@ -70,26 +70,15 @@ export const IssueView = () => {
       });
       return inputObject;
     };
-
-    console.log('Built Schema:', selectedSchema);
-    console.log(buildInputObject(selectedSchema));
-
     const newInputs = buildInputObject(selectedSchema);
-
     setInputs(newInputs);
     setIsFilled(false);
     setNext(true);
   };
 
   const handleInputValueChange = (e: string, path: string) => {
-    console.log('e', e);
-    console.log('path', path);
-    // Update the correct field in inpuitsObject with the new value. Mind the path
     const newInputs = { ...inputs };
-
-    console.log(newInputs);
     const pathArray = path.split('/').filter((p) => p !== '');
-    console.log(pathArray);
     let currentObject = newInputs;
     pathArray.forEach((key, index) => {
       if (index === pathArray.length - 1) {
@@ -98,30 +87,22 @@ export const IssueView = () => {
         currentObject = currentObject[key];
       }
     });
-    console.log('Updated inputs:', newInputs);
     setInputs(newInputs);
   };
 
   const issue = async () => {
-    // const body = { credentialSubject: {} };
-    // body.credentialSubject = { id: inputs.subject };
-    // body.credentialSubject = { ...body.credentialSubject, ...inputs };
     const body = inputs;
-    console.log('body', body);
-    console.log('type', selectedSchema.type);
-
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('schemaType', selectedSchema.type || '');
     try {
-      const response = await axios.post(
-        `${ISSUER_ENDPOINT}/issue-deferred`,
-        JSON.stringify(body),
-        {
-          headers: {
-            schemaType: selectedSchema.type,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (response.data === true) {
+      const response = await fetch(`${ISSUER_ENDPOINT}/issue-deferred`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
         setCredentialIssued(true);
       }
     } catch (error: any) {
@@ -137,11 +118,6 @@ export const IssueView = () => {
       }
     }
   };
-
-  // useEffect(() => {
-  //   checkIfFilled();
-  // }, [inputs]);
-
   return (
     <div
       className="flex min-h-screen w-screen items-center justify-center"

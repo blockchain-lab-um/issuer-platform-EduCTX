@@ -34,26 +34,23 @@ interface CredentialFormNodeProps {
   handleInputValue: (e: string, path: string) => void;
 }
 
-export const CredentialFormNode = ({
+const CredentialFormNode = ({
   path,
   schema,
   handleInputValue,
-}: CredentialFormNodeProps) => {
-  const a = 'a';
-  return (
-    <div className="mt-2">
-      <Input
-        label={schema.title}
-        isRequired={schema.required}
-        type={schema.type}
-        isClearable={true}
-        onChange={(e) => {
-          handleInputValue(e.target.value, `${path}/${schema.propertyName}`);
-        }}
-      />
-    </div>
-  );
-};
+}: CredentialFormNodeProps) => (
+  <div className="mt-2">
+    <Input
+      label={schema.title}
+      isRequired={schema.required}
+      type={schema.type}
+      isClearable={true}
+      onChange={(e) => {
+        handleInputValue(e.target.value, `${path}/${schema.propertyName}`);
+      }}
+    />
+  </div>
+);
 
 interface CredentialFormObjectProps {
   path: string;
@@ -61,68 +58,23 @@ interface CredentialFormObjectProps {
   handleInputValue: (e: string, path: string) => void;
 }
 
-export const CredentialFormObject = ({
+const CredentialFormObject = ({
   path,
   schema,
   handleInputValue,
-}: CredentialFormObjectProps) => {
-  const a = 'a';
-  return (
-    <div className="mt-1 rounded-xl  p-1">
-      <Card isBlurred className="p-2">
-        <CardHeader>{schema.title}</CardHeader>
-        <CardBody>
-          {schema.fields.map((field: any, key: any) => {
-            if (field.type === 'object') {
-              return (
-                <div key={key}>
-                  <CredentialFormObject
-                    path={`${path}/${schema.propertyName}`}
-                    schema={field}
-                    handleInputValue={handleInputValue}
-                  />
-                </div>
-              );
-            }
-            return (
-              <div key={key}>
-                <CredentialFormNode
-                  path={`${path}/${schema.propertyName}`}
-                  schema={field}
-                  handleInputValue={handleInputValue}
-                />
-              </div>
-            );
-          })}
-        </CardBody>
-      </Card>
-    </div>
-  );
-};
-
-export const CredentialForm = ({
-  schema,
-  handleInputValueChange,
-  submitForm,
-}: CredentialFormProps) => {
-  const a = 'A';
-
-  return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          submitForm();
-        }}
-      >
+}: CredentialFormObjectProps) => (
+  <div className="mt-1 rounded-xl  p-1">
+    <Card isBlurred className="p-2">
+      <CardHeader>{schema.title}</CardHeader>
+      <CardBody>
         {schema.fields.map((field: any, key: any) => {
           if (field.type === 'object') {
             return (
               <div key={key}>
                 <CredentialFormObject
-                  path={''}
+                  path={`${path}/${schema.propertyName}`}
                   schema={field}
-                  handleInputValue={handleInputValueChange}
+                  handleInputValue={handleInputValue}
                 />
               </div>
             );
@@ -130,15 +82,53 @@ export const CredentialForm = ({
           return (
             <div key={key}>
               <CredentialFormNode
+                path={`${path}/${schema.propertyName}`}
+                schema={field}
+                handleInputValue={handleInputValue}
+              />
+            </div>
+          );
+        })}
+      </CardBody>
+    </Card>
+  </div>
+);
+
+export const CredentialForm = ({
+  schema,
+  handleInputValueChange,
+  submitForm,
+}: CredentialFormProps) => (
+  <div>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        submitForm();
+      }}
+    >
+      {schema.fields.map((field: any, key: any) => {
+        if (field.type === 'object') {
+          return (
+            <div key={key}>
+              <CredentialFormObject
                 path={''}
                 schema={field}
                 handleInputValue={handleInputValueChange}
               />
             </div>
           );
-        })}
-        <Button type="submit">Submit</Button>
-      </form>
-    </div>
-  );
-};
+        }
+        return (
+          <div key={key}>
+            <CredentialFormNode
+              path={''}
+              schema={field}
+              handleInputValue={handleInputValueChange}
+            />
+          </div>
+        );
+      })}
+      <Button type="submit">Submit</Button>
+    </form>
+  </div>
+);
