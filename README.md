@@ -1,34 +1,68 @@
 # EduCTX Issuer platform
 
-### Environment
+## Environment
 
-- Node.js v18.17.1
-- pnpm 8.7.6
+* Node.js v18.17.1
+* pnpm 8.7.6
 
-### Docker
+## Running services
+
+### Local development environment
+
+```bash
+ pnpm --filter issuer dev
+ pnpm --filter dashboard dev
+```
+
+See [below](#database) for database setup.
+
+### Development environment in Docker 🐳
 
 We are using 3 images:
 
-- Base image for building everything in the monorepo: `blockchain-lab-um/eductx-platform-base`
-- Dashboard image: `blockchain-lab-um/eductx-platform-dashboard`
-- Issuer image: `blockchain-lab-um/eductx-platform-issuer`
+* Base image for building everything in the monorepo: `blockchain-lab-um/eductx-platform-base`
+* Dashboard image: `blockchain-lab-um/eductx-platform-dashboard`
+* Issuer image: `blockchain-lab-um/eductx-platform-issuer`
 
-> ⚠️ We urge you to set `POSTGRES_USER` and `POSTGRES_PASSWORD` .
+> ❗️ Env files need to be set. See [dashboard env file](apps/dashboard/.env.example) and [issuer env file](apps/issuer/.env.example).
 
-If you already have `.env` files for the issuer and dashboard you can run them using docker compose with the following command:
-
-```bash
-docker compose --env-file apps/dashboard/.env --env-file apps/issuer/.env up --build
-```
-
-You can also use the command:
+Running dashboard and issuer (with DB):
 
 ```bash
 pnpm docker:run
 ```
 
-In this process, postgresql container also starts. If running for the first time, you need to run migrations. This can be achieved by running:
+or
 
 ```bash
-sh apps/issuer/scripts/run_db.sh
+docker compose --env-file apps/dashboard/.env --env-file apps/issuer/.env up --build
 ```
+
+Running only issuer service (with db):
+
+```bash
+pnpm docker:run:issuer
+```
+
+or
+
+```bash
+docker compose --env-file apps/issuer/.env up issuer db --build
+```
+
+In both cases, database migrations need to be executed when running for the first time. See [below](#database) for more info.
+
+## Database
+
+Running database and migrations can be achieved by running the command below. Script will determine whether it needs to start docker container or not and execute migrations.
+
+```bash
+cd apps/issuer/scripts
+sh run_db.sh
+```
+
+If migrations fail to execute and throw db does not exist error, make sure to wipe all volumes attached to containers and recreate containers.
+
+Custom database info can be specific with env variables. See [example file](apps/issuer/.env.example).
+
+ > ⚠️ If not executing `run_db.sh` , you'll need to take care of the database yourself. Be sure to also set `DATABASE_URL` env variable.
