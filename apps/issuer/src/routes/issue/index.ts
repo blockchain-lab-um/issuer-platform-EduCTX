@@ -1,6 +1,7 @@
 import { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
 
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { routeSchemas } from '../../utils/schemas/index.js';
 
 const constraint = {
@@ -21,6 +22,7 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.post(
     '/',
     {
+      preValidation: apiKeyAuth,
       schema: {
         body: routeSchemas,
       },
