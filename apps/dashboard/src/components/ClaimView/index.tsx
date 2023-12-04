@@ -35,9 +35,7 @@ export const ClaimView = () => {
   async function getProof(): Promise<string | undefined> {
     const url = `${ISSUER_ENDPOINT}/query/nonce/${currDID}`;
     const res = await fetch(url);
-
     const data = await res.json();
-
     const signedData = await api?.signData({
       type: 'JWT',
       data: {
@@ -59,6 +57,7 @@ export const ClaimView = () => {
       return;
     }
 
+
     return proof;
   }
 
@@ -66,6 +65,17 @@ export const ClaimView = () => {
     setNoCredentials(false);
 
     const claimUrl = `${ISSUER_ENDPOINT}/query/claim`;
+
+
+
+    return proof;
+  }
+
+  const checkForCredentials = async () => {
+    setNoCredentials(false);
+
+    const claimUrl = `${ISSUER_ENDPOINT}/query/claim`;
+
 
     const proof = await getProof();
     if (!proof) {
@@ -104,7 +114,7 @@ export const ClaimView = () => {
       console.error('No proof');
       return;
     }
-    console.log('Deleting...');
+
     const url = `${ISSUER_ENDPOINT}/query/${id}`;
     try {
       const response = await fetch(url, {
@@ -114,7 +124,7 @@ export const ClaimView = () => {
         },
       });
       if (!response.ok) {
-        console.log('Deletion failed');
+
         return false;
       }
       return true;
@@ -139,7 +149,7 @@ export const ClaimView = () => {
     if (isError(result!)) {
       console.error(result);
       if (result.error === 'Error: User rejected save credential request.') {
-        console.log('User rejected save credential request.');
+
         deleteCredential(id).catch(() => {});
         return;
       }

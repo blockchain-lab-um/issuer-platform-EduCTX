@@ -73,7 +73,6 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
         'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
         [id, vc.credentialSubject.id, vc, vc.issuanceDate]
       );
-
       return reply.code(201).send(true);
     }
   );

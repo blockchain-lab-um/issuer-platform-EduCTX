@@ -2,21 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-// import { Button } from '@nextui-org/react';
 import { Button } from '@nextui-org/react';
 import { signIn, useSession } from 'next-auth/react';
 
-import { useGeneralStore } from '@/stores';
 import { MascaDescription } from './MascaDescription';
 import ConnectButton from './MetaMaskConnectButton';
 
 export const LoginView = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [userType, setUserType] = useState<number>(0);
-  const { hasMM } = useGeneralStore((state) => ({
-    hasMM: state.hasMetaMask,
-  }));
 
   useEffect(() => {
     if (session) {

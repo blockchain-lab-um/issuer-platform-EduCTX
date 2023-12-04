@@ -130,7 +130,8 @@ interface Schema {
   fields: SchemaNode[] | SchemaObject[];
 }
 
-export const EduCredentialSchema = {
+
+export const EducationalCredentialSchema = {
   title: 'Education Credential',
   type: '#educationCredential',
   fields: [

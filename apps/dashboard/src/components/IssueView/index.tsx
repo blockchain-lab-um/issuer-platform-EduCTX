@@ -1,3 +1,4 @@
+
 import React, { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, Transition } from '@headlessui/react';
@@ -9,12 +10,14 @@ import {
 import { Button, Select, SelectItem } from '@nextui-org/react';
 import axios from 'axios';
 import clsx from 'clsx';
+
 import { signOut } from 'next-auth/react';
 
 import { Logo } from '@/components/Logo';
 import { ISSUER_ENDPOINT } from '@/config/api';
 import { CredentialForm } from './CredentialForm';
-import { EduCredentialSchema } from './educationCredential';
+import { EducationalCredentialSchema } from './educationCredential';
+
 
 interface SchemaNode {
   title: string;
@@ -44,7 +47,7 @@ const SCHEMAS: Schema[] = [
     fields: [{ title: 'test', type: 'string', propertyName: 'test' }],
     type: '#didSchema',
   },
-  EduCredentialSchema,
+  EducationalCredentialSchema,
 ];
 
 export const IssueView = () => {
@@ -52,7 +55,7 @@ export const IssueView = () => {
   const [selectedSchema, setSelectedSchema] = useState<Schema | null>(null);
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
-  const [isFilled, setIsFilled] = useState(false);
+  const [_, setIsFilled] = useState(false);
   const [credentialIssued, setCredentialIssued] = useState(false);
   const [isIssuing, setIsIssuing] = useState(false);
 
@@ -68,38 +71,23 @@ export const IssueView = () => {
   };
 
   const handleNext = () => {
-    // Builds the input object with all the fields from the schema correctly nested
     const buildInputObject = (schema: Schema) => {
       const inputObject: Record<string, any> = {};
       schema.fields.forEach((field) => {
-        if (field.type === 'object') {
-          inputObject[field.propertyName] = buildInputObject(field);
-        } else {
-          inputObject[field.propertyName] = undefined;
-        }
+        inputObject[field.propertyName] =
+          field.type === 'object' ? buildInputObject(field) : null;
       });
       return inputObject;
     };
-
-    console.log('Built Schema:', selectedSchema);
-    console.log(buildInputObject(selectedSchema!));
-
-    const newInputs = buildInputObject(selectedSchema!);
-
+    const newInputs = buildInputObject(selectedSchema);
     setInputs(newInputs);
     setIsFilled(false);
     setNext(true);
   };
 
   const handleInputValueChange = (e: string, path: string) => {
-    console.log('e', e);
-    console.log('path', path);
-    // Update the correct field in inpuitsObject with the new value. Mind the path
     const newInputs = { ...inputs };
-
-    console.log(newInputs);
     const pathArray = path.split('/').filter((p) => p !== '');
-    console.log(pathArray);
     let currentObject = newInputs;
     pathArray.forEach((key, index) => {
       if (index === pathArray.length - 1) {
@@ -108,30 +96,22 @@ export const IssueView = () => {
         currentObject = currentObject[key];
       }
     });
-    console.log('Updated inputs:', newInputs);
     setInputs(newInputs);
   };
 
   const issue = async () => {
-    // const body = { credentialSubject: {} };
-    // body.credentialSubject = { id: inputs.subject };
-    // body.credentialSubject = { ...body.credentialSubject, ...inputs };
     const body = inputs;
-    console.log('body', body);
-    console.log('type', selectedSchema!.type);
-
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('schemaType', selectedSchema.type || '');
     try {
-      const response = await axios.post(
-        `${ISSUER_ENDPOINT}/issue-deferred`,
-        JSON.stringify(body),
-        {
-          headers: {
-            schemaType: selectedSchema!.type,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (response.data === true) {
+      const response = await fetch(`${ISSUER_ENDPOINT}/issue-deferred`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
         setCredentialIssued(true);
       }
     } catch (error: any) {
@@ -147,7 +127,6 @@ export const IssueView = () => {
       }
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <Transition.Root show={sidebarOpen} as={Fragment}>
