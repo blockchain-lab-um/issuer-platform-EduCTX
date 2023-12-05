@@ -65,4 +65,4 @@ If migrations fail to execute and throw db does not exist error, make sure to wi
 
 Custom database info can be specific with env variables. See [example file](apps/issuer/.env.example).
 
- > ⚠️ If not executing `run_db.sh` , you'll need to take care of the database yourself. Be sure to also set `DATABASE_URL` env variable.
+> ⚠️ If not executing `run_db.sh` , you'll need to take care of the database yourself. Be sure to also set `DATABASE_URL` env variable.
