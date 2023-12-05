@@ -29,6 +29,8 @@ interface CredentialFormProps {
   schema: Schema;
   handleInputValueChange: (e: string, path: string) => void;
   submitForm: () => void;
+  isIssued: boolean;
+  goBack: () => void;
 }
 
 interface CredentialFormNodeProps {
@@ -136,6 +138,8 @@ export const CredentialForm = ({
   schema,
   handleInputValueChange,
   submitForm,
+  isIssued,
+  goBack,
 }: CredentialFormProps) => (
   <div>
     <form
@@ -168,15 +172,36 @@ export const CredentialForm = ({
           );
         })}
       </div>
-      <div className="flex w-full justify-end">
+      <div className="flex justify-end gap-x-2">
         <Button
-          color="primary"
+          color="default"
           variant="flat"
-          className="text-md  bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
-          type="submit"
+          className="text-md font-medium"
+          onClick={() => {
+            goBack();
+          }}
         >
-          Issue Credential
+          Back
         </Button>
+        {!isIssued ? (
+          <Button
+            color="primary"
+            variant="flat"
+            className="text-md  bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
+            type="submit"
+          >
+            Issue Credential
+          </Button>
+        ) : (
+          <Button
+            color="success"
+            variant="flat"
+            className="text-md font-medium "
+            disabled={true}
+          >
+            Issued
+          </Button>
+        )}
       </div>
     </form>
   </div>

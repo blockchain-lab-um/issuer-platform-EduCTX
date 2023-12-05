@@ -1,4 +1,3 @@
-
 import React, { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, Transition } from '@headlessui/react';
@@ -8,16 +7,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/solid';
 import { Button, Select, SelectItem } from '@nextui-org/react';
-import axios from 'axios';
 import clsx from 'clsx';
-
 import { signOut } from 'next-auth/react';
 
 import { Logo } from '@/components/Logo';
 import { ISSUER_ENDPOINT } from '@/config/api';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
-
 
 interface SchemaNode {
   title: string;
@@ -79,7 +75,7 @@ export const IssueView = () => {
       });
       return inputObject;
     };
-    const newInputs = buildInputObject(selectedSchema);
+    const newInputs = buildInputObject(selectedSchema!);
     setInputs(newInputs);
     setIsFilled(false);
     setNext(true);
@@ -103,7 +99,7 @@ export const IssueView = () => {
     const body = inputs;
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    headers.append('schemaType', selectedSchema.type || '');
+    headers.append('schemaType', selectedSchema!.type || '');
     try {
       const response = await fetch(`${ISSUER_ENDPOINT}/issue-deferred`, {
         method: 'POST',
@@ -127,6 +123,14 @@ export const IssueView = () => {
       }
     }
   };
+
+  const goBack = () => {
+    console.log('clicked');
+    setCredentialIssued(false);
+    setNext(false);
+    setSelectedSchema(null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -183,9 +187,16 @@ export const IssueView = () => {
                 <Logo />
               </div>
               <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                <div>Welcome Mr. Professor</div>
+                <div>
+                  <span className="text-md block text-center font-medium text-gray-600">
+                    Welcome
+                  </span>
+                  <span className="block text-center text-lg font-semibold text-gray-800">
+                    Mr. Professor
+                  </span>
+                </div>
 
-                <nav className="space-y-1 px-2">
+                <nav className="mt-8 space-y-1 px-2">
                   <button
                     onClick={() => {
                       setIsIssuing(true);
@@ -234,9 +245,16 @@ export const IssueView = () => {
             <Logo />
           </div>
           <div className="mt-5 flex flex-grow flex-col">
-            <div>Welcome Mr. Professor</div>
+            <div>
+              <span className="text-md block text-center font-medium text-gray-600">
+                Welcome
+              </span>
+              <span className="block text-center text-lg font-semibold text-gray-800">
+                Mr. Professor
+              </span>
+            </div>
 
-            <nav className="flex-1 space-y-1 px-2 pb-4">
+            <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
               <button
                 onClick={() => {
                   setIsIssuing(true);
@@ -332,18 +350,6 @@ export const IssueView = () => {
                       {next && (
                         <div className="px-4">
                           <div className="flex items-center gap-x-4">
-                            <Button
-                              color="default"
-                              variant="flat"
-                              size="sm"
-                              onClick={() => {
-                                setCredentialIssued(false);
-                                setNext(false);
-                                setSelectedSchema(null);
-                              }}
-                            >
-                              Back
-                            </Button>
                             <div className="flex flex-col">
                               <span className="text-xs text-green-600">
                                 Selected Schema
@@ -358,6 +364,8 @@ export const IssueView = () => {
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
                               submitForm={() => issue()}
+                              isIssued={credentialIssued}
+                              goBack={() => goBack()}
                             />
                           </div>
                         </div>
@@ -368,7 +376,38 @@ export const IssueView = () => {
               ) : (
                 <div className="py-4">
                   <div className="h-96 rounded-lg border-2 border-gray-300 bg-white">
-                    Welcome
+                    <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 lg:px-8 lg:py-16">
+                      <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                        <span className="block font-bold">
+                          Ready to dive in?
+                        </span>
+                        <span className="text-xl font-semibold">
+                          Issue a new credential
+                        </span>
+                      </h2>
+                      <div className="mt-8 flex justify-center">
+                        <div>
+                          <button
+                            onClick={() => {
+                              setIsIssuing(true);
+                            }}
+                            className={clsx(
+                              'bg-green-100 text-green-600 hover:bg-green-50 ',
+                              'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium'
+                            )}
+                          >
+                            <DocumentPlusIcon
+                              className={clsx(
+                                ' text-green-600',
+                                'mr-3 h-6 w-6 flex-shrink-0'
+                              )}
+                              aria-hidden="true"
+                            />
+                            Issue Credential
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
