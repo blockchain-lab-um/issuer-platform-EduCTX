@@ -30,7 +30,7 @@ export const MascaDescription = () => (
       <div className=" text-lg text-gray-900">
         EduCTX requires MetaMask with plugin Masca installed to work
       </div>
-      <div className="mt-8 rounded-3xl border border-gray-500 px-12 py-8 md:min-w-[40em]">
+      <div className="mt-8 min-w-[10em] rounded-3xl border-2 border-gray-300 px-12 py-8 lg:min-w-[30em]">
         <div className="flex items-center gap-x-6">
           <div className="hidden sm:block">
             <MascaLogo />
@@ -47,7 +47,7 @@ export const MascaDescription = () => (
           <ul className="flex flex-col items-start text-xl tracking-normal">
             <li className="mt-12">
               <div className=" flex items-center gap-x-4">
-                <LockClosedIcon className="h-8 w-8 text-pink-500" />
+                <LockClosedIcon className="h-8 w-8 text-green-500" />
                 <div className="text-lg font-medium text-gray-900 ">
                   Own your Identity
                 </div>
@@ -55,7 +55,7 @@ export const MascaDescription = () => (
             </li>
             <li className="mt-12">
               <div className=" flex items-center gap-x-4">
-                <CreditCardIcon className="h-8 w-8 text-pink-500" />
+                <CreditCardIcon className="h-8 w-8 text-green-500" />
                 <div className="text-lg font-medium text-gray-900 ">
                   Manage Credentials securely
                 </div>
@@ -63,7 +63,7 @@ export const MascaDescription = () => (
             </li>
             <li className="mt-12">
               <div className=" flex items-center gap-x-4">
-                <GlobeAltIcon className="h-8 w-8 text-pink-500" />
+                <GlobeAltIcon className="h-8 w-8 text-green-500" />
                 <div className=" text-start text-lg font-medium text-gray-900 ">
                   Universal Compatibility with Identity Flows
                 </div>

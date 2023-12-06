@@ -147,7 +147,8 @@ const ConnectButton = () => {
     <div className="w-full text-center">
       {hasMM && (
         <Button
-          color="primary"
+          color="success"
+          variant="flat"
           onClick={() => enableMascaHandler()}
           isLoading={isConnecting}
         >
