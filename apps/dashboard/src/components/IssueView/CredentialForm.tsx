@@ -41,23 +41,20 @@ export const CredentialFormNode = ({
   path,
   schema,
   handleInputValue,
-}: CredentialFormNodeProps) => {
-  const a = 'a';
-  return (
-    <div className="mt-2">
-      <Input
-        className="max-w-xs"
-        label={schema.title}
-        isRequired={schema.required}
-        type={schema.type}
-        isClearable={true}
-        onChange={(e) => {
-          handleInputValue(e.target.value, `${path}/${schema.propertyName}`);
-        }}
-      />
-    </div>
-  );
-};
+}: CredentialFormNodeProps) => (
+  <div className="mt-2">
+    <Input
+      className="max-w-xs"
+      label={schema.title}
+      isRequired={schema.required}
+      type={schema.type}
+      isClearable={true}
+      onChange={(e) => {
+        handleInputValue(e.target.value, `${path}/${schema.propertyName}`);
+      }}
+    />
+  </div>
+);
 
 interface CredentialFormObjectProps {
   path: string;
