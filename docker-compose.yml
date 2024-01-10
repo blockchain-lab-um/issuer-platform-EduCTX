@@ -19,7 +19,7 @@ services:
     volumes:
       - eductx-issuer-db:/data/postgres
     ports:
-      - '127.0.0.1:5432:5432'
+      - '127.0.0.1:34569:5432'
     restart: unless-stopped
   issuer:
     image: blockchain-lab-um/eductx-platform-issuer:latest
@@ -27,7 +27,7 @@ services:
     depends_on:
       - db
     ports:
-      - '3001:3001'
+      - '34568:3001'
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-credentials}
       PROOF_AUDIENCE: ${PROOF_AUDIENCE}
@@ -40,7 +40,7 @@ services:
     image: blockchain-lab-um/eductx-platform-dashboard:latest
     container_name: eductx-dashboard
     ports:
-      - '3000:3000'
+      - '34567:3000'
     environment:
       AZURE_AD_CLIENT_ID: ${AZURE_AD_CLIENT_ID}
       AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
