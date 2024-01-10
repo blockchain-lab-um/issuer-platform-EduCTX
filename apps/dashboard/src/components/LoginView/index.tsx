@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -44,7 +42,7 @@ export const LoginView = () => {
                   />
                 </div>
               </div>
-              <div className="mx-24 mt-32 flex">
+              <div className="m-32 mx-24 flex">
                 <div>
                   <div>
                     <span className="text-xl font-bold text-gray-700 md:text-5xl">
@@ -103,7 +101,7 @@ export const LoginView = () => {
                     size="md"
                     color="success"
                     variant="flat"
-                    onClick={() => signIn()}
+                    onClick={() => signIn(undefined, { callbackUrl: '/issue' })}
                   >
                     Login
                   </Button>

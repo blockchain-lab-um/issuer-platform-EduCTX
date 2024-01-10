@@ -101,11 +101,7 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
   const agent = await createVeramoAgent();
   let identifier: IIdentifier;
 
-  if (
-    process.env.EBSI_BEARER_TOKEN &&
-    process.env.EBSI_PRIVATE_KEY &&
-    process.env.EBSI_ID
-  ) {
+  if (process.env.EBSI_PRIVATE_KEY && process.env.EBSI_ID) {
     identifier = await agent.didManagerCreate({
       provider: 'did:ebsi',
       alias: 'ebsi',

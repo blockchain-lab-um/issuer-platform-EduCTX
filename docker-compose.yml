@@ -34,6 +34,7 @@ services:
       EBSI_BEARER_TOKEN: ${EBSI_BEARER_TOKEN}
       EBSI_PRIVATE_KEY: ${EBSI_PRIVATE_KEY}
       EBSI_ID: ${EBSI_ID}
+      API_KEY: ${API_KEY}
     restart: unless-stopped
   dashboard:
     image: blockchain-lab-um/eductx-platform-dashboard:latest
@@ -45,4 +46,5 @@ services:
       AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       ISSUER_ENDPOINT: http://issuer:3001
+      API_KEY: ${API_KEY}
     restart: unless-stopped

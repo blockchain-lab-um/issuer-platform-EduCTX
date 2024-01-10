@@ -1,3 +1,5 @@
+'use client';
+
 import React, { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dialog, Transition } from '@headlessui/react';
@@ -11,7 +13,6 @@ import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 
 import { Logo } from '@/components/Logo';
-import { ISSUER_ENDPOINT } from '@/config/api';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
 
@@ -96,36 +97,22 @@ export const IssueView = () => {
   };
 
   const issue = async () => {
-    const body = inputs;
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
     headers.append('schemaType', selectedSchema!.type || '');
-    try {
-      const response = await fetch(`${ISSUER_ENDPOINT}/issue-deferred`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      });
+    const body = inputs;
+    const response = await fetch(`/api/issue-deferred`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
 
-      if (response.ok) {
-        setCredentialIssued(true);
-      }
-    } catch (error: any) {
-      console.error('Error making POST request:', error.message);
-      if (error.response) {
-        console.error('Response Data:', error.response.data);
-        console.error('Response Status:', error.response.status);
-        console.error('Response Headers:', error.response.headers);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Axios config error:', error.config);
-      }
+    if (response.ok) {
+      setCredentialIssued(true);
     }
   };
 
   const goBack = () => {
-    console.log('clicked');
     setCredentialIssued(false);
     setNext(false);
     setSelectedSchema(null);
