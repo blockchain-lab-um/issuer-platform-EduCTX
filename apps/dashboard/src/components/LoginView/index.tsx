@@ -27,7 +27,7 @@ export const LoginView = () => {
               <div className="flex h-min w-full items-center justify-between p-2">
                 <div>
                   <Image
-                    src="/images/EDU-Coin.png"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}/images/EDU-Coin.png`}
                     alt="Logo"
                     width={64}
                     height={64}
@@ -35,7 +35,7 @@ export const LoginView = () => {
                 </div>
                 <div>
                   <Image
-                    src="/images/blockchain-lab.svg"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}/images/blockchain-lab.svg`}
                     alt="Logo"
                     width={64}
                     height={64}
@@ -76,7 +76,7 @@ export const LoginView = () => {
                 </div>
                 <div>
                   <Image
-                    src="/images/hero.svg"
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}/images/hero.svg`}
                     alt="Logo"
                     width={361}
                     height={306}

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: '/eductx',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
   output: 'standalone',
 };
 
