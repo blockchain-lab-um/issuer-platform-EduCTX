@@ -14,7 +14,6 @@ import {
   TableRow,
 } from '@nextui-org/react';
 
-import { ISSUER_ENDPOINT } from '@/config/api';
 import { useGeneralStore, useMascaStore } from '@/stores';
 import { Logo } from '../Logo';
 
@@ -38,7 +37,7 @@ export const ClaimView = () => {
   const [noCredentials, setNoCredentials] = useState(false);
 
   async function getProof(): Promise<string | undefined> {
-    const url = `${ISSUER_ENDPOINT}/query/nonce/${currDID}`;
+    const url = `${process.env.ISSUER_ENDPOINT}/query/nonce/${currDID}`;
     const res = await fetch(url);
     const data = await res.json();
     const signedData = await api?.signData({
@@ -68,7 +67,7 @@ export const ClaimView = () => {
   const checkForCredentials = async () => {
     setNoCredentials(false);
 
-    const claimUrl = `${ISSUER_ENDPOINT}/query/claim`;
+    const claimUrl = `${process.env.ISSUER_ENDPOINT}/query/claim`;
 
     const proof = await getProof();
     if (!proof) {
@@ -108,7 +107,7 @@ export const ClaimView = () => {
       return;
     }
 
-    const url = `${ISSUER_ENDPOINT}/query/${id}`;
+    const url = `${process.env.ISSUER_ENDPOINT}/query/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
