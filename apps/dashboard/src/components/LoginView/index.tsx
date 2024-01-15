@@ -101,7 +101,11 @@ export const LoginView = () => {
                     size="md"
                     color="success"
                     variant="flat"
-                    onClick={() => signIn(undefined, { callbackUrl: '/issue' })}
+                    onClick={() =>
+                      signIn(undefined, {
+                        callbackUrl: `${process.env.NEXT_PUBLIC_BASE_PATH}/issue`,
+                      })
+                    }
                   >
                     Login
                   </Button>
