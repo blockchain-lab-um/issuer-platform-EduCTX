@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   headers.append('x-api-key', process.env.API_KEY || '');
   try {
     const response = await fetch(
-      `${process.env.ISSUER_ENDPOINT}/issue-deferred`,
+      `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/issue-deferred`,
       {
         method: 'POST',
         headers,
