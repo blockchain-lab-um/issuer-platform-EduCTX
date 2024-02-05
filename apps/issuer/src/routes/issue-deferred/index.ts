@@ -46,10 +46,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
         credential: {
           issuer: fastify.issuerIdentifier.did,
           type: ['VerifiableCredential', 'EducationCredential'],
-          '@context': [
-            'https://www.w3.org/2018/credentials/v1',
-            'https://schema.org',
-          ],
+          '@context': ['https://www.w3.org/2018/credentials/v1'],
           credentialSubject: data.credentialSubject,
         },
       };
@@ -101,10 +98,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
             credential: {
               issuer: fastify.issuerIdentifier.did,
               type: ['VerifiableCredential', 'EducationCredential'],
-              '@context': [
-                'https://www.w3.org/2018/credentials/v1',
-                'https://schema.org',
-              ],
+              '@context': ['https://www.w3.org/2018/credentials/v1'],
               ...subject,
             },
           };
