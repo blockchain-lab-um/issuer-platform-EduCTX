@@ -38,14 +38,7 @@ interface Schema {
   fields: SchemaNode[] | SchemaObject[];
 }
 
-const SCHEMAS: Schema[] = [
-  {
-    title: 'Schema A',
-    fields: [{ title: 'test', type: 'string', propertyName: 'test' }],
-    type: '#didSchema',
-  },
-  EducationalCredentialSchema,
-];
+const SCHEMAS: Schema[] = [EducationalCredentialSchema];
 
 export const IssueView = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -181,9 +174,9 @@ export const IssueView = () => {
                   <span className="text-md block text-center font-medium text-gray-600">
                     Welcome
                   </span>
-                  <span className="block text-center text-lg font-semibold text-gray-800">
+                  {/* <span className="block text-center text-lg font-semibold text-gray-800">
                     Mr. Professor
-                  </span>
+                  </span> */}
                 </div>
 
                 <nav className="mt-8 space-y-1 px-2">
@@ -199,7 +192,7 @@ export const IssueView = () => {
                   >
                     <DocumentPlusIcon
                       className={clsx(
-                        ' text-green-500 hover:text-green-600',
+                        'text-green-500 hover:text-green-600',
                         'mr-3 h-6 w-6 flex-shrink-0'
                       )}
                       aria-hidden="true"
@@ -239,9 +232,9 @@ export const IssueView = () => {
               <span className="text-md block text-center font-medium text-gray-600">
                 Welcome
               </span>
-              <span className="block text-center text-lg font-semibold text-gray-800">
+              {/* <span className="block text-center text-lg font-semibold text-gray-800">
                 Mr. Professor
-              </span>
+              </span> */}
             </div>
 
             <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
