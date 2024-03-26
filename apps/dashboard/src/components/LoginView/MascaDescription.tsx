@@ -28,7 +28,7 @@ export const MascaDescription = () => (
   <div>
     <div className="flex flex-col items-center p-12">
       <div className=" text-lg text-gray-900">
-        EduCTX requires MetaMask with plugin Masca installed to work
+        In order to collect your credentials, EduCTX 2.0 requires you to use a digital wallet like Masca
       </div>
       <div className="mt-8 min-w-[10em] rounded-3xl border-2 border-gray-300 px-12 py-8 lg:min-w-[30em]">
         <div className="flex items-center gap-x-6">
@@ -38,7 +38,7 @@ export const MascaDescription = () => (
           <div>
             <div className=" text-xl font-bold">Masca</div>
             <div className="mt-2 text-lg">
-              Manage Decentralized Identity in MetaMask
+              A decentralized digital identity wallet based on Metamask
             </div>
           </div>
         </div>

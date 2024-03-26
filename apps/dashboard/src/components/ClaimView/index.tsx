@@ -139,10 +139,6 @@ export const ClaimView = () => {
 
     if (isError(result!)) {
       console.error(result);
-      if (result.error === 'Error: User rejected save credential request.') {
-        deleteCredential(id).catch(() => {});
-        return;
-      }
       return;
     }
 
@@ -154,8 +150,6 @@ export const ClaimView = () => {
     });
 
     setCredentials(updatedCredentials);
-
-    requestDeletion(id).catch(() => {});
   };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
@@ -337,7 +331,7 @@ export const ClaimView = () => {
                         </Button>
                         {noCredentials && (
                           <label className="mt-4 text-red-500">
-                            No Credentials found...
+                            Sorry, it seams that there are no new credentials for you to claim. Try again later.
                           </label>
                         )}
                       </div>
