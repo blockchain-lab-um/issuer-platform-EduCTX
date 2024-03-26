@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 
 import { Logo } from '@/components/Logo';
+import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
 
@@ -89,6 +90,12 @@ export const IssueView = () => {
     setInputs(newInputs);
   };
 
+  const goBack = () => {
+    setCredentialIssued(false);
+    setNext(false);
+    setSelectedSchema(null);
+  };
+
   const issue = async () => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -105,13 +112,25 @@ export const IssueView = () => {
 
     if (response.ok) {
       setCredentialIssued(true);
+      useToastStore.setState({
+        open: true,
+        title: "Credential Issued",
+        type: 'success',
+        loading: false,
+        link: null,
+      });
+      return;
     }
-  };
 
-  const goBack = () => {
-    setCredentialIssued(false);
-    setNext(false);
-    setSelectedSchema(null);
+    const responseBody = await response.json();
+    console.error(responseBody.error);
+    useToastStore.setState({
+      open: true,
+      title: response.statusText,
+      type: 'error',
+      loading: false,
+      link: null,
+    });
   };
 
   return (
@@ -202,8 +221,8 @@ export const IssueView = () => {
                 </nav>
                 <div className="flex justify-center p-4">
                   <Button
-                    size="sm"
-                    variant="light"
+                    size="md"
+                    color="danger"
                     onClick={() => {
                       signOut()
                         .then(() => {
@@ -260,8 +279,8 @@ export const IssueView = () => {
           </div>
           <div className="flex justify-center p-4">
             <Button
-              size="sm"
-              variant="light"
+              size="md"
+              color="danger"
               onClick={() => {
                 signOut()
                   .then(() => {
