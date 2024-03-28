@@ -22,7 +22,9 @@ const config: Config = {
           to: { opacity: '0' },
         },
         slideIn: {
-          from: { transform: 'translateX(calc(100% + var(--viewport-padding)))' },
+          from: {
+            transform: 'translateX(calc(100% + var(--viewport-padding)))',
+          },
           to: { transform: 'translateX(0)' },
         },
         swipeOut: {

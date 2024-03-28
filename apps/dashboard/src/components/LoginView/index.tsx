@@ -53,7 +53,9 @@ export const LoginView = () => {
                     </span>
                   </div>
                   <div className="text-md mt-4 font-medium text-gray-600 md:text-xl">
-                    A robust and decentralized tool for managing digital documents (e.g., micro-credentials) in the form of Verifiable Credentials
+                    A robust and decentralized tool for managing digital
+                    documents (e.g., micro-credentials) in the form of
+                    Verifiable Credentials
                   </div>
                   <div className="mt-4 flex gap-x-2">
                     <Button
@@ -87,7 +89,8 @@ export const LoginView = () => {
           {userType === 1 && (
             <div className="flex h-full w-full items-center justify-center py-16">
               <div>
-                For the purpose of login we will redirect you to your Corporate Digital Identity Provider
+                For the purpose of login we will redirect you to your Corporate
+                Digital Identity Provider
                 <div className="mt-4 flex justify-center gap-x-2">
                   <Button
                     size="md"

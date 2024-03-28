@@ -114,7 +114,7 @@ export const IssueView = () => {
       setCredentialIssued(true);
       useToastStore.setState({
         open: true,
-        title: "Credential Issued",
+        title: 'Credential Issued',
         type: 'success',
         loading: false,
         link: null,

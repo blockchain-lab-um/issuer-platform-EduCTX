@@ -331,7 +331,8 @@ export const ClaimView = () => {
                         </Button>
                         {noCredentials && (
                           <label className="mt-4 text-red-500">
-                            Sorry, it seams that there are no new credentials for you to claim. Try again later.
+                            Sorry, it seams that there are no new credentials
+                            for you to claim. Try again later.
                           </label>
                         )}
                       </div>
