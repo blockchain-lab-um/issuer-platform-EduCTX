@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import {
+import type {
   CredentialSubject,
   ICreateVerifiableCredentialArgs,
   VerifiableCredential,
 } from '@veramo/core';
-import { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
 
-import { CredentialsTable } from '../../db/types/index.js';
+import type { CredentialsTable } from '../../db/types/index.js';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { routeSchemas } from '../../utils/schemas/index.js';
 

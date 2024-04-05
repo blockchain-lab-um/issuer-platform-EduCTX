@@ -7,25 +7,25 @@ import {
   getDidKeyResolver as keyDidResolver,
 } from '@blockchain-lab-um/did-provider-key';
 import {
-  AbstractDataStore,
+  type AbstractDataStore,
   DataManager,
   MemoryDataStore,
 } from '@blockchain-lab-um/veramo-datamanager';
 import {
   createAgent,
-  ICredentialIssuer,
-  ICredentialVerifier,
-  IDataStore,
-  IDIDManager,
-  IIdentifier,
-  IKeyManager,
-  IResolver,
-  MinimalImportableKey,
-  TAgent,
+  type ICredentialIssuer,
+  type ICredentialVerifier,
+  type IDataStore,
+  type IDIDManager,
+  type IIdentifier,
+  type IKeyManager,
+  type IResolver,
+  type MinimalImportableKey,
+  type TAgent,
 } from '@veramo/core';
 import { CredentialPlugin } from '@veramo/credential-w3c';
 import {
-  AbstractIdentifierProvider,
+  type AbstractIdentifierProvider,
   DIDManager,
   MemoryDIDStore,
 } from '@veramo/did-manager';
@@ -37,7 +37,7 @@ import {
 } from '@veramo/key-manager';
 import { KeyManagementSystem } from '@veramo/kms-local';
 import { Resolver } from 'did-resolver';
-import { FastifyPluginOptions } from 'fastify';
+import type { FastifyPluginOptions } from 'fastify';
 import fp from 'fastify-plugin';
 
 export type Agent = TAgent<

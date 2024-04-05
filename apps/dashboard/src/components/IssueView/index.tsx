@@ -119,18 +119,17 @@ export const IssueView = () => {
         loading: false,
         link: null,
       });
-      return;
+    } else {
+      const responseBody = await response.json();
+      console.error(responseBody.error);
+      useToastStore.setState({
+        open: true,
+        title: response.statusText,
+        type: 'error',
+        loading: false,
+        link: null,
+      });
     }
-
-    const responseBody = await response.json();
-    console.error(responseBody.error);
-    useToastStore.setState({
-      open: true,
-      title: response.statusText,
-      type: 'error',
-      loading: false,
-      link: null,
-    });
   };
 
   return (
@@ -200,6 +199,7 @@ export const IssueView = () => {
 
                 <nav className="mt-8 space-y-1 px-2">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsIssuing(true);
                       setSidebarOpen(false);
@@ -237,7 +237,7 @@ export const IssueView = () => {
               </div>
             </div>
           </Transition.Child>
-          <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
+          <div className="w-14 flex-shrink-0" aria-hidden="true" />
         </Dialog>
       </Transition.Root>
 
@@ -258,6 +258,7 @@ export const IssueView = () => {
 
             <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
               <button
+                type="button"
                 onClick={() => {
                   setIsIssuing(true);
                 }}
@@ -365,7 +366,11 @@ export const IssueView = () => {
                             <CredentialForm
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
-                              submitForm={() => issue()}
+                              submitForm={() => {
+                                issue().catch((error) => {
+                                  console.error('Error enabling Masca:', error);
+                                });
+                              }}
                               isIssued={credentialIssued}
                               goBack={() => goBack()}
                             />
@@ -390,6 +395,7 @@ export const IssueView = () => {
                       <div className="mt-8 flex justify-center">
                         <div>
                           <button
+                            type="button"
                             onClick={() => {
                               setIsIssuing(true);
                             }}

@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import { FastifyPluginAsync, FastifyRequest } from 'fastify';
-import { FastifyReply } from 'fastify/types/reply.js';
+import type { FastifyPluginAsync, FastifyRequest } from 'fastify';
+import type { FastifyReply } from 'fastify/types/reply.js';
 
-import { CredentialsTable, NoncesTable } from '../../db/types/index.js';
+import type { CredentialsTable, NoncesTable } from '../../db/types/index.js';
 import verifyProofPlugin from '../../plugins/proofOfPossession.js';
 
 const query: FastifyPluginAsync = async (fastify): Promise<void> => {

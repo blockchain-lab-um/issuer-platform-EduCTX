@@ -1,4 +1,4 @@
-import fastifyPostgres, { PostgresPluginOptions } from '@fastify/postgres';
+import fastifyPostgres, { type PostgresPluginOptions } from '@fastify/postgres';
 import fp from 'fastify-plugin';
 
 export default fp<PostgresPluginOptions>(async (fastify) => {

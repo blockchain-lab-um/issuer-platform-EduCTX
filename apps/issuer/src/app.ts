@@ -1,7 +1,7 @@
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
-import { FastifyPluginAsync } from 'fastify';
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
+import type { FastifyPluginAsync } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
 
 import { Schemas } from './utils/schemas/index.js';

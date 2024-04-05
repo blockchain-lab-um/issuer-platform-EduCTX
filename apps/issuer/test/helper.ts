@@ -1,8 +1,8 @@
 // This file contains code that we reuse between our tests.
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import helper from 'fastify-cli/helper.js';
-import tap from 'tap';
+import type tap from 'tap';
 
 export type Test = (typeof tap)['Test']['prototype'];
 

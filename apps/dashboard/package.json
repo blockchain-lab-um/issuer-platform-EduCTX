@@ -9,8 +9,8 @@
     "postbuild": "next-sitemap --config=next-sitemap.config.js",
     "dev": "next dev",
     "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-dashboard",
-    "lint": "next lint && prettier . --check && tsc -p tsconfig.json --noEmit --incremental false",
-    "lint:fix": "next lint . --fix && prettier . --write",
+    "lint": "pnpm biome check .",
+    "lint:fix": "pnpm biome check --apply .",
     "start": "next start"
   },
   "dependencies": {

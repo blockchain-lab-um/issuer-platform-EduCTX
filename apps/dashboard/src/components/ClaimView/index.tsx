@@ -222,6 +222,7 @@ export const ClaimView = () => {
                         {currDID}
                       </span>
                       <button
+                        type="button"
                         onClick={() => {
                           navigator.clipboard
                             .writeText(currDID)
@@ -247,7 +248,7 @@ export const ClaimView = () => {
                 </div>
               </div>
             </Transition.Child>
-            <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
+            <div className="w-14 flex-shrink-0" aria-hidden="true" />
           </Dialog>
         </Transition.Root>
 
@@ -266,6 +267,7 @@ export const ClaimView = () => {
                     {currDID}
                   </span>
                   <button
+                    type="button"
                     onClick={() => {
                       navigator.clipboard.writeText(currDID).catch(() => {});
                     }}
@@ -406,6 +408,7 @@ export const ClaimView = () => {
                                   <TableCell>
                                     {!obj.claimed && (
                                       <button
+                                        type="button"
                                         onClick={() => {
                                           deleteCredential(obj.id).catch(
                                             () => {}

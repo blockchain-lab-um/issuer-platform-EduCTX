@@ -98,10 +98,10 @@ export const CredentialFormObject = ({
       )}
 
       <div className={`${!isOpen && 'hidden'}`}>
-        {schema.fields.map((field: any, key: any) => {
+        {schema.fields.map((field: any, key: number) => {
           if (field.type === 'object') {
             return (
-              <div key={key} className="ml-4">
+              <div key={key.toString()} className="ml-4">
                 <CredentialFormObject
                   path={`${path}/${schema.propertyName}`}
                   schema={field}
@@ -111,7 +111,7 @@ export const CredentialFormObject = ({
             );
           }
           return (
-            <div key={key}>
+            <div key={key.toString()}>
               <CredentialFormNode
                 path={`${path}/${schema.propertyName}`}
                 schema={field}
@@ -140,10 +140,10 @@ export const CredentialForm = ({
       }}
     >
       <div className="">
-        {schema.fields.map((field: any, key: any) => {
+        {schema.fields.map((field: any, key: number) => {
           if (field.type === 'object') {
             return (
-              <div key={key}>
+              <div key={key.toString()}>
                 <CredentialFormObject
                   path={''}
                   schema={field}
@@ -153,7 +153,7 @@ export const CredentialForm = ({
             );
           }
           return (
-            <div key={key}>
+            <div key={key.toString()}>
               <CredentialFormNode
                 path={''}
                 schema={field}

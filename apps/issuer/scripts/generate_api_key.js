@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 
 // Script for generating an API key for the issuer app
 const generateApiKey = () => {

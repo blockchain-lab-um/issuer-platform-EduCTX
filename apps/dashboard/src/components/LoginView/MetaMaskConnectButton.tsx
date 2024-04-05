@@ -149,7 +149,11 @@ const ConnectButton = () => {
         <Button
           color="success"
           variant="flat"
-          onClick={() => enableMascaHandler()}
+          onClick={() => {
+            enableMascaHandler().catch((error) => {
+              console.error('Error enabling Masca:', error);
+            });
+          }}
           isLoading={isConnecting}
         >
           Connect MetaMask
@@ -160,6 +164,7 @@ const ConnectButton = () => {
           className="text-pink-500 underline"
           href="https://metamask.io/download/"
           target="_blank"
+          rel="noreferrer"
         >
           Install MetaMask to continue!
         </a>

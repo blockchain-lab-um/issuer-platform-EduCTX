@@ -1,4 +1,4 @@
-import { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync } from 'fastify';
 import SchemaConstraint from 'fastify-schema-constraint';
 
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
