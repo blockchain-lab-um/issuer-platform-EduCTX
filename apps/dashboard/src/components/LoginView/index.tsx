@@ -35,7 +35,7 @@ export const LoginView = () => {
                 </div>
                 <div>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}i/mages/blockchain-lab.svg`}
+                    src={`${process.env.NEXT_PUBLIC_BASE_PATH}/images/blockchain-lab.svg`}
                     alt="Logo"
                     width={64}
                     height={64}
