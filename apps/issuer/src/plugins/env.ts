@@ -1,4 +1,4 @@
-import envSchema, { JSONSchemaType } from 'env-schema';
+import envSchema, { type JSONSchemaType } from 'env-schema';
 import fp from 'fastify-plugin';
 
 export interface Env {

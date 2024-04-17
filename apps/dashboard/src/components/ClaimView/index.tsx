@@ -40,6 +40,7 @@ export const ClaimView = () => {
     const url = `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/query/nonce/${currDID}`;
     const res = await fetch(url);
     const data = await res.json();
+
     const signedData = await api?.signData({
       type: 'JWT',
       data: {
@@ -139,10 +140,6 @@ export const ClaimView = () => {
 
     if (isError(result!)) {
       console.error(result);
-      if (result.error === 'Error: User rejected save credential request.') {
-        deleteCredential(id).catch(() => {});
-        return;
-      }
       return;
     }
 
@@ -154,8 +151,6 @@ export const ClaimView = () => {
     });
 
     setCredentials(updatedCredentials);
-
-    requestDeletion(id).catch(() => {});
   };
 
   const { changeIsConnected } = useGeneralStore((state) => ({
@@ -228,6 +223,7 @@ export const ClaimView = () => {
                         {currDID}
                       </span>
                       <button
+                        type="button"
                         onClick={() => {
                           navigator.clipboard
                             .writeText(currDID)
@@ -253,7 +249,7 @@ export const ClaimView = () => {
                 </div>
               </div>
             </Transition.Child>
-            <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
+            <div className="w-14 flex-shrink-0" aria-hidden="true" />
           </Dialog>
         </Transition.Root>
 
@@ -272,6 +268,7 @@ export const ClaimView = () => {
                     {currDID}
                   </span>
                   <button
+                    type="button"
                     onClick={() => {
                       navigator.clipboard.writeText(currDID).catch(() => {});
                     }}
@@ -283,8 +280,8 @@ export const ClaimView = () => {
             </div>
             <div className="flex justify-center p-4">
               <Button
-                size="sm"
-                variant="light"
+                size="md"
+                color="danger"
                 onClick={() => {
                   changeIsConnected(false);
                   router.push('/');
@@ -337,7 +334,8 @@ export const ClaimView = () => {
                         </Button>
                         {noCredentials && (
                           <label className="mt-4 text-red-500">
-                            No Credentials found...
+                            Sorry, it seems that there are no new credentials
+                            for you to claim. Try again later.
                           </label>
                         )}
                       </div>
@@ -411,6 +409,7 @@ export const ClaimView = () => {
                                   <TableCell>
                                     {!obj.claimed && (
                                       <button
+                                        type="button"
                                         onClick={() => {
                                           deleteCredential(obj.id).catch(
                                             () => {}

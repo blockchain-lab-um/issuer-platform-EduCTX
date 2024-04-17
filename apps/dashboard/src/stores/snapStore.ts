@@ -1,4 +1,4 @@
-import { type MascaApi } from '@blockchain-lab-um/masca-connector';
+import type { MascaApi } from '@blockchain-lab-um/masca-connector';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 

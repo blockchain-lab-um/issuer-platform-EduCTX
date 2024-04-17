@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 
 import { Logo } from '@/components/Logo';
+import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
 
@@ -42,7 +43,9 @@ const SCHEMAS: Schema[] = [EducationalCredentialSchema];
 
 export const IssueView = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedSchema, setSelectedSchema] = useState<Schema | null>(null);
+  const [selectedSchema, setSelectedSchema] = useState<Schema | null>(
+    SCHEMAS[0]
+  );
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
   const [_, setIsFilled] = useState(false);
@@ -89,6 +92,11 @@ export const IssueView = () => {
     setInputs(newInputs);
   };
 
+  const goBack = () => {
+    setCredentialIssued(false);
+    setNext(false);
+  };
+
   const issue = async () => {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
@@ -105,13 +113,24 @@ export const IssueView = () => {
 
     if (response.ok) {
       setCredentialIssued(true);
+      useToastStore.setState({
+        open: true,
+        title: 'Credential Issued',
+        type: 'success',
+        loading: false,
+        link: null,
+      });
+    } else {
+      const responseBody = await response.json();
+      console.error(responseBody.error);
+      useToastStore.setState({
+        open: true,
+        title: response.statusText,
+        type: 'error',
+        loading: false,
+        link: null,
+      });
     }
-  };
-
-  const goBack = () => {
-    setCredentialIssued(false);
-    setNext(false);
-    setSelectedSchema(null);
   };
 
   return (
@@ -181,6 +200,7 @@ export const IssueView = () => {
 
                 <nav className="mt-8 space-y-1 px-2">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsIssuing(true);
                       setSidebarOpen(false);
@@ -202,8 +222,8 @@ export const IssueView = () => {
                 </nav>
                 <div className="flex justify-center p-4">
                   <Button
-                    size="sm"
-                    variant="light"
+                    size="md"
+                    color="danger"
                     onClick={() => {
                       signOut()
                         .then(() => {
@@ -218,7 +238,7 @@ export const IssueView = () => {
               </div>
             </div>
           </Transition.Child>
-          <div className="w-14 flex-shrink-0" aria-hidden="true"></div>
+          <div className="w-14 flex-shrink-0" aria-hidden="true" />
         </Dialog>
       </Transition.Root>
 
@@ -239,6 +259,7 @@ export const IssueView = () => {
 
             <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
               <button
+                type="button"
                 onClick={() => {
                   setIsIssuing(true);
                 }}
@@ -260,8 +281,8 @@ export const IssueView = () => {
           </div>
           <div className="flex justify-center p-4">
             <Button
-              size="sm"
-              variant="light"
+              size="md"
+              color="danger"
               onClick={() => {
                 signOut()
                   .then(() => {
@@ -303,6 +324,7 @@ export const IssueView = () => {
                               label="Select a credential Schema"
                               className="max-w-xs"
                               onChange={handleSelectionChange}
+                              defaultSelectedKeys={['Education Credential']}
                             >
                               {SCHEMAS.map((schema) => (
                                 <SelectItem
@@ -346,7 +368,16 @@ export const IssueView = () => {
                             <CredentialForm
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
-                              submitForm={() => issue()}
+                              submitForm={() => {
+                                issue()
+                                  .then(() => goBack())
+                                  .catch((error) => {
+                                    console.error(
+                                      'Error enabling Masca:',
+                                      error
+                                    );
+                                  });
+                              }}
                               isIssued={credentialIssued}
                               goBack={() => goBack()}
                             />
@@ -371,6 +402,7 @@ export const IssueView = () => {
                       <div className="mt-8 flex justify-center">
                         <div>
                           <button
+                            type="button"
                             onClick={() => {
                               setIsIssuing(true);
                             }}

@@ -11,12 +11,13 @@
     "test": "test"
   },
   "scripts": {
-    "build": "node build.js",
+    "build": "pnpm clean && node build.js",
+    "clean": "rimraf dist",
     "dev": "cross-env NODE_ENV=development pnpm build && concurrently -k -p \"[{name}]\" -n \"Typescript,App\" -c \"yellow.bold,cyan.bold\" \"pnpm watch:tsc\" \"pnpm dev:start\"",
     "dev:start": "node --watch dist/server.js",
     "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-issuer",
-    "lint": "eslint . --ext .js,.ts && prettier . --check && tsc -p tsconfig.json --noEmit --incremental false",
-    "lint:fix": "eslint . --ext .js,.ts --fix && prettier . --write && tsc -p tsconfig.json --noEmit --incremental false",
+    "lint": "pnpm biome check .",
+    "lint:fix": "pnpm biome check --apply .",
     "start": "node dist/server.js",
     "test": "pnpm build && tsc -p test/tsconfig.json && c8 tap --ts \"test/**/*.test.ts\"",
     "watch:esbuild": "esbuild --watch --platform=node --target=es2022 --outdir=dist src/*.ts src/**/*.ts src/**/**/*.ts",
@@ -24,11 +25,7 @@
   },
   "tap": {
     "coverage": false,
-    "node-arg": [
-      "--no-warnings",
-      "--experimental-loader",
-      "ts-node/esm"
-    ]
+    "node-arg": ["--no-warnings", "--experimental-loader", "ts-node/esm"]
   },
   "dependencies": {
     "@blockchain-lab-um/did-provider-ebsi": "^1.2.1-beta.0",

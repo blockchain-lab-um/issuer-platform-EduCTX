@@ -49,7 +49,7 @@ app.addHook('onClose', (_, done) => {
 // Start listening.
 app.listen(
   {
-    port: parseInt(process.env.PORT ?? '3001', 10),
+    port: Number.parseInt(process.env.PORT ?? '3001', 10),
     host: process.env.HOST ?? 'localhost',
   },
   (err: any) => {

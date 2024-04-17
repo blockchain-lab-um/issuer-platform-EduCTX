@@ -99,8 +99,8 @@ const ConnectButton = () => {
     const address = await connectHandler();
     if (!address) return;
     const enableResult = await enableMasca(address, {
-      version: '1.1.0',
-      supportedMethods: ['did:key'],
+      version: '1.2.2',
+      supportedMethods: ['did:key:jwk_jcs-pub'],
     });
     if (isError(enableResult)) {
       // FIXME: This error is shown as [Object object]
@@ -149,7 +149,11 @@ const ConnectButton = () => {
         <Button
           color="success"
           variant="flat"
-          onClick={() => enableMascaHandler()}
+          onClick={() => {
+            enableMascaHandler().catch((error) => {
+              console.error('Error enabling Masca:', error);
+            });
+          }}
           isLoading={isConnecting}
         >
           Connect MetaMask
@@ -160,6 +164,7 @@ const ConnectButton = () => {
           className="text-pink-500 underline"
           href="https://metamask.io/download/"
           target="_blank"
+          rel="noreferrer"
         >
           Install MetaMask to continue!
         </a>

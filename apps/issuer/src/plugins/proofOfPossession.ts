@@ -1,12 +1,12 @@
-import { JsonWebKey } from 'node:crypto';
+import type { JsonWebKey } from 'node:crypto';
 import {
-  _ExtendedVerificationMethod,
+  type _ExtendedVerificationMethod,
   bytesToBase64url,
   extractPublicKeyHex,
 } from '@veramo/utils';
-import { VerificationMethod } from 'did-resolver';
+import type { VerificationMethod } from 'did-resolver';
 import elliptic from 'elliptic';
-import {
+import type {
   FastifyInstance,
   FastifyReply,
   FastifyRequest,
@@ -16,9 +16,9 @@ import fp from 'fastify-plugin';
 import { decodeProtectedHeader, importJWK, jwtVerify } from 'jose';
 import type { Pool } from 'pg';
 
-import { NoncesTable } from '../db/types/index.js';
-import { Agent } from '../plugins/veramoAgent.js';
-import { JWTProof, ProofOfPossesionArgs } from '../types/index.js';
+import type { NoncesTable } from '../db/types/index.js';
+import type { Agent } from '../plugins/veramoAgent.js';
+import type { JWTProof, ProofOfPossesionArgs } from '../types/index.js';
 
 const { ec: EC } = elliptic;
 

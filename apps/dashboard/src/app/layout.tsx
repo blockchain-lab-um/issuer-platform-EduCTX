@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import '../styles/globals.css';
 
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import { Providers } from './providers';
