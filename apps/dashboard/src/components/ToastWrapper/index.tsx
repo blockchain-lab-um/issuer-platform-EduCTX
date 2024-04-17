@@ -39,7 +39,7 @@ const ToastWrapper = () => {
         open={open}
         onOpenChange={(_open) => useToastStore.setState({ open: _open })}
       >
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
           <Toast.Title
             className={clsx(
               toastTypeText[type],
@@ -56,6 +56,7 @@ const ToastWrapper = () => {
               {text}
             </Toast.Description>
           )}
+          <Toast.Close>Close</Toast.Close>
         </div>
       </Toast.Root>
       <Toast.Viewport className="fixed bottom-0 right-0 z-[2147483647] m-0 flex w-[390px] max-w-[100vw] list-none flex-col gap-[10px] p-[var(--viewport-padding)] outline-none [--viewport-padding:_25px]" />

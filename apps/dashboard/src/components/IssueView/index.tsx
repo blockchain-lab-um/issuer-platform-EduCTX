@@ -43,7 +43,9 @@ const SCHEMAS: Schema[] = [EducationalCredentialSchema];
 
 export const IssueView = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedSchema, setSelectedSchema] = useState<Schema | null>(null);
+  const [selectedSchema, setSelectedSchema] = useState<Schema | null>(
+    SCHEMAS[0]
+  );
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
   const [_, setIsFilled] = useState(false);
@@ -93,7 +95,6 @@ export const IssueView = () => {
   const goBack = () => {
     setCredentialIssued(false);
     setNext(false);
-    setSelectedSchema(null);
   };
 
   const issue = async () => {
@@ -323,6 +324,7 @@ export const IssueView = () => {
                               label="Select a credential Schema"
                               className="max-w-xs"
                               onChange={handleSelectionChange}
+                              defaultSelectedKeys={['Education Credential']}
                             >
                               {SCHEMAS.map((schema) => (
                                 <SelectItem
@@ -367,9 +369,14 @@ export const IssueView = () => {
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
                               submitForm={() => {
-                                issue().catch((error) => {
-                                  console.error('Error enabling Masca:', error);
-                                });
+                                issue()
+                                  .then(() => goBack())
+                                  .catch((error) => {
+                                    console.error(
+                                      'Error enabling Masca:',
+                                      error
+                                    );
+                                  });
                               }}
                               isIssued={credentialIssued}
                               goBack={() => goBack()}
