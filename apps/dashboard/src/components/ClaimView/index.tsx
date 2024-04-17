@@ -40,6 +40,7 @@ export const ClaimView = () => {
     const url = `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/query/nonce/${currDID}`;
     const res = await fetch(url);
     const data = await res.json();
+
     const signedData = await api?.signData({
       type: 'JWT',
       data: {
@@ -279,8 +280,8 @@ export const ClaimView = () => {
             </div>
             <div className="flex justify-center p-4">
               <Button
-                size="sm"
-                variant="light"
+                size="md"
+                color="danger"
                 onClick={() => {
                   changeIsConnected(false);
                   router.push('/');
