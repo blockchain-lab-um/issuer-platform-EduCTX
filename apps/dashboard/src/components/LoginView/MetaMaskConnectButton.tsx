@@ -151,7 +151,7 @@ const ConnectButton = () => {
           variant="flat"
           onClick={() => {
             enableMascaHandler().catch((error) => {
-              console.error('Error enabling Masca:', error);
+              changeIsConnecting(false);
             });
           }}
           isLoading={isConnecting}
