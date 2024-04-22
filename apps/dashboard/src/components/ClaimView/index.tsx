@@ -20,7 +20,7 @@ import { Logo } from '../Logo';
 interface MappedCredentials {
   credential: any;
   claimed: boolean;
-  created_at: string;
+  date: string;
   id: string;
 }
 
@@ -90,12 +90,16 @@ export const ClaimView = () => {
       return;
     }
 
-    const mappedCredentials: MappedCredentials[] = credData.map((obj: any) => ({
-      credential: obj.credential,
-      claimed: false,
-      date: obj.created_at,
-      id: obj.id,
-    }));
+    const mappedCredentials: MappedCredentials[] = credData
+      .map((obj: any) => ({
+        credential: obj.credential,
+        claimed: false,
+        date: obj.created_at,
+        id: obj.id,
+      }))
+      .sort((a: any, b: any) => {
+        return a.date > b.date ? -1 : a.date < b.date ? 1 : 0;
+      });
 
     setCredentials(mappedCredentials);
     setIsSelected(false);
@@ -364,6 +368,7 @@ export const ClaimView = () => {
                             <TableHeader>
                               <TableColumn>TITLE</TableColumn>
                               <TableColumn>ROLE</TableColumn>
+                              <TableColumn>DATE</TableColumn>
                               <TableColumn>STATUS</TableColumn>
                               <TableColumn>REJECT</TableColumn>
                             </TableHeader>
@@ -378,6 +383,11 @@ export const ClaimView = () => {
                                       : obj.credential.type.toString()}
                                   </TableCell>
                                   <TableCell>Course Participant</TableCell>
+                                  <TableCell>
+                                    {new Date(obj.date).toLocaleDateString(
+                                      'sl-SI'
+                                    )}
+                                  </TableCell>
                                   <TableCell>
                                     {obj.claimed ? (
                                       <Button
