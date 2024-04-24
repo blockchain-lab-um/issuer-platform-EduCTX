@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
 import type { SchemaObject } from '.';
 import { CredentialFormNode } from './CredentialFormNode';
+import clsx from 'clsx';
 
 interface CredentialFormObjectProps {
   path: string;
@@ -16,12 +17,13 @@ export const CredentialFormObject = ({
   handleInputValue,
   setDateValidity,
 }: CredentialFormObjectProps) => {
-  const [isOpen, setIsOpen] = React.useState(true);
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <div
-      className={`mt-2 rounded-none ${
+      className={clsx(
+        'mt-2 rounded-none',
         path !== '' && 'border-l-2 border-gray-300 p-1'
-      }`}
+      )}
     >
       {path === '' ? (
         <div className="font-medium text-gray-800">{schema.title}</div>

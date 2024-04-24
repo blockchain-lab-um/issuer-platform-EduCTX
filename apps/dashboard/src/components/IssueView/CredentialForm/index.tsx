@@ -110,7 +110,7 @@ export const CredentialForm = ({
             <Button
               color="primary"
               variant="flat"
-              className="text-md  bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
+              className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
               type="submit"
             >
               Issue Credential
