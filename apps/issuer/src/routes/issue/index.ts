@@ -40,6 +40,10 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
           issuer: fastify.issuerIdentifier.did,
           type: ['VerifiableCredential', 'EducationCredential'],
           '@context': ['https://www.w3.org/2018/credentials/v1'],
+          credentialSchema: {
+            id: 'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/356bce18f61e8d8d6ec0244510e56300f931dc2d/schemas/education/education-credential-schema.json',
+            type: 'JsonSchema',
+          },
           ...data,
         },
       });
