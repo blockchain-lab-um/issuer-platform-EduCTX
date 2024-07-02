@@ -114,7 +114,6 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
       },
     });
 
-    // eslint-disable-next-line no-console
     console.log(`Your issuer EBSI did is: ${identifier.did}`);
   } else {
     await agent.didManagerImport({

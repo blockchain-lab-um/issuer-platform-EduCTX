@@ -26,7 +26,7 @@
     "@commitlint/config-conventional": "^19.2.2",
     "@types/node": "^20.14.9",
     "cross-env": "^7.0.3",
-    "fastify-cli": "^5.8.0",
+    "fastify-cli": "^6.2.1",
     "husky": "^9.0.11",
     "is-ci": "^3.0.1",
     "lint-staged": "^15.2.7",

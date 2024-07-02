@@ -99,7 +99,7 @@ async function verifyProofOfPossession(
     if (fragment.publicKeyJwk) {
       publicKey = await importJWK(fragment.publicKeyJwk, protectedHeader.alg);
     } else {
-      const publicKeyHex = extractPublicKeyHex(
+      const { publicKeyHex } = extractPublicKeyHex(
         fragment as _ExtendedVerificationMethod,
       );
 

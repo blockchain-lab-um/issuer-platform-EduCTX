@@ -102,14 +102,11 @@ export const IssueView = () => {
     headers.append('Content-Type', 'application/json');
     headers.append('schemaType', selectedSchema!.type || '');
     const body = inputs;
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_PATH}/api/issue-deferred`,
-      {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-      },
-    );
+    const response = await fetch('/api/issue-deferred', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    });
 
     if (response.ok) {
       setCredentialIssued(true);

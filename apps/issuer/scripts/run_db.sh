@@ -13,17 +13,17 @@ DB_PORT="${POSTGRES_PORT:=34569}"
 
 # Launch postgres using Docker
 # Allow to skip Docker if a dockerized Postgres database is already running
-# if [ ! "$(docker ps -a -q -f name=eductx-issuer-db -f status=running)" ]; then
-#     docker run \
-#         -e POSTGRES_USER=${DB_USER} \
-#         -e POSTGRES_PASSWORD=${DB_PASSWORD} \
-#         -e POSTGRES_DB=${DB_NAME} \
-#         -p "${DB_PORT}":5432 \
-#         --name eductx-issuer-db \
-#         -d postgres:15.4-alpine3.18 \
-#         postgres -N 1000
-#     # ^ Increased maximum number of connections for testing purposes
-# fi
+if [ ! "$(docker ps -a -q -f name=eductx-issuer-db -f status=running)" ]; then
+    docker run \
+        -e POSTGRES_USER=${DB_USER} \
+        -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+        -e POSTGRES_DB=${DB_NAME} \
+        -p "${DB_PORT}":5432 \
+        --name eductx-issuer-db \
+        -d postgres:15.4-alpine3.18 \
+        postgres -N 1000
+    # ^ Increased maximum number of connections for testing purposes
+fi
 
 # Keep pinging Postgres until it's ready to accept commands
 export PGPASSWORD="${DB_PASSWORD}"
