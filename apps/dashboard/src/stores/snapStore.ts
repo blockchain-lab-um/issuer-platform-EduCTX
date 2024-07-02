@@ -31,5 +31,5 @@ export const useMascaStore = createWithEqualityFn<MascaStore>()(
     changeCurrDIDMethod: (currDIDMethod: string) => set({ currDIDMethod }),
     changeCurrDID: (currDID: string) => set({ currDID }),
   }),
-  shallow
+  shallow,
 );

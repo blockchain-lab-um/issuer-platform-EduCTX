@@ -49,7 +49,7 @@ export const CredentialForm = ({
         onSubmit={(e) => {
           e.preventDefault();
           const hasInvalidDate = Object.values(dateValidity).some(
-            (isInvalid) => isInvalid
+            (isInvalid) => isInvalid,
           );
           if (hasInvalidDate) {
             useToastStore.setState({

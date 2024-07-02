@@ -44,7 +44,7 @@ const SCHEMAS: Schema[] = [EducationalCredentialSchema];
 export const IssueView = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<Schema | null>(
-    SCHEMAS[0]
+    SCHEMAS[0],
   );
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
@@ -56,7 +56,7 @@ export const IssueView = () => {
 
   const handleSelectionChange = (e: { target: { value: string } }) => {
     const selectedShema = SCHEMAS.find(
-      (schema) => schema.title === e.target.value
+      (schema) => schema.title === e.target.value,
     );
     if (selectedShema) {
       setSelectedSchema(selectedShema);
@@ -108,7 +108,7 @@ export const IssueView = () => {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (response.ok) {
@@ -207,13 +207,13 @@ export const IssueView = () => {
                     }}
                     className={clsx(
                       'bg-green-50 text-green-500 hover:bg-green-50/80 hover:text-green-600',
-                      'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium'
+                      'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                     )}
                   >
                     <DocumentPlusIcon
                       className={clsx(
                         'text-green-500 hover:text-green-600',
-                        'mr-3 h-6 w-6 flex-shrink-0'
+                        'mr-3 h-6 w-6 flex-shrink-0',
                       )}
                       aria-hidden="true"
                     />
@@ -265,13 +265,13 @@ export const IssueView = () => {
                 }}
                 className={clsx(
                   'bg-green-50 text-green-500 hover:bg-green-50/80 hover:text-green-600',
-                  'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium'
+                  'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                 )}
               >
                 <DocumentPlusIcon
                   className={clsx(
                     ' text-green-500 hover:text-green-600',
-                    'mr-3 h-6 w-6 flex-shrink-0'
+                    'mr-3 h-6 w-6 flex-shrink-0',
                   )}
                   aria-hidden="true"
                 />
@@ -374,7 +374,7 @@ export const IssueView = () => {
                                   .catch((error) => {
                                     console.error(
                                       'Error enabling Masca:',
-                                      error
+                                      error,
                                     );
                                   });
                               }}
@@ -408,13 +408,13 @@ export const IssueView = () => {
                             }}
                             className={clsx(
                               'bg-green-100 text-green-600 hover:bg-green-50 ',
-                              'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium'
+                              'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                             )}
                           >
                             <DocumentPlusIcon
                               className={clsx(
                                 ' text-green-600',
-                                'mr-3 h-6 w-6 flex-shrink-0'
+                                'mr-3 h-6 w-6 flex-shrink-0',
                               )}
                               aria-hidden="true"
                             />

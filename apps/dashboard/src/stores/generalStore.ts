@@ -46,5 +46,5 @@ export const useGeneralStore = createWithEqualityFn<GeneralStore>()(
       set({ hasSnapInstalled }),
     changeChainId: (chainId: string) => set({ chainId }),
   }),
-  shallow
+  shallow,
 );

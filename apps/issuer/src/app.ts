@@ -20,7 +20,7 @@ const options: AppOptions = {};
 
 const app: FastifyPluginAsync<AppOptions> = async (
   fastify,
-  opts
+  opts,
 ): Promise<void> => {
   Schemas.forEach((schema) => {
     fastify.addSchema(schema);

@@ -62,7 +62,7 @@ export const CredentialFormNode = ({
               ? (() => {
                   setDateError(true);
                   setDateErrorText(
-                    'Invalid date format. Please use YYYY-MM-DD.'
+                    'Invalid date format. Please use YYYY-MM-DD.',
                   );
                 })()
               : (() => {

@@ -385,7 +385,7 @@ export const ClaimView = () => {
                                   <TableCell>Course Participant</TableCell>
                                   <TableCell>
                                     {new Date(obj.date).toLocaleDateString(
-                                      'sl-SI'
+                                      'sl-SI',
                                     )}
                                   </TableCell>
                                   <TableCell>
@@ -406,7 +406,7 @@ export const ClaimView = () => {
                                         onClick={() => {
                                           claimCredential(
                                             obj.credential,
-                                            obj.id
+                                            obj.id,
                                           )
                                             .then(() => {})
                                             .catch(() => {});
@@ -422,7 +422,7 @@ export const ClaimView = () => {
                                         type="button"
                                         onClick={() => {
                                           deleteCredential(obj.id).catch(
-                                            () => {}
+                                            () => {},
                                           );
                                         }}
                                       >

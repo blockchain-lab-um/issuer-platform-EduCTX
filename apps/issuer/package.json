@@ -19,13 +19,8 @@
     "lint": "pnpm biome check .",
     "lint:fix": "pnpm biome check --apply .",
     "start": "node dist/server.js",
-    "test": "pnpm build && tsc -p test/tsconfig.json && c8 tap --ts \"test/**/*.test.ts\"",
     "watch:esbuild": "esbuild --watch --platform=node --target=es2022 --outdir=dist src/*.ts src/**/*.ts src/**/**/*.ts",
     "watch:tsc": "tsc -w -p tsconfig.json"
-  },
-  "tap": {
-    "coverage": false,
-    "node-arg": ["--no-warnings", "--experimental-loader", "ts-node/esm"]
   },
   "dependencies": {
     "@blockchain-lab-um/did-provider-ebsi": "^1.2.1-beta.0",
@@ -57,16 +52,13 @@
   },
   "devDependencies": {
     "@types/elliptic": "^6.4.15",
-    "@types/node": "^20.4.4",
+    "@types/node": "^20.14.9",
     "@types/pg": "^8.10.3",
     "@types/tap": "^15.0.5",
-    "c8": "^7.13.0",
-    "concurrently": "^7.0.0",
-    "esbuild": "^0.19.3",
+    "concurrently": "^8.2.2",
+    "esbuild": "^0.23.0",
     "fastify-tsconfig": "^1.0.1",
-    "pino-pretty": "^10.2.3",
-    "tap": "^16.1.0",
-    "ts-node": "^10.4.0",
-    "typescript": "^4.5.4"
+    "pino-pretty": "^11.2.1",
+    "typescript": "^5.5.3"
   }
 }

@@ -49,7 +49,7 @@ const issue: FastifyPluginAsync = async (fastify): Promise<void> => {
       });
 
       return reply.code(200).send(vc);
-    }
+    },
   );
 };
 

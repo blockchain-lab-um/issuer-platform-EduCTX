@@ -25,5 +25,5 @@ export const useToastStore = createWithEqualityFn<ToastStore>()(
   () => ({
     ...toastStoreInitialState,
   }),
-  shallow
+  shallow,
 );

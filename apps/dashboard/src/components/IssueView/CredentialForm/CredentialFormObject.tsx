@@ -22,7 +22,7 @@ export const CredentialFormObject = ({
     <div
       className={clsx(
         'mt-2 rounded-none',
-        path !== '' && 'border-l-2 border-gray-300 p-1'
+        path !== '' && 'border-l-2 border-gray-300 p-1',
       )}
     >
       {path === '' ? (

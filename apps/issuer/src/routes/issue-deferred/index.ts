@@ -58,7 +58,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       let vc;
       try {
         vc = await agent.createVerifiableCredential(
-          credentialArgs as ICreateVerifiableCredentialArgs
+          credentialArgs as ICreateVerifiableCredentialArgs,
         );
         if (!vc) {
           throw new Error('Could not create Verifiable Credential');
@@ -74,10 +74,10 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       const id = randomUUID();
       await pool.query<CredentialsTable>(
         'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
-        [id, vc.credentialSubject.id, vc, vc.issuanceDate]
+        [id, vc.credentialSubject.id, vc, vc.issuanceDate],
       );
       return reply.code(201).send(true);
-    }
+    },
   );
 
   fastify.post(
@@ -108,9 +108,9 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
           };
 
           return agent.createVerifiableCredential(
-            credentialArgs as ICreateVerifiableCredentialArgs
+            credentialArgs as ICreateVerifiableCredentialArgs,
           );
-        }
+        },
       );
 
       const promiseResults = await Promise.allSettled(promises);
@@ -129,7 +129,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
             const id = randomUUID();
             await pool.query<CredentialsTable>(
               'INSERT INTO credentials (id, did, credential, created_at) VALUES ($1, $2, $3, $4)',
-              [id, vc.credentialSubject.id, vc, vc.issuanceDate]
+              [id, vc.credentialSubject.id, vc, vc.issuanceDate],
             );
           }
         } else if (result.status === 'rejected') {
@@ -151,7 +151,7 @@ const issueDeferred: FastifyPluginAsync = async (fastify): Promise<void> => {
       }
 
       return reply.code(status).send(true);
-    }
+    },
   );
 };
 

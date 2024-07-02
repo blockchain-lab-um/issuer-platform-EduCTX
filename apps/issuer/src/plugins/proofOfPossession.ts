@@ -25,7 +25,7 @@ const { ec: EC } = elliptic;
 async function verifyProofOfPossession(
   args: ProofOfPossesionArgs,
   pool: Pool,
-  agent: Agent
+  agent: Agent,
 ): Promise<string> {
   const { proof } = args;
 
@@ -46,11 +46,11 @@ async function verifyProofOfPossession(
   // Check if more than 1 is present (kid, jwk, x5c)
   if (
     [protectedHeader.kid, protectedHeader.jwk, protectedHeader.x5c].filter(
-      (value) => value != null
+      (value) => value != null,
     ).length !== 1
   )
     throw new Error(
-      'invalid_request: Exactly one of kid, jwk, x5c must be present.'
+      'invalid_request: Exactly one of kid, jwk, x5c must be present.',
     );
 
   let payload;
@@ -61,7 +61,7 @@ async function verifyProofOfPossession(
     throw new Error(
       `invalid_request: Invalid JWT typ. Expected "JWT" but got "${
         protectedHeader.typ ?? 'undefined'
-      }".`
+      }".`,
     );
   }
 
@@ -80,7 +80,7 @@ async function verifyProofOfPossession(
       throw new Error(
         `invalid_request: Error resolving did. Reason: ${
           resolvedDid.didResolutionMetadata.error ?? 'Unknown error'
-        }.`
+        }.`,
       );
     }
 
@@ -100,12 +100,12 @@ async function verifyProofOfPossession(
       publicKey = await importJWK(fragment.publicKeyJwk, protectedHeader.alg);
     } else {
       const publicKeyHex = extractPublicKeyHex(
-        fragment as _ExtendedVerificationMethod
+        fragment as _ExtendedVerificationMethod,
       );
 
       if (publicKeyHex === '') {
         throw new Error(
-          'invalid_request: Invalid kid or no public key present.'
+          'invalid_request: Invalid kid or no public key present.',
         );
       }
 
@@ -160,7 +160,7 @@ async function verifyProofOfPossession(
 
   const nonceRows = await pool.query<NoncesTable>(
     'SELECT * FROM nonces WHERE did = $1',
-    [did]
+    [did],
   );
 
   if (nonceRows.rowCount === 0)
@@ -206,10 +206,10 @@ export default fp(async (fastify: FastifyInstance, _) => {
         const did = await verifyProofOfPossession(
           proofArgs,
           fastify.pg.pool,
-          fastify.veramoAgent
+          fastify.veramoAgent,
         );
         request.did = did;
-      }
+      },
   );
 });
 
@@ -218,7 +218,7 @@ declare module 'fastify' {
     verifyProof: () => (
       request: FastifyRequest,
       reply: FastifyReply,
-      done: HookHandlerDoneFunction
+      done: HookHandlerDoneFunction,
     ) => void;
   }
 

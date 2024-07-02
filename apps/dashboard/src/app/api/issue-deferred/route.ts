@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       },
       {
         status: 401,
-      }
+      },
     );
   }
   const schemaType = req.headers.get('schemaType');
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-      }
+      },
     );
 
     if (response.ok) {
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       },
       {
         status: error.status || 500,
-      }
+      },
     );
   }
 
@@ -54,6 +54,6 @@ export async function POST(req: NextRequest) {
     },
     {
       status: 500,
-    }
+    },
   );
 }

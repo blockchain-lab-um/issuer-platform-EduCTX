@@ -10,30 +10,28 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "workspaces": [
-    "apps/**/*"
-  ],
+  "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
     "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-base && pnpm -r docker:build",
     "docker:run": "pnpm docker:build && docker compose --env-file apps/dashboard/.env --env-file apps/issuer/.env up",
     "docker:run:issuer": "pnpm docker:build && docker compose --env-file apps/issuer/.env up issuer db",
     "lint": "pnpm biome check .",
-    "lint:fix": "pnpm biome check --apply .",
+    "lint:fix": "pnpm biome check --write --unsafe .",
     "prepare": "is-ci || husky install"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.6.3",
-    "@commitlint/cli": "^17.8.1",
-    "@commitlint/config-conventional": "^17.8.1",
-    "@types/node": "^20.8.9",
+    "@biomejs/biome": "^1.8.3",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@types/node": "^20.14.9",
     "cross-env": "^7.0.3",
     "fastify-cli": "^5.8.0",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "is-ci": "^3.0.1",
-    "lint-staged": "^14.0.1",
-    "rimraf": "^5.0.5",
-    "typescript": "^5.2.2"
+    "lint-staged": "^15.2.7",
+    "rimraf": "^5.0.7",
+    "typescript": "^5.5.3"
   },
   "packageManager": "pnpm@9.4.0",
   "engines": {

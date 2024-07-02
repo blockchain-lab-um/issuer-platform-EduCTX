@@ -22,18 +22,18 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       request: FastifyRequest<{
         Params: { did: string };
       }>,
-      reply: FastifyReply
+      reply: FastifyReply,
     ) => {
       const { did } = request.params;
 
       const nonce = randomUUID();
       await pool.query<NoncesTable>(
         "INSERT INTO nonces (did, nonce) VALUES ($1, $2) ON CONFLICT (did) DO UPDATE SET nonce = EXCLUDED.nonce, created_at = NOW(), expires_at = NOW() + INTERVAL '1 hour'",
-        [did, nonce]
+        [did, nonce],
       );
 
       return reply.send({ nonce, aud: process.env.PROOF_AUDIENCE });
-    }
+    },
   );
 
   fastify.get(
@@ -50,7 +50,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
 
       const didRows = await pool.query<CredentialsTable>(
         'SELECT * FROM credentials WHERE did = $1',
-        [did]
+        [did],
       );
 
       didRows.rows.forEach((row) => {
@@ -59,7 +59,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       });
 
       return reply.send(didRows.rows);
-    }
+    },
   );
 
   fastify.delete(
@@ -78,13 +78,13 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         }>;
         await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = $1',
-          [id]
+          [id],
         );
         return await reply.code(204).send();
       } catch (error) {
         return reply.code(500).send({ error: (error as Error).message });
       }
-    }
+    },
   );
 
   fastify.post(
@@ -105,7 +105,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
         }>;
         const res = await pool.query<CredentialsTable>(
           'DELETE FROM credentials WHERE id = ANY($1)',
-          [body]
+          [body],
         );
         if (!res) {
           return await reply.code(404).send();
@@ -114,7 +114,7 @@ const query: FastifyPluginAsync = async (fastify): Promise<void> => {
       } catch (error) {
         return reply.code(500).send({ error: (error as Error).message });
       }
-    }
+    },
   );
 };
 
