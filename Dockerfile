@@ -1,4 +1,4 @@
-FROM node:20.10.0-alpine AS base
+FROM node:20.15.0-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -19,7 +19,7 @@ COPY ./apps/issuer/package.json ./apps/issuer/
 # Remove prepare script
 RUN npm pkg delete scripts.prepare
 
-RUN npm i -g pnpm@8.7.6 && pnpm i --frozen-lockfile
+RUN npm i -g pnpm@9.4.0 && pnpm i --frozen-lockfile
 
 COPY . .
 

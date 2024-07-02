@@ -1,7 +1,7 @@
 FROM blockchain-lab-um/eductx-platform-base:latest as builder
 
 # Production image, copy all the files and run next
-FROM node:20.10.0-alpine AS runner
+FROM node:20.15.0-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
