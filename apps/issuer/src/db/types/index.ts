@@ -21,4 +21,5 @@ export interface UserSessionsTable {
   c_nonce_expires_in: string;
   credentials: string[];
   claims: string;
+  credential_offer_request: string;
 }

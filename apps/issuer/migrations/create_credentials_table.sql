@@ -21,7 +21,8 @@ CREATE TABLE user_sessions(
   c_nonce_expires_in timestamp with time zone,
   credentials json[] NOT NULL,
   claims json,
-  access_token text
+  access_token text,
+  credential_offer_request text
 );
 
 CREATE INDEX user_sessions_user_access_token_index ON user_sessions(access_token);

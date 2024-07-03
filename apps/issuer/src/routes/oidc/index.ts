@@ -5,10 +5,6 @@ import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-js
 import type { UserSessionsTable } from '../../db/types/index.js';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { routeSchemas } from '../../utils/schemas/index.js';
-import {
-  SUPPORTED_CREDENTIALS,
-  SUPPORTED_CREDENTIALS_SCHEMA,
-} from '../../config.js';
 
 const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -46,11 +42,17 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
           200: {
             type: 'object',
             properties: {
+              id: {
+                type: 'string',
+              },
               credentialOfferRequest: {
                 type: 'string',
               },
+              userPin: {
+                type: 'string',
+              },
             },
-            required: ['credentialOfferRequest'],
+            required: ['id', 'credentialOfferRequest'],
           },
           500: {
             type: 'object',
@@ -76,7 +78,7 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         ],
         grants: ['urn:ietf:params:oauth:grant-type:pre-authorized_code'],
-        userPinRequired: true,
+        userPinRequired: false,
       });
 
       if (isError(res)) {
@@ -90,8 +92,6 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
         userPin,
       } = res.data;
 
-      console.log('USER PIN:', userPin);
-
       if (!preAuthorizedCode) {
         return reply.code(500).send({
           error:
@@ -103,8 +103,14 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
 
       try {
         await pool.query<UserSessionsTable>(
-          'INSERT INTO user_sessions (id, user_pin, credentials, claims) VALUES ($1, $2, $3, $4)',
-          [preAuthorizedCode, userPin, credentials, claims],
+          'INSERT INTO user_sessions (id, user_pin, credentials, claims, credential_offer_request) VALUES ($1, $2, $3, $4, $5)',
+          [
+            preAuthorizedCode,
+            userPin ?? '',
+            credentials,
+            claims,
+            credentialOfferRequest,
+          ],
         );
       } catch (error) {
         return reply.code(500).send({
@@ -113,7 +119,9 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send({
+        id: preAuthorizedCode,
         credentialOfferRequest,
+        userPin: userPin ?? '',
       });
     },
   );
@@ -138,7 +146,7 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
             'pre-authorized_code': { type: 'string' },
             user_pin: { type: 'string' },
           },
-          required: ['grant_type', 'pre-authorized_code', 'user_pin'],
+          required: ['grant_type', 'pre-authorized_code'],
         },
       },
 
@@ -174,7 +182,7 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
         await fastify.veramoAgent.handlePreAuthorizedCodeTokenRequest({
           body: request.body,
           preAuthorizedCode,
-          userPin: userSession.user_pin,
+          // userPin: userSession.user_pin,
         });
 
       if (isError(tokenRequestResult)) {

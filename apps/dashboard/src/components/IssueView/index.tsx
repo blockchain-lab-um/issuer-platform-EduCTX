@@ -51,6 +51,7 @@ export const IssueView = () => {
   const [_, setIsFilled] = useState(false);
   const [credentialIssued, setCredentialIssued] = useState(false);
   const [isIssuing, setIsIssuing] = useState(false);
+  const [email, setEmail] = useState('');
 
   const router = useRouter();
 
@@ -106,6 +107,41 @@ export const IssueView = () => {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
+    });
+
+    if (response.ok) {
+      setCredentialIssued(true);
+      useToastStore.setState({
+        open: true,
+        title: 'Credential Issued',
+        type: 'success',
+        loading: false,
+        link: null,
+      });
+    } else {
+      const responseBody = await response.json();
+      console.error(responseBody.error);
+      useToastStore.setState({
+        open: true,
+        title: response.statusText,
+        type: 'error',
+        loading: false,
+        link: null,
+      });
+    }
+  };
+
+  const issueByEmail = async () => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('schemaType', selectedSchema!.type || '');
+    const response = await fetch('/api/issue-oidc', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        email: email,
+        data: inputs,
+      }),
     });
 
     if (response.ok) {
@@ -366,7 +402,7 @@ export const IssueView = () => {
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
                               submitForm={() => {
-                                issue()
+                                issueByEmail()
                                   .then(() => goBack())
                                   .catch((error) => {
                                     console.error(
