@@ -7,7 +7,9 @@
     "module": "nodenext",
     "target": "ES2022",
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node"],
+    "strict": true,
+    "noStrictGenericChecks": false
   },
 
   "include": ["src/**/*.ts"],

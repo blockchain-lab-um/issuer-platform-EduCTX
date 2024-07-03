@@ -4,6 +4,9 @@ import * as dotenv from 'dotenv';
 // Require the framework
 import Fastify from 'fastify';
 
+// Import the app and options
+import { app, options } from './app.js';
+
 // Read the .env file.
 dotenv.config();
 
@@ -25,36 +28,38 @@ type LogEnv = keyof typeof envToLogger;
 const env = (process.env.NODE_ENV ?? 'development') as LogEnv;
 
 // Instantiate Fastify with some config
-const app = Fastify({
+const server = Fastify({
   logger: envToLogger[env],
   maxParamLength: 300,
 });
 
 // Register your application as a normal plugin.
-await app.register(import('./app.js'));
+await server.register(app, options);
 
-// delay is the number of milliseconds for the graceful close to finish
+// Exits process gracefully if possible
 const closeListeners = closeWithGrace({ delay: 500 }, (async ({ err }) => {
   if (err) {
-    app.log.error(err);
+    server.log.error(err);
   }
-  await app.close();
+  await server.close();
 }) as closeWithGrace.CloseWithGraceAsyncCallback);
 
-app.addHook('onClose', (_, done) => {
+// On Close, remove all listeners
+server.addHook('onClose', (_, done) => {
   closeListeners.uninstall();
   done();
 });
 
-// Start listening.
-app.listen(
+// Start listening
+// Read the PORT from the .env file. Defaults to 3003.
+server.listen(
   {
     port: Number.parseInt(process.env.PORT ?? '3001', 10),
-    host: process.env.HOST ?? 'localhost',
+    host: process.env.HOST ?? '0.0.0.0',
   },
   (err: any) => {
     if (err) {
-      app.log.error(err);
+      server.log.error(err);
       process.exit(1);
     }
   },

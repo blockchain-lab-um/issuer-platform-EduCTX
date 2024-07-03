@@ -7,6 +7,10 @@ import {
   getDidKeyResolver as keyDidResolver,
 } from '@blockchain-lab-um/did-provider-key';
 import {
+  OIDCRPPlugin,
+  type IOIDCRPPlugin,
+} from '@blockchain-lab-um/oidc-rp-plugin';
+import {
   type AbstractDataStore,
   DataManager,
   MemoryDataStore,
@@ -39,6 +43,12 @@ import { KeyManagementSystem } from '@veramo/kms-local';
 import { Resolver } from 'did-resolver';
 import type { FastifyPluginOptions } from 'fastify';
 import fp from 'fastify-plugin';
+import {
+  SUPPORTED_CREDENTIALS,
+  SUPPORTED_CURVES,
+  SUPPORTED_DID_METHODS,
+  SUPPORTED_DIGITAL_SIGNATURES,
+} from '../config.js';
 
 export type Agent = TAgent<
   IDIDManager &
@@ -46,7 +56,8 @@ export type Agent = TAgent<
     IDataStore &
     IResolver &
     ICredentialIssuer &
-    ICredentialVerifier
+    ICredentialVerifier &
+    IOIDCRPPlugin
 >;
 
 declare module 'fastify' {
@@ -71,7 +82,8 @@ async function createVeramoAgent() {
       IDataStore &
       IResolver &
       ICredentialIssuer &
-      ICredentialVerifier
+      ICredentialVerifier &
+      IOIDCRPPlugin
   >({
     plugins: [
       new CredentialPlugin(),
@@ -92,6 +104,13 @@ async function createVeramoAgent() {
         store: new MemoryDIDStore(),
         defaultProvider: 'metamask',
         providers: didProviders,
+      }),
+      new OIDCRPPlugin({
+        url: 'http://localhost:3001/oidc',
+        supported_curves: SUPPORTED_CURVES,
+        supported_did_methods: SUPPORTED_DID_METHODS,
+        supported_digital_signatures: SUPPORTED_DIGITAL_SIGNATURES,
+        supported_credentials: SUPPORTED_CREDENTIALS,
       }),
     ],
   });

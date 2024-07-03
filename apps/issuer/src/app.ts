@@ -1,7 +1,7 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
-import type { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
 
 import { Schemas } from './utils/schemas/index.js';
@@ -11,9 +11,9 @@ const dirname = path.dirname(filename);
 // Add plugins not to be registered globally.
 const ignored = ['proofOfPossession'];
 
-export type AppOptions = {
-  // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>;
+export interface AppOptions
+  extends FastifyServerOptions,
+    Partial<AutoloadPluginOptions> {}
 
 // Pass --options via CLI arguments in command to enable these options.
 const options: AppOptions = {};
