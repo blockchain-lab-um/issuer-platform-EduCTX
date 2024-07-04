@@ -27,7 +27,6 @@ export async function POST(req: NextRequest) {
   headers.append('x-api-key', process.env.API_KEY || '');
 
   try {
-    // TODO: Use the email from the request body
     const { data, email } = body;
 
     const response = await fetch(
