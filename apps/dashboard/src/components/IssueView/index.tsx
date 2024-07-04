@@ -8,7 +8,7 @@ import {
   DocumentPlusIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
-import { Button, Select, SelectItem } from '@nextui-org/react';
+import { Button, Input, Select, SelectItem } from '@nextui-org/react';
 import clsx from 'clsx';
 import { signOut } from 'next-auth/react';
 
@@ -42,6 +42,8 @@ interface Schema {
 const SCHEMAS: Schema[] = [EducationalCredentialSchema];
 
 export const IssueView = () => {
+  const router = useRouter();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedSchema, setSelectedSchema] = useState<Schema | null>(
     SCHEMAS[0],
@@ -52,8 +54,6 @@ export const IssueView = () => {
   const [credentialIssued, setCredentialIssued] = useState(false);
   const [isIssuing, setIsIssuing] = useState(false);
   const [email, setEmail] = useState('');
-
-  const router = useRouter();
 
   const handleSelectionChange = (e: { target: { value: string } }) => {
     const selectedShema = SCHEMAS.find(
@@ -226,9 +226,6 @@ export const IssueView = () => {
                   <span className="text-md block text-center font-medium text-gray-600">
                     Welcome
                   </span>
-                  {/* <span className="block text-center text-lg font-semibold text-gray-800">
-                    Mr. Professor
-                  </span> */}
                 </div>
 
                 <nav className="mt-8 space-y-1 px-2">
@@ -285,9 +282,6 @@ export const IssueView = () => {
               <span className="text-md block text-center font-medium text-gray-600">
                 Welcome
               </span>
-              {/* <span className="block text-center text-lg font-semibold text-gray-800">
-                Mr. Professor
-              </span> */}
             </div>
 
             <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
@@ -303,7 +297,7 @@ export const IssueView = () => {
               >
                 <DocumentPlusIcon
                   className={clsx(
-                    ' text-green-500 hover:text-green-600',
+                    'text-green-500 hover:text-green-600',
                     'mr-3 h-6 w-6 flex-shrink-0',
                   )}
                   aria-hidden="true"
@@ -397,21 +391,37 @@ export const IssueView = () => {
                               </span>
                             </div>
                           </div>
+                          <div>
+                            <div className="mt-2">
+                              <Input
+                                className="max-w-xs"
+                                label={'Email'}
+                                isRequired={false}
+                                isClearable={true}
+                                onChange={(e) => {
+                                  setEmail(e.target.value);
+                                }}
+                              />
+                            </div>
+                          </div>
                           <div className="mt-8">
                             <CredentialForm
                               schema={selectedSchema as unknown as Schema}
                               handleInputValueChange={handleInputValueChange}
                               submitForm={() => {
+                                issue()
+                                  .then(() => goBack())
+                                  .catch((error) => {
+                                    console.error(error);
+                                  });
+                              }}
+                              submitFormByEmail={() => {
                                 issueByEmail()
                                   .then(() => goBack())
                                   .catch((error) => {
-                                    console.error(
-                                      'Error enabling Masca:',
-                                      error,
-                                    );
+                                    console.error(error);
                                   });
                               }}
-                              isIssued={credentialIssued}
                               goBack={() => goBack()}
                             />
                           </div>

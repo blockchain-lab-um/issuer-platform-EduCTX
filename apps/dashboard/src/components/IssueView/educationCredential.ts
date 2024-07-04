@@ -156,7 +156,7 @@ export const EducationalCredentialSchema = {
           propertyName: 'id',
           type: 'string',
           isCredentialSubject: true,
-          required: true,
+          required: false,
         } as SchemaNode,
         {
           title: 'Date of Birth',

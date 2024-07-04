@@ -31,7 +31,7 @@ interface CredentialFormProps {
   schema: Schema;
   handleInputValueChange: (e: string, path: string) => void;
   submitForm: () => void;
-  isIssued: boolean;
+  submitFormByEmail: () => void;
   goBack: () => void;
 }
 
@@ -39,32 +39,37 @@ export const CredentialForm = ({
   schema,
   handleInputValueChange,
   submitForm,
-  isIssued,
+  submitFormByEmail,
   goBack,
 }: CredentialFormProps) => {
   const [dateValidity, setDateValidity] = React.useState({});
+
+  const handleFormSubmit = (byEmail: boolean) => {
+    const hasInvalidDate = Object.values(dateValidity).some(
+      (isInvalid) => isInvalid,
+    );
+
+    if (hasInvalidDate) {
+      useToastStore.setState({
+        open: true,
+        title: 'One or more date fields are invalid. Please correct them.',
+        type: 'error',
+        loading: false,
+        link: null,
+      });
+      return;
+    }
+
+    if (byEmail) {
+      submitFormByEmail();
+      return;
+    }
+    submitForm();
+  };
+
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const hasInvalidDate = Object.values(dateValidity).some(
-            (isInvalid) => isInvalid,
-          );
-          if (hasInvalidDate) {
-            useToastStore.setState({
-              open: true,
-              title:
-                'One or more date fields are invalid. Please correct them.',
-              type: 'error',
-              loading: false,
-              link: null,
-            });
-            return;
-          }
-          submitForm();
-        }}
-      >
+      <form>
         <div className="">
           {schema.fields.map((field: any, key: number) => {
             if (field.type === 'object') {
@@ -106,25 +111,24 @@ export const CredentialForm = ({
           >
             Back
           </Button>
-          {!isIssued ? (
-            <Button
-              color="primary"
-              variant="flat"
-              className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
-              type="submit"
-            >
-              Issue Credential
-            </Button>
-          ) : (
-            <Button
-              color="success"
-              variant="flat"
-              className="text-md font-medium "
-              disabled={true}
-            >
-              Issued
-            </Button>
-          )}
+          <Button
+            color="primary"
+            variant="flat"
+            className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
+            type="button"
+            onClick={() => handleFormSubmit(false)}
+          >
+            Issue Credential
+          </Button>
+          <Button
+            color="primary"
+            variant="flat"
+            className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
+            type="button"
+            onClick={() => handleFormSubmit(true)}
+          >
+            Issue by Email
+          </Button>
         </div>
       </form>
     </div>

@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     // Send email with credential offer request
     const { error } = await resend.emails.send({
       from: 'example@skippy-ai.com',
-      to: 'domajnko.martin@gmail.com',
+      to: email,
       subject: 'Claim your new digital credential',
       text: 'Claim your new digital credential',
       react: Basic({
