@@ -78,7 +78,7 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         ],
         grants: ['urn:ietf:params:oauth:grant-type:pre-authorized_code'],
-        userPinRequired: false,
+        userPinRequired: true,
       });
 
       if (isError(res)) {
