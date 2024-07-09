@@ -6,7 +6,7 @@ import { BasicEmail } from '@/components/EmailTemplates/BasicEmail';
 import { Resend } from 'resend';
 import { PinEmail } from '@/components/EmailTemplates/PinEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? '');
+const resend = new Resend(process.env.RESEND_API_KEY ?? 'test-key');
 
 export async function POST(req: NextRequest) {
   let authorized = false;
