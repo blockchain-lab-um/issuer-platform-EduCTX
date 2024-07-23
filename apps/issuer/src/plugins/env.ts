@@ -3,6 +3,7 @@ import fp from 'fastify-plugin';
 
 export interface Env {
   DATABASE_URL: string;
+  ISSUER_URL: string;
 }
 
 declare module 'fastify' {
@@ -19,9 +20,12 @@ declare module 'fastify' {
 export default fp(async (fastify, _) => {
   const schema: JSONSchemaType<Env> = {
     type: 'object',
-    required: ['DATABASE_URL'],
+    required: ['DATABASE_URL', 'ISSUER_URL'],
     properties: {
       DATABASE_URL: {
+        type: 'string',
+      },
+      ISSUER_URL: {
         type: 'string',
       },
     },

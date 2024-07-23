@@ -67,7 +67,7 @@ declare module 'fastify' {
   }
 }
 
-async function createVeramoAgent() {
+async function createVeramoAgent(issuerUrl: string) {
   const didProviders: Record<string, AbstractIdentifierProvider> = {};
   const vcStorePlugins: Record<string, AbstractDataStore> = {};
 
@@ -106,7 +106,7 @@ async function createVeramoAgent() {
         providers: didProviders,
       }),
       new OIDCRPPlugin({
-        url: 'http://localhost:3001/oidc',
+        url: `${issuerUrl}/oidc`,
         supported_curves: SUPPORTED_CURVES,
         supported_did_methods: SUPPORTED_DID_METHODS,
         supported_digital_signatures: SUPPORTED_DIGITAL_SIGNATURES,
@@ -117,7 +117,8 @@ async function createVeramoAgent() {
 }
 
 export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
-  const agent = await createVeramoAgent();
+  const issuerUrl = fastify.config.ISSUER_URL;
+  const agent = await createVeramoAgent(issuerUrl);
   let identifier: IIdentifier;
 
   if (process.env.EBSI_PRIVATE_KEY && process.env.EBSI_ID) {

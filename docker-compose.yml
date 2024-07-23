@@ -35,6 +35,7 @@ services:
       EBSI_PRIVATE_KEY: ${EBSI_PRIVATE_KEY}
       EBSI_ID: ${EBSI_ID}
       API_KEY: ${API_KEY}
+      ISSUER_URL: ${ISSUER_URL}
     restart: unless-stopped
   dashboard:
     image: blockchain-lab-um/eductx-platform-dashboard:latest
