@@ -46,5 +46,8 @@ services:
       AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXT_PUBLIC_ISSUER_ENDPOINT: 'https://bclabum.informatika.uni-mb.si/eductx-issuer'
+      NEXT_PUBLIC_APP_URL: 'https://platform2.eductx.org'
       API_KEY: ${API_KEY}
+      RESEND_API_KEY: ${RESEND_API_KEY}
+      BFF_API_KEY: ${BFF_API_KEY}
     restart: unless-stopped
