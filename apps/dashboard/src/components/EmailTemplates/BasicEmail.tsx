@@ -14,12 +14,6 @@ import {
   Head,
 } from '@react-email/components';
 import { tailwindConfig } from './tailwindConfig';
-import {
-  GlobeAltIcon,
-  LockClosedIcon,
-  ForwardIcon,
-  AcademicCapIcon,
-} from '@heroicons/react/24/outline';
 
 interface BasicEmailProps {
   qrCodeUrl: string;

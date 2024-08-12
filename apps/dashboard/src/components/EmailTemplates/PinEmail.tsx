@@ -7,7 +7,6 @@ import {
   Heading,
   Container,
   Head,
-  Font,
   Tailwind,
   Row,
   Hr,
@@ -35,7 +34,7 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
             <Row>
               <Text className="text-center px-7 text-xs">
                 The credential has been issued to you via EduCTX platform.
-                Retreive it anytime with the QR code from the previos email.
+                Retreive it anytime with the QR code from the previous email.
               </Text>
             </Row>
             <Row className="mt-8">
