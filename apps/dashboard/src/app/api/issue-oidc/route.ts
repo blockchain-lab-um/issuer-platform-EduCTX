@@ -77,19 +77,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Send PIN in separate email
-    // const { error: pinEmailError } = await resend.emails.send({
-    //   from: 'example@skippy-ai.com', // TODO: Change domaing to send from bclabum email
-    //   to: email,
-    //   subject: 'PIN for claiming your new digital credential',
-    //   text: 'PIN for claiming your new digital credential',
-    //   react: PinEmail({
-    //     pin: userPin,
-    //   }),
-    // });
+    const { error: pinEmailError } = await resend.emails.send({
+      from: 'example@skippy-ai.com', // TODO: Change domaing to send from bclabum email
+      to: email,
+      subject: 'PIN for claiming your new digital credential',
+      text: 'PIN for claiming your new digital credential',
+      react: PinEmail({
+        pin: userPin,
+      }),
+    });
 
-    // if (pinEmailError) {
-    //   throw new Error('Something went wrong');
-    // }
+    if (pinEmailError) {
+      throw new Error('Something went wrong');
+    }
 
     return NextResponse.json({
       success: true,

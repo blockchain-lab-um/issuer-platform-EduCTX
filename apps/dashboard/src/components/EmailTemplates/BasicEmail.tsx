@@ -57,7 +57,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Text className="font-medium text-lg">
                   Use Masca Wallet
                   <Img
-                    className="ml-0.5 mr-2 w-[16px] h-[15px] inline-flex"
+                    className="ml-1 mr-2 w-[16px] h-[15px] inline-flex"
                     width={18}
                     height={16}
                     src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black.png`}
@@ -114,7 +114,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 </Text>
               </Column>
             </Row>
-            <Row align="left">
+            <Row align="left" className="mb-4">
               <Column className="pl-7 w-10" align="left">
                 <Img
                   width={28}
@@ -138,7 +138,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
             <Row align="left">
               <Column className="pl-7 pr-0.5 max-w-[149px]" align="left">
                 <Row align="left">
-                  <Column className="bg-[#EDF9F3] rounded-md p-2" align="left">
+                  <Column className="bg-[#EDF9F3] rounded-md p-4" align="left">
                     <Row align="left" className="w-full">
                       <Column align="left">
                         <Img
@@ -170,7 +170,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
               </Column>
               <Column className="pr-7 pl-0.5 max-w-[149px]" align="left">
                 <Row align="left">
-                  <Column className="bg-[#EDF9F3] rounded-md p-2" align="left">
+                  <Column className="bg-[#EDF9F3] rounded-md p-4" align="left">
                     <Row align="left" className="w-full">
                       <Column align="left">
                         <Img
@@ -204,7 +204,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
             <Row className="mt-1.5" align="left">
               <Column className="pl-7 pr-0.5 max-w-[149px]" align="left">
                 <Row align="left">
-                  <Column className="bg-[#EDF9F3] rounded-md p-2" align="left">
+                  <Column className="bg-[#EDF9F3] rounded-md p-4" align="left">
                     <Row align="left" className="w-full">
                       <Column align="left">
                         <Img
@@ -236,7 +236,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
               </Column>
               <Column className="pr-7 pl-0.5 max-w-[149px]" align="left">
                 <Row align="left">
-                  <Column className="bg-[#EDF9F3] rounded-md p-2" align="left">
+                  <Column className="bg-[#EDF9F3] rounded-md p-4" align="left">
                     <Row align="left" className="w-full">
                       <Column align="left">
                         <Img
@@ -268,8 +268,8 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
               </Column>
             </Row>
           </Section>
-          <Section className="my-8 mb-12">
-            <Row>
+          <Section className="mb-20">
+            <Row className="mt-12">
               <Column>
                 <Text className="text-center text-sm font-semibold">
                   Brought to you by
@@ -278,22 +278,31 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
             </Row>
             <Row>
               <Column className="pl-7 pr-4 max-w-16 sm:max-w-24">
-                <Img
-                  height={24}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/bclab.png`}
-                />
+                <Link
+                  href="https://blockchain-lab.um.si/?lang=en"
+                  target="_blank"
+                >
+                  <Img
+                    height={24}
+                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/bclab.png`}
+                  />
+                </Link>
               </Column>
               <Column className="max-w-16 px-4 sm:max-w-24">
-                <Img
-                  height={24}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/eductx.png`}
-                />
+                <Link href="https://eductx.org/" target="_blank">
+                  <Img
+                    height={24}
+                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/eductx.png`}
+                  />
+                </Link>
               </Column>
               <Column className="pr-7 pl-4 max-w-16 sm:max-w-24">
-                <Img
-                  height={24}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black_with_text.png`}
-                />
+                <Link href="https://masca.io/" target="_blank">
+                  <Img
+                    height={24}
+                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black_with_text.png`}
+                  />
+                </Link>
               </Column>
             </Row>
           </Section>
@@ -304,8 +313,8 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
           </Row>
           <Section className="mt-4 mb-10" align="left">
             <Row>
-              <Column className="px-7">
-                <Row className="mt-4">
+              <Column className="px-7" align="left">
+                <Row className="mt-4" align="left">
                   <Column className="px-3">
                     <Img
                       width={36}
@@ -313,11 +322,14 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                       src={`${process.env.NEXT_PUBLIC_APP_URL}/images/question_mark.png`}
                     />
                   </Column>
-                  <Column className="pr-3">
-                    <Row className="font-semibold text-xs mb-1 text-left">
+                  <Column className="pr-3" align="left">
+                    <Row
+                      className="font-semibold text-xs mb-1 text-left"
+                      align="left"
+                    >
                       Need some help?
                     </Row>
-                    <Row>
+                    <Row align="left">
                       <Text
                         className="m-0"
                         style={{ fontSize: '10px', lineHeight: '12px' }}
