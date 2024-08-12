@@ -21,10 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <head />
-      <body className={clsx(inter.className, 'w-screen')}>
-        <Providers>
-          <div>{children}</div>
-        </Providers>
+      {/* <body className={clsx(inter.className, 'w-screen')}> */}
+      <body>
+        {/* <Providers> */}
+        {/* <div>{children}</div> */}
+        {/* </Providers> */}
+        {children}
       </body>
     </html>
   );
