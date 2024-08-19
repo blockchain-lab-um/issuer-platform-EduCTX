@@ -14,10 +14,14 @@ import {
   Section,
 } from '@react-email/components';
 import { tailwindConfig } from './tailwindConfig';
+import { renderAsync } from '@react-email/render';
 
 interface PinEmailProps {
   pin: string;
 }
+
+export const renderPinEmail = async ({ pin }: PinEmailProps) =>
+  await renderAsync(<PinEmail pin={pin} />, { pretty: true });
 
 export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
   <Tailwind config={tailwindConfig}>

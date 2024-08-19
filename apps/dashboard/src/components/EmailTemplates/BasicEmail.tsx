@@ -14,10 +14,14 @@ import {
   Head,
 } from '@react-email/components';
 import { tailwindConfig } from './tailwindConfig';
+import { renderAsync } from '@react-email/render';
 
 interface BasicEmailProps {
   qrCodeUrl: string;
 }
+
+export const renderBasicEmail = async ({ qrCodeUrl }: BasicEmailProps) =>
+  await renderAsync(<BasicEmail qrCodeUrl={qrCodeUrl} />, { pretty: true });
 
 export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
   qrCodeUrl,

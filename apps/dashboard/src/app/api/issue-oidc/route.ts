@@ -2,11 +2,20 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
 import { authOptions } from '@/lib/auth';
-import { BasicEmail } from '@/components/EmailTemplates/BasicEmail';
-import { Resend } from 'resend';
-import { PinEmail } from '@/components/EmailTemplates/PinEmail';
+import { renderBasicEmail } from '@/components/EmailTemplates/BasicEmail';
+import { renderPinEmail } from '@/components/EmailTemplates/PinEmail';
 
-const resend = new Resend(process.env.RESEND_API_KEY ?? 'test-key');
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USERNAME,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
 
 export async function POST(req: NextRequest) {
   let authorized = false;
@@ -61,34 +70,34 @@ export async function POST(req: NextRequest) {
       throw new Error('Something went wrong');
     }
 
-    // Send email with credential offer request
-    const { error: basicEmailError } = await resend.emails.send({
-      from: 'example@skippy-ai.com', // TODO: Change domaing to send from bclabum email
-      to: email,
-      subject: 'Claim your new digital credential',
-      text: 'Claim your new digital credential',
-      react: BasicEmail({
-        qrCodeUrl: `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/image/${id}`,
-      }),
+    const basicEmailHtml = await renderBasicEmail({
+      qrCodeUrl: `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/image/${id}`,
     });
 
-    if (basicEmailError) {
-      throw new Error('Something went wrong');
+    const emailOptions = {
+      from: process.env.EMAIL_USERNAME,
+      to: email,
+      subject: 'Claim your new digital credential',
+      html: basicEmailHtml,
+    };
+
+    // Send email with credential offer request
+    let sendMessageInfo = await transporter.sendMail(emailOptions);
+
+    if (sendMessageInfo.rejected.length > 0) {
+      throw new Error('Failed to send first email');
     }
 
     // Send PIN in separate email
-    const { error: pinEmailError } = await resend.emails.send({
-      from: 'example@skippy-ai.com', // TODO: Change domaing to send from bclabum email
-      to: email,
-      subject: 'PIN for claiming your new digital credential',
-      text: 'PIN for claiming your new digital credential',
-      react: PinEmail({
-        pin: userPin,
-      }),
-    });
+    const pinEmailHtml = await renderPinEmail({ pin: userPin });
 
-    if (pinEmailError) {
-      throw new Error('Something went wrong');
+    emailOptions.subject = 'PIN for claiming your new digital credential';
+    emailOptions.html = pinEmailHtml;
+
+    sendMessageInfo = await transporter.sendMail(emailOptions);
+
+    if (sendMessageInfo.rejected.length > 0) {
+      throw new Error('Failed to send second email');
     }
 
     return NextResponse.json({
