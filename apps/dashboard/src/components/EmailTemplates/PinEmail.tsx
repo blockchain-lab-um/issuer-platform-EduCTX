@@ -57,14 +57,7 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
             <Row>
               <Column className="pt-3 px-7 flex w-full items-center">
                 <Text className="font-medium text-lg">
-                  Use Masca Wallet
-                  <Img
-                    className="ml-1 mr-2 w-[16px] h-[15px] inline-flex"
-                    width={18}
-                    height={16}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black.png`}
-                  />
-                  to retrieve your new credential
+                  Use Masca Wallet to retrieve your new credential
                 </Text>
               </Column>
             </Row>

@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     const emailOptions = {
       from: process.env.EMAIL_USERNAME,
       to: email,
-      subject: 'Claim your new digital credential',
+      subject: 'Blockchain Lab:UM (EduCTX)',
       html: basicEmailHtml,
     };
 
@@ -91,7 +91,6 @@ export async function POST(req: NextRequest) {
     // Send PIN in separate email
     const pinEmailHtml = await renderPinEmail({ pin: userPin });
 
-    emailOptions.subject = 'PIN for claiming your new digital credential';
     emailOptions.html = pinEmailHtml;
 
     sendMessageInfo = await transporter.sendMail(emailOptions);

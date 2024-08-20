@@ -49,6 +49,8 @@ services:
       NEXT_PUBLIC_ISSUER_ENDPOINT: 'https://bclabum.informatika.uni-mb.si/eductx-issuer'
       NEXT_PUBLIC_APP_URL: 'https://platform2.eductx.org'
       API_KEY: ${API_KEY}
-      RESEND_API_KEY: ${RESEND_API_KEY}
       BFF_API_KEY: ${BFF_API_KEY}
+      EMAIL_HOST: mail.um.si
+      EMAIL_USERNAME: blockchain-lab@um.si
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     restart: unless-stopped

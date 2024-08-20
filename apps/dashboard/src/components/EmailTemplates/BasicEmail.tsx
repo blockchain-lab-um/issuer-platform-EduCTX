@@ -53,14 +53,7 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
             <Row>
               <Column className="pt-3 px-7 flex w-full items-center">
                 <Text className="font-medium text-lg">
-                  Use Masca Wallet
-                  <Img
-                    className="ml-1 mr-2 w-[16px] h-[15px] inline-flex"
-                    width={18}
-                    height={16}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black.png`}
-                  />
-                  to retrieve your new credential
+                  Use Masca Wallet to retrieve your new credential
                 </Text>
               </Column>
             </Row>
@@ -158,8 +151,8 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                           style={{ fontSize: '10px', lineHeight: '12px' }}
                           className="m-0"
                         >
-                          In line with European Commission and technology
-                          (EIEIE, DJADS) standards
+                          In line with technology standards (W3C VC, OIDC4VC)
+                          and EU regulations and initiatives (GDPR, EBSI)
                         </Text>
                       </Column>
                     </Row>
@@ -224,8 +217,8 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                           style={{ fontSize: '10px', lineHeight: '12px' }}
                           className="m-0"
                         >
-                          In line with technology standards (W3C VC, OIDC4VC),
-                          EU regulations and initiatives (GDPR, EBSI)
+                          We follow the guidelines of the European digital
+                          identity wallets and Web3 standards.
                         </Text>
                       </Column>
                     </Row>
