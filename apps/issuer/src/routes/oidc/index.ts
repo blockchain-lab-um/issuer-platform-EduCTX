@@ -182,7 +182,7 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
         await fastify.veramoAgent.handlePreAuthorizedCodeTokenRequest({
           body: request.body,
           preAuthorizedCode,
-          // userPin: userSession.user_pin,
+          userPin: userSession.user_pin,
         });
 
       if (isError(tokenRequestResult)) {
