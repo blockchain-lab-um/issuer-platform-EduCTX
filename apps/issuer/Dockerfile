@@ -1,10 +1,10 @@
 FROM blockchain-lab-um/eductx-platform-base:latest as builder
 
 # Production image, copy all the files and run next
-FROM node:20.15.0-alpine AS runner
+FROM node:20.18.0-alpine AS runner
 WORKDIR /app
 
-RUN npm i -g pnpm@9.4.0
+RUN npm i -g pnpm@9.12.2
 
 ENV NODE_ENV production
 
