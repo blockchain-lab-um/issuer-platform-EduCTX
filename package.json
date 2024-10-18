@@ -10,9 +10,7 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "workspaces": [
-    "apps/**/*"
-  ],
+  "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
     "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-base && pnpm -r docker:build",
