@@ -15,7 +15,8 @@ COPY --from=builder --chown=fastify:nodejs /app/apps/issuer/dist/ ./apps/issuer/
 COPY --from=builder --chown=fastify:nodejs /app/apps/issuer/package.json ./apps/issuer
 
 # Copy root package.json + pnpm-lock.yaml + pnpm-workspace.yaml + patches
-COPY --from=builder --chown=fastify:nodejs /app/pnpm-lock.yaml /app/package.json /app/pnpm-workspace.yaml /app/patches ./
+COPY --from=builder --chown=fastify:nodejs /app/pnpm-lock.yaml /app/package.json /app/pnpm-workspace.yaml ./
+COPY --from=builder --chown=fastify:nodejs /app/patches ./patches
 
 # Remove prepare script
 RUN npm pkg delete scripts.prepare
