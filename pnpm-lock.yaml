@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@blockchain-lab-um/did-provider-ebsi':
+    hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
+    path: patches/@blockchain-lab-um__did-provider-ebsi.patch
+
 importers:
 
   .:
@@ -128,7 +133,7 @@ importers:
     dependencies:
       '@blockchain-lab-um/did-provider-ebsi':
         specifier: 1.2.1
-        version: 1.2.1(web-streams-polyfill@3.3.3)
+        version: 1.2.1(patch_hash=3ycnj2ohz3qddy5hl2jkh7m3iu)(web-streams-polyfill@3.3.3)
       '@blockchain-lab-um/did-provider-key':
         specifier: 1.1.0-beta.1
         version: 1.1.0-beta.1
@@ -5101,6 +5106,7 @@ packages:
 
   expo-random@14.0.1:
     resolution: {integrity: sha512-gX2mtR9o+WelX21YizXUCD/y+a4ZL+RDthDmFkHxaYbdzjSYTn8u/igoje/l3WEO+/RYspmqUFa8w/ckNbt6Vg==}
+    deprecated: This package is now deprecated in favor of expo-crypto, which provides the same functionality. To migrate, replace all imports from expo-random with imports from expo-crypto.
     peerDependencies:
       expo: '*'
 
@@ -9801,7 +9807,7 @@ snapshots:
 
   '@bitauth/libauth@1.19.1': {}
 
-  '@blockchain-lab-um/did-provider-ebsi@1.2.1(web-streams-polyfill@3.3.3)':
+  '@blockchain-lab-um/did-provider-ebsi@1.2.1(patch_hash=3ycnj2ohz3qddy5hl2jkh7m3iu)(web-streams-polyfill@3.3.3)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 3.2.0
       '@cef-ebsi/key-did-resolver': 1.1.0
