@@ -136,25 +136,18 @@ export default fp<FastifyPluginOptions>(async (fastify, _opts) => {
 
     console.log(`Your issuer EBSI did is: ${identifier.did}`);
   } else {
-    await agent.didManagerImport({
-      did: `did:key:${process.env.ISSUER_ADDRESS}`,
-      provider: 'did:key',
-      controllerKeyId: 'primary',
+    identifier = await agent.didManagerCreate({
       alias: 'issuer-primary',
-      keys: [
-        {
-          kid: 'primary',
-          type: 'Secp256k1',
-          kms: 'local',
-          privateKeyHex: process.env.ISSUER_PRIVATE_KEY,
-        } as MinimalImportableKey,
-      ],
+      provider: 'did:key',
+      kms: 'local',
+      options: {
+        privateKeyHex: process.env.ISSUER_PRIVATE_KEY,
+        keyType: 'Secp256r1',
+        type: 'ebsi',
+      },
     });
 
-    identifier = await agent.didManagerGetByAlias({
-      alias: 'issuer-primary',
-      provider: 'did:key',
-    });
+    console.log(`Your issuer did is: ${identifier.did}`);
   }
 
   if (!identifier) throw new Error('Cannot generate valid identifier');
