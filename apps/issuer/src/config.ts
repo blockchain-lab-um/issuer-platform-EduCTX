@@ -14,6 +14,39 @@ export const SUPPORTED_DID_METHODS = ['did:key:jwk_jcs-pub'];
 export const SUPPORTED_CURVES = ['P-256'];
 export const SUPPORTED_DIGITAL_SIGNATURES = ['ES256K'];
 
+const EBSI_CONFORMANCE_TESTING_SUPPORTED_CREDENTIALS: SupportedCredential[] = [
+  {
+    id: 'CTWalletSameAuthorisedInTime',
+    credentialSchema: {
+      id: '',
+      type: 'JsonSchema',
+    },
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSameAuthorisedInTime',
+    ],
+    cryptographic_binding_methods_supported: ['did'],
+    cryptographic_suites_supported: ['ES256K'],
+  },
+  {
+    id: 'CTWalletSamePreAuthorisedInTime',
+    credentialSchema: {
+      id: '',
+      type: 'JsonSchema',
+    },
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSamePreAuthorisedInTime',
+    ],
+    cryptographic_binding_methods_supported: ['did'],
+    cryptographic_suites_supported: ['ES256K'],
+  },
+];
+
 export const SUPPORTED_CREDENTIALS: SupportedCredential[] = [
   {
     id: 'EducationCredential',
@@ -26,4 +59,5 @@ export const SUPPORTED_CREDENTIALS: SupportedCredential[] = [
     cryptographic_binding_methods_supported: ['did'],
     cryptographic_suites_supported: ['ES256K'],
   },
+  ...EBSI_CONFORMANCE_TESTING_SUPPORTED_CREDENTIALS, // TODO: Enable with flag
 ];

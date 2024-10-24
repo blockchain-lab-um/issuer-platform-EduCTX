@@ -129,8 +129,8 @@ async function verifyProofOfPossession(
       const publicKeyJwk: JsonWebKey = {
         kty: 'EC',
         crv: curveName,
-        x: bytesToBase64url(pubPoint.getX().toBuffer('be', 32)),
-        y: bytesToBase64url(pubPoint.getY().toBuffer('be', 32)),
+        x: bytesToBase64url(new Uint8Array(pubPoint.getX().toBuffer('be', 32))),
+        y: bytesToBase64url(new Uint8Array(pubPoint.getY().toBuffer('be', 32))),
       };
 
       publicKey = await importJWK(publicKeyJwk, protectedHeader.alg);

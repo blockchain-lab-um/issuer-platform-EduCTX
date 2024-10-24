@@ -138,14 +138,23 @@ importers:
         specifier: 1.1.0-beta.1
         version: 1.1.0-beta.1
       '@blockchain-lab-um/oidc-rp-plugin':
-        specifier: 0.0.11
-        version: 0.0.11(expo-crypto@13.0.2(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))))(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))(msrcrypto@1.5.8)(react-native-securerandom@0.1.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(web-streams-polyfill@3.3.3)
+        specifier: 0.0.13
+        version: 0.0.13(expo-crypto@13.0.2(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))))(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))(msrcrypto@1.5.8)(react-native-securerandom@0.1.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(web-streams-polyfill@3.3.3)
       '@blockchain-lab-um/oidc-types':
-        specifier: ^0.0.8
-        version: 0.0.8
+        specifier: 0.1.0
+        version: 0.1.0
       '@blockchain-lab-um/veramo-datamanager':
         specifier: 1.1.0-beta.1
         version: 1.1.0-beta.1
+      '@cef-ebsi/auth-server':
+        specifier: 1.0.0-alpha.45
+        version: 1.0.0-alpha.45(ajv@8.16.0)
+      '@cef-ebsi/credential-issuer':
+        specifier: 1.0.0-alpha.24
+        version: 1.0.0-alpha.24
+      '@cef-ebsi/verifiable-presentation':
+        specifier: 7.1.0
+        version: 7.1.0(ajv@8.16.0)
       '@fastify/autoload':
         specifier: ^5.10.0
         version: 5.10.0
@@ -164,6 +173,12 @@ importers:
       '@fastify/type-provider-json-schema-to-ts':
         specifier: ^3.0.0
         version: 3.0.0(fastify@4.28.1)(json-schema-to-ts@3.1.0)
+      '@noble/curves':
+        specifier: 1.6.0
+        version: 1.6.0
+      '@sphereon/pex-models':
+        specifier: 2.3.1
+        version: 2.3.1
       '@veramo/core':
         specifier: ^6.0.0
         version: 6.0.0
@@ -218,6 +233,9 @@ importers:
       jose:
         specifier: ^5.6.2
         version: 5.6.2
+      level:
+        specifier: 8.0.1
+        version: 8.0.1
       pg:
         specifier: ^8.12.0
         version: 8.12.0
@@ -272,6 +290,9 @@ packages:
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
+
+  '@astronautlabs/jsonpath@1.1.2':
+    resolution: {integrity: sha512-FqL/muoreH7iltYC1EB5Tvox5E8NSOOPGkgns4G+qxRKl6k5dxEVljUjB5NcKESzkqwnUqWjSZkL61XGYOuV+A==}
 
   '@babel/code-frame@7.10.4':
     resolution: {integrity: sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==}
@@ -1111,11 +1132,11 @@ packages:
   '@blockchain-lab-um/masca-types@1.3.2':
     resolution: {integrity: sha512-hUm7zNY22yrWWGPcHvn4G4dnB/hnBntIR84e5UOTNxY8I4PhnanSkO4NBw2xvg8EBIHftlSIV8gCdpPgcaw8Mw==}
 
-  '@blockchain-lab-um/oidc-rp-plugin@0.0.11':
-    resolution: {integrity: sha512-h5U35FL5ALWCb5uEmZmrfiN32smidQuknDCIDj8pSDZLhUqqj4mwDmQ7ez+V36ZwiMaQyju+2DRykSL/C2x8MQ==}
+  '@blockchain-lab-um/oidc-rp-plugin@0.0.13':
+    resolution: {integrity: sha512-c4MosBaKGW9qdFEa/OMdJDi4y+BbL5Jhh9cuoWuShTXPjjl2B4yepD72dSRyRiFmqKJm4vfQ+Se+GPneVkuMBw==}
 
-  '@blockchain-lab-um/oidc-types@0.0.8':
-    resolution: {integrity: sha512-ktvLbJA26FZwjjICGqe++Qe6gvDcoGUl5adHDx5KBNxkT+L8lp6caXt1NgYqhNfDsQuJg4syK8s33cMmlTXOSQ==}
+  '@blockchain-lab-um/oidc-types@0.1.0':
+    resolution: {integrity: sha512-iDEFi8B/7k0Q5YmUBgz83jPjvM3TM2y1NEa5/YJbUW7GMJKrgt2MywSXjot/9wNhGTnoSlUr+jKrPZ8bpqyP2Q==}
 
   '@blockchain-lab-um/utils@1.3.8':
     resolution: {integrity: sha512-DCgKzP8p3+n3la8ir6hY76y1Ng5DrQ0k6/nca/dlK3B/KTq/gkMr3XmzmB5jiNd91mRkItGKLs5J1gPwiiDLzQ==}
@@ -1126,9 +1147,21 @@ packages:
   '@blockchain-lab-um/veramo-datamanager@1.1.0-beta.1':
     resolution: {integrity: sha512-8MWH0vmhB42Ca8IE5rrOj9fh+jPDh3vVJpmd3ROrLmUPPReYpskCRdYa+OP+P5t5E1Kn5kY1z6o6Hr9eW9ZuEw==}
 
+  '@cef-ebsi/auth-server@1.0.0-alpha.45':
+    resolution: {integrity: sha512-6wkVk0QWFiA0EkmnBFgIQeAWn43htODXFDD6cQIiNvI1IScKVRCInKdtJGK66dhcAfPRIl1mcCn93bV30tnIww==}
+
+  '@cef-ebsi/credential-issuer@1.0.0-alpha.24':
+    resolution: {integrity: sha512-5L4tWEtWjvo2l2NwCBZnmxUsmIbdq5z7lNfQhiKImGAOWOFUIEgo1XBws1enNl762FvD6Nf0lFt/IVhltGTdqg==}
+
   '@cef-ebsi/ebsi-did-resolver@3.2.0':
     resolution: {integrity: sha512-4wM5TK5l6xRBSkOCEZRP64Xqsd0BqmvjfSpREn8fXbrpMZqOafku77YQSMzqFmOIQ62HSEi5Vf4CSzDHAmalig==}
     engines: {node: '>=16.10.0'}
+
+  '@cef-ebsi/ebsi-did-resolver@4.0.3':
+    resolution: {integrity: sha512-0GpZ1wtA0YZj4JqpnF2MhYqhOrNuEjh+QJLMOMAa8LKflBVoKljWsf41W8H61b5bbSXWlb0IjBCUqvXUacJAuw==}
+
+  '@cef-ebsi/ebsi-uri@0.1.0':
+    resolution: {integrity: sha512-6YH8RehbOoFL+WES999HfiflYcYHxif4W5lWCHjsvUlPqmBRvOtEJ5pew/Fyi4goP4y0WbCwDWYGWfq3ywQ8hw==}
 
   '@cef-ebsi/key-did-resolver@1.1.0':
     resolution: {integrity: sha512-fx8otCet0vRM/PnndGHHhuWBy5EpX142RsfKT3DTH8/a3Yjkdo8S+C9bGHbDdc6PowPyp4FgF/6XVQUH45iu1A==}
@@ -1137,17 +1170,38 @@ packages:
   '@cef-ebsi/key-did-resolver@2.0.1':
     resolution: {integrity: sha512-+OqXuw5ci+DPTR5D7Ap8C6l5xU4FbY4nWTPc5rHXqWB3poWZrJA3xrddqNUshLUZj/nkw1UzRPhFmuD8jWBZRg==}
 
+  '@cef-ebsi/key-did-resolver@2.0.4':
+    resolution: {integrity: sha512-9GN5uqkimJWHPXoikMTpW/pIpPwpdnd8JHwA/PtyAeeRe2+w68gEc30qYQqAVB/q5W72P33w+/hW8ehqSURAfg==}
+
   '@cef-ebsi/siop-auth@3.2.0':
     resolution: {integrity: sha512-Udd2xZOx/PrDWJ69qiEdmckmZ4VVBtxaCzXBRQ6UrzWAU0yiCApC+/ryynaF3O+eUAqVsVHQwyveFYBFHUbUYw==}
     engines: {node: '>=16.10.0'}
+
+  '@cef-ebsi/vcdm1.1-accreditation-schema@1.3.0':
+    resolution: {integrity: sha512-1kjxKsnR3tD8+tzL56jV9E1Si3bL65i1fYuG0APVmlEa9pmzLUwpUO6TUHBbsJephDZpgsgEL7C7eWXXrqdujQ==}
+
+  '@cef-ebsi/vcdm1.1-attestation-schema@1.3.0':
+    resolution: {integrity: sha512-A8ol6bUOGdYFeAWRAg8WMymgCtzQXRXP5S6zi7JB8o4VU3ICylRqYcQM83BHwmZNGF+uwRwEmkIGX9Z0kF9dDg==}
+
+  '@cef-ebsi/vcdm1.1-presentation-schema@1.0.3':
+    resolution: {integrity: sha512-MAbThvUOBG75kSE4iSSGvEFTxMgBFUrMQCsPCXi+oteStXpHSIy8JEg6UFyrLqmDqKK1MY4SzuopkW9dm5Y1+A==}
+
+  '@cef-ebsi/vcdm1.1-revocation-statuslist-schema@1.3.0':
+    resolution: {integrity: sha512-nFRBQFVI33lRUwuGM5ow7xX+Vm17GdbXhK5cZ+qmFkx3dsFUpFxOEUqobvRr0MH0vwkLKIU4v9bzlHXUPmlIGA==}
 
   '@cef-ebsi/verifiable-credential@4.5.2':
     resolution: {integrity: sha512-a/YDXVzSPupVW+ebtXOAxJxBS9kc3G0WiMVjfYqDqWbw3T3O8uEQ5tVElTy9uK9vMIaVUSZNkVag8T+5TL7/3w==}
     engines: {node: '>=16.10.0'}
 
+  '@cef-ebsi/verifiable-credential@6.1.0':
+    resolution: {integrity: sha512-Wyfb8Nl+zOKm/wZrOson9DZWhQnIweOCONvz8Wp3LQUtRck+uPcRJzTceiL/cp5d7x+CuZWRxVEJjAH+SS50Vw==}
+
   '@cef-ebsi/verifiable-presentation@5.4.2':
     resolution: {integrity: sha512-6ovl8SKAaegsEjlkW9lq7wbLcJV03/1Thlxa2oLWVZ+m7LahpBiKjgPL/I3cW7sSFsHf70VNsE9A5RSNqMxNGQ==}
     engines: {node: '>=16.10.0'}
+
+  '@cef-ebsi/verifiable-presentation@7.1.0':
+    resolution: {integrity: sha512-+cCRtKIKqhy/I76taAskA97Cb+nJVLWGLfTmjzxeJ5VNO5Se3W84Bajqg5H8/SSNgvrdLB2tF2rvlxeOKK4tCg==}
 
   '@ceramicnetwork/codecs@1.14.0':
     resolution: {integrity: sha512-UElVFFIHWHGc/cr5pZxQTfd7DJIf95cFtADTFQ+O78c+X+OOO323F40KLCP+vuwooyiVbGArHiaU5WsrHCz7bg==}
@@ -2437,6 +2491,10 @@ packages:
   '@noble/curves@1.4.2':
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
 
+  '@noble/curves@1.6.0':
+    resolution: {integrity: sha512-TlaHRXDehJuRNR9TfZDNQ45mMEd5dwUwmicsafcIX4SsNiqnCHKjE/1alYPd/lDRVhxdhUAlv8uEhMCI5zjIJQ==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/ed25519@1.7.3':
     resolution: {integrity: sha512-iR8GBkDt0Q3GyaVcIu7mSsVIqnFbkbRzGLWlvhwunacoLwt4J3swfKhfaM6rN6WY+TBGoYT1GtT1mIh2/jGbRQ==}
 
@@ -2450,6 +2508,10 @@ packages:
   '@noble/hashes@1.4.0':
     resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
     engines: {node: '>= 16'}
+
+  '@noble/hashes@1.5.0':
+    resolution: {integrity: sha512-1j6kQFb7QRru7eKN3ZDvRcP13rugwdxZqCjbiAVZfIJwgj2A65UmT4TgARXGlXgnRkORLTDTrO19ZErt7+QXgA==}
+    engines: {node: ^14.21.3 || >=16}
 
   '@noble/secp256k1@1.7.1':
     resolution: {integrity: sha512-hOUk6AyBFmqVrv7k5WAw/LpszxVbj9gGN4JRkIX52fdFAj1UA61KXmZDvqVEm+pOyec3+fIeZB02LYa/pWOArw==}
@@ -3351,6 +3413,27 @@ packages:
   '@scure/bip39@1.3.0':
     resolution: {integrity: sha512-disdg7gHuTDZtY+ZdkmLpPCk7fxZSu3gBiEGuoC1XYxv9cGx3Z6cpTggCgW6odSOOIXCiDjuGejW+aJKCY/pIQ==}
 
+  '@sd-jwt/decode@0.6.1':
+    resolution: {integrity: sha512-QgTIoYd5zyKKLgXB4xEYJTrvumVwtsj5Dog0v0L9UH9ZvHekDaeexS247X7A4iSdzTvmZzUpGskgABOa4D8NmQ==}
+    engines: {node: '>=16'}
+
+  '@sd-jwt/present@0.6.1':
+    resolution: {integrity: sha512-QRD3TUDLj4PqQNZ70bBxh8FLLrOE9mY8V9qiZrJSsaDOLFs2p1CtZG+v9ig62fxFYJZMf4bWKwYjz+qqGAtxCg==}
+    engines: {node: '>=16'}
+
+  '@sd-jwt/types@0.6.1':
+    resolution: {integrity: sha512-LKpABZJGT77jNhOLvAHIkNNmGqXzyfwBT+6r+DN9zNzMx1CzuNR0qXk1GMUbast9iCfPkGbnEpUv/jHTBvlIvg==}
+    engines: {node: '>=16'}
+
+  '@sd-jwt/utils@0.6.1':
+    resolution: {integrity: sha512-1NHZ//+GecGQJb+gSdDicnrHG0DvACUk9jTnXA5yLZhlRjgkjyfJLNsCZesYeCyVp/SiyvIC9B+JwoY4kI0TwQ==}
+    engines: {node: '>=16'}
+
+  '@segment/ajv-human-errors@2.14.0':
+    resolution: {integrity: sha512-vaURfRwGRWXz4wimWHX2Gy7Qs5toJzICQ3ecphlQJK1UDVe11zWOz+0UyJ3fmYLV8+z4Skwcu1vZPXoMBFXWhQ==}
+    peerDependencies:
+      ajv: ^8.0.0
+
   '@segment/loosely-validate-event@2.0.0':
     resolution: {integrity: sha512-ZMCSfztDBqwotkl848ODgVcAmN4OItEWDCkshcKz0/W6gGSQayuuCtWV/MlodFivAZD793d6UgANd6wCXUfrIw==}
 
@@ -3383,15 +3466,22 @@ packages:
       msrcrypto: ^1.5.8
       react-native-securerandom: ^1.0.1
 
-  '@sphereon/pex-models@2.2.4':
-    resolution: {integrity: sha512-pGlp+wplneE1+Lk3U48/2htYKTbONMeG5/x7vhO6AnPUOsnOXeJdftPrBYWVSzz/JH5GJptAc6+pAyYE1zMu4Q==}
+  '@sphereon/pex-models@2.3.1':
+    resolution: {integrity: sha512-SByU4cJ0XYA6VZQ/L6lsSiRcFtBPHbFioCeQ4GP7/W/jQ+PSBD7uK2oTnKQ9/0iEiMK/6JYqhKgLs4a9UX3UTQ==}
 
   '@sphereon/pex@2.0.1':
     resolution: {integrity: sha512-9UW1z60ltPMEauqKXa73gTfmU8SrPxH+X7Rx9v7G13ZmeTC8Yjfm2C7Mit01B9BCL49gShV4htG8np3+UKlorg==}
     engines: {node: '>=16'}
 
+  '@sphereon/pex@3.3.3':
+    resolution: {integrity: sha512-CXwdEcMTUh2z/5AriBn3OuShEG06l2tgiIr7qDJthnkez8DQ3sZo2vr4NEQWKKAL+DeAWAI4FryQGO4KuK7yfg==}
+    engines: {node: '>=18'}
+
   '@sphereon/ssi-types@0.10.0':
     resolution: {integrity: sha512-ajAUeaR2fMSvlj/au40ltzSoQ+Qy0CdYouPeK6upFma/8g36RbRh0CI+Ee1qOl3R/SbHBzB3XKWFVGHzooVnNQ==}
+
+  '@sphereon/ssi-types@0.22.0':
+    resolution: {integrity: sha512-YPJAZlKmzNALXK8ohP3ETxj1oVzL4+M9ljj3fD5xrbacvYax1JPCVKc8BWSubGcQckKHPbgbpcS7LYEeghyT9Q==}
 
   '@stablelib/aead@1.0.1':
     resolution: {integrity: sha512-q39ik6sxGHewqtO0nP4BuSe3db5G1fEJE8ukvngS2gLkBXyy6E7pLubhbYgnkDFv6V8cWaxcE4Xn0t6LWcJkyg==}
@@ -3656,6 +3746,9 @@ packages:
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
 
+  '@types/validator@13.12.2':
+    resolution: {integrity: sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==}
+
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
 
@@ -3795,6 +3888,10 @@ packages:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
     engines: {node: '>=6.5'}
 
+  abstract-level@1.0.4:
+    resolution: {integrity: sha512-eUP/6pbXBkMbXFdx4IH2fVgvB7M0JvR7/lIL33zcs0IBcwjdzSSl31TOJsaCzmKSSDF9h8QYSOJux4Nd4YJqFg==}
+    engines: {node: '>=12'}
+
   abstract-logging@2.0.1:
     resolution: {integrity: sha512-2BjRTZxTPvheOvGbBslFSYOUkr+SjPtOnrLP33f+VIWLzezQpZcqVg7ja3L4dBXmzzgwT+a029jRx5PCi3JuiA==}
 
@@ -3848,6 +3945,9 @@ packages:
 
   ajv@8.16.0:
     resolution: {integrity: sha512-F0twR8U1ZU67JIEtekUcLkXkoO5mMMmgGD8sK/xUFzJ805jxHQl92hImFAqqXMyMYjSPOyUPAwHYhB72g5sTXw==}
+
+  ajv@8.17.1:
+    resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
   anser@1.4.10:
     resolution: {integrity: sha512-hCv9AqTQ8ycjpSd3upOJd7vFwW1JaoYQ7tpham03GJ1ca8/65rqn0RpaWpItOAd6ylW9wAw6luXYPJIyPFVOww==}
@@ -3995,6 +4095,9 @@ packages:
 
   axios@1.7.2:
     resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+
+  axios@1.7.7:
+    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
 
   b4a@1.6.6:
     resolution: {integrity: sha512-5Tk1HLk6b6ctmjIkAcU/Ujv/1WqiDl0F0JdRCR80VsOcUlHcu7pWeWRlOqQLHfDEsVx9YH/aif5AG4ehoCtTmg==}
@@ -4149,6 +4252,9 @@ packages:
   brorand@1.1.0:
     resolution: {integrity: sha512-cKV8tMCEpQs4hK/ik71d6LrPOnpkpGBR0wzxqr68g2m/LB2GxVYQroAjMJZRVM1Y4BCjCKc3vAamxSzOY2RP+w==}
 
+  browser-level@1.0.1:
+    resolution: {integrity: sha512-XECYKJ+Dbzw0lbydyQuJzwNXtOpbMSq737qxJN11sIRTErOMShvDpbzTlgju7orJKvx4epULolZAuJGLzCmWRQ==}
+
   browserify-aes@1.2.0:
     resolution: {integrity: sha512-+7CHXqGuspUn/Sl5aO7Ea0xWGAtETPXNSAjHo48JfLdPWcMng33Xe4znFvQweqc/uzk5zSOI3H52CYnjCfb5hA==}
 
@@ -4273,6 +4379,10 @@ packages:
   cartonne@2.2.0:
     resolution: {integrity: sha512-O1rA2AQKnposZJ7oT+GtCQpcv4kfs+gqkCs5rFLBfegP3K0nWNmHj5q4d8NlUxqe3EHvAddCci6WO+ogupl3MA==}
 
+  catering@2.1.1:
+    resolution: {integrity: sha512-K7Qy8O9p76sL3/3m7/zLKbRkyOlSZAgzEaLhyj2mXS8PsCud2Eo4hAb8aLtZqHh0QGqLcb9dlJSu6lHRVENm1w==}
+    engines: {node: '>=6'}
+
   cborg@1.10.2:
     resolution: {integrity: sha512-b3tFPA9pUr2zCUiCfRd2+wok2/LBSNUMKOuRRok+WlvvAgEt/PlbgPTsZUcwCOs53IJvLgTp0eotwtosE6njug==}
     hasBin: true
@@ -4328,6 +4438,16 @@ packages:
   circom_runtime@0.1.21:
     resolution: {integrity: sha512-qTkud630B/GK8y76hnOaaS1aNuF6prfV0dTrkeRsiJKnlP1ryQbP2FWLgDOPqn6aKyaPlam+Z+DTbBhkEzh8dA==}
     hasBin: true
+
+  class-transformer@0.5.1:
+    resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
+
+  class-validator@0.14.1:
+    resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
+
+  classic-level@1.4.1:
+    resolution: {integrity: sha512-qGx/KJl3bvtOHrGau2WklEZuXhS3zme+jf+fsu6Ej7W7IP/C49v7KNlWIsT1jZu0YnfzSIYDGcEWpCa1wKGWXQ==}
+    engines: {node: '>=12'}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
@@ -5169,6 +5289,9 @@ packages:
   fast-uri@2.4.0:
     resolution: {integrity: sha512-ypuAmmMKInk5q7XcepxlnUWDLWv4GFtaJqAzWKqn62IpQ3pejtr5dTVbt3vwqVaMKmkNR55sTT+CqUKIaT21BA==}
 
+  fast-uri@3.0.3:
+    resolution: {integrity: sha512-aLrHthzCjH5He4Z2H9YZ+v6Ujb9ocRuW6ZzkJQOrTxleEijANq4v1TsaPaVG1PZcuurEzrLcWRyYBYXD5cEiaw==}
+
   fast-xml-parser@4.4.0:
     resolution: {integrity: sha512-kLY3jFlwIYwBNDojclKsNAC12sfD6NwW74QB2CoNGPvtVxjliYehVunB3HYyNi+n4Tt1dAcgwYvmKF/Z18flqg==}
     hasBin: true
@@ -5731,6 +5854,10 @@ packages:
   is-buffer@1.1.6:
     resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
 
+  is-buffer@2.0.5:
+    resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
+    engines: {node: '>=4'}
+
   is-callable@1.2.7:
     resolution: {integrity: sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==}
     engines: {node: '>= 0.4'}
@@ -5986,6 +6113,9 @@ packages:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
 
+  js-base64@3.7.7:
+    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
+
   js-beautify@1.15.1:
     resolution: {integrity: sha512-ESjNzSlt/sWE8sciZH8kBF8BPlwXPwhR6pWKAw8bw4Bwj+iZcnKW6ONWUutJ7eObuBZQpiIb8S7OYspWrKt7rA==}
     engines: {node: '>=14'}
@@ -6162,6 +6292,18 @@ packages:
   leac@0.6.0:
     resolution: {integrity: sha512-y+SqErxb8h7nE/fiEX07jsbuhrpO9lL8eca7/Y1nuWV2moNlXhyd59iDGcRf6moVyDMbmTNzL40SUyrFU/yDpg==}
 
+  level-supports@4.0.1:
+    resolution: {integrity: sha512-PbXpve8rKeNcZ9C1mUicC9auIYFyGpkV9/i6g76tLgANwWhtG2v7I4xNBUlkn3lE2/dZF3Pi0ygYGtLc4RXXdA==}
+    engines: {node: '>=12'}
+
+  level-transcoder@1.0.1:
+    resolution: {integrity: sha512-t7bFwFtsQeD8cl8NIoQ2iwxA0CL/9IFw7/9gAjOonH0PWTTiRfY7Hq+Ejbsxh86tXobDQ6IOiddjNYIfOBs06w==}
+    engines: {node: '>=12'}
+
+  level@8.0.1:
+    resolution: {integrity: sha512-oPBGkheysuw7DmzFQYyFe8NAia5jFLAgEnkgWnK3OXAuJr8qFT+xBQIwokAZPME2bhPFzS8hlYcL16m8UZrtwQ==}
+    engines: {node: '>=12'}
+
   leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
     engines: {node: '>=6'}
@@ -6169,6 +6311,9 @@ packages:
   levn@0.3.0:
     resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
     engines: {node: '>= 0.8.0'}
+
+  libphonenumber-js@1.11.12:
+    resolution: {integrity: sha512-QkJn9/D7zZ1ucvT++TQSvZuSA2xAWeUytU+DiEQwbPKLyrDpvbul2AFs1CGbRAPpSCCk47aRAb5DX5mmcayp4g==}
 
   light-my-request@5.13.0:
     resolution: {integrity: sha512-9IjUN9ZyCS9pTG+KqTDEQo68Sui2lHsYBrfMyVUTTZ3XhH8PMZq7xO94Kr+eP9dhi/kcKsx4N41p2IXEBil1pQ==}
@@ -6272,6 +6417,9 @@ packages:
 
   lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  lodash.defaults@4.2.0:
+    resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
 
   lodash.foreach@4.5.0:
     resolution: {integrity: sha512-aEXTF4d+m05rVOAUG3z4vZZ4xVexLKZGF0lIxuHZ1Hplpk/3B6Z1+/ICICYRLm7c41Z2xiejbkCkJoTlypoXhQ==}
@@ -6415,6 +6563,10 @@ packages:
   memoize-one@5.2.1:
     resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
 
+  memoize@10.0.0:
+    resolution: {integrity: sha512-H6cBLgsi6vMWOcCpvVCdFFnl3kerEXbrYh9q+lY6VXvQSmM6CkmV08VOwT+WE2tzIEqRPFfAq3fm4v/UIW6mSA==}
+    engines: {node: '>=18'}
+
   memory-cache@0.2.0:
     resolution: {integrity: sha512-OcjA+jzjOYzKmKS6IQVALHLVz+rNTMPoJvCztFaZxwG14wtAW7VRZjwTQu06vKCYOxh4jVnik7ya0SXTB0W+xA==}
 
@@ -6532,6 +6684,10 @@ packages:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
 
+  mimic-function@5.0.1:
+    resolution: {integrity: sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==}
+    engines: {node: '>=18'}
+
   minimalistic-assert@1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
 
@@ -6604,6 +6760,10 @@ packages:
   mnemonist@0.39.6:
     resolution: {integrity: sha512-A/0v5Z59y63US00cRSLiloEIw3t5G+MiKz4BhX21FI+YBJXBOGW0ohFxTxO08dsOYlzxo87T7vGfZKYp2bcAWA==}
 
+  module-error@1.0.2:
+    resolution: {integrity: sha512-0yuvsqSCv8LbaOKhnsQ/T5JhyFlCYLPXK3U2sgV10zoKQwzs/MyfuQUOZQ1V/6OCOJsK/TRgNVrPuPDqtdMFtA==}
+    engines: {node: '>=10'}
+
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
@@ -6668,6 +6828,9 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  napi-macros@2.2.2:
+    resolution: {integrity: sha512-hmEVtAGYzVQpCKdbQea4skABsdXW4RUh5t5mJ2zzqowJS2OyXZTU1KhDVFhx+NlWZ4ap9mqR9TcDO3LTTttd+g==}
 
   ncp@2.0.0:
     resolution: {integrity: sha512-zIdGUrPRFTUELUvr3Gmc7KZ2Sw/h1PiVM0Af/oHB6zgnV1ikqSfRk+TOufi79aHYCW3NiOXmr1BP5nWbzojLaA==}
@@ -7661,6 +7824,9 @@ packages:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
 
+  run-parallel-limit@1.1.0:
+    resolution: {integrity: sha512-jJA7irRNM91jaKc3Hcl1npHsFLOXOoTkPCUL1JEa1R82O2miplXXRaGdjW/KM/98YQWDhJLiSs793CnXfblJUw==}
+
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
@@ -8229,6 +8395,10 @@ packages:
     resolution: {integrity: sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==}
     engines: {node: '>=8'}
 
+  type-fest@4.26.1:
+    resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
+    engines: {node: '>=16'}
+
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
@@ -8773,6 +8943,10 @@ snapshots:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
+
+  '@astronautlabs/jsonpath@1.1.2':
+    dependencies:
+      static-eval: 2.0.2
 
   '@babel/code-frame@7.10.4':
     dependencies:
@@ -9879,9 +10053,9 @@ snapshots:
       - utf-8-validate
       - web-streams-polyfill
 
-  '@blockchain-lab-um/oidc-rp-plugin@0.0.11(expo-crypto@13.0.2(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))))(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))(msrcrypto@1.5.8)(react-native-securerandom@0.1.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(web-streams-polyfill@3.3.3)':
+  '@blockchain-lab-um/oidc-rp-plugin@0.0.13(expo-crypto@13.0.2(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))))(expo@51.0.17(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7)))(msrcrypto@1.5.8)(react-native-securerandom@0.1.1(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1)))(react-native@0.74.3(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.3)(react@18.3.1))(web-streams-polyfill@3.3.3)':
     dependencies:
-      '@blockchain-lab-um/oidc-types': 0.0.8
+      '@blockchain-lab-um/oidc-types': 0.1.0
       '@sphereon/pex': 2.0.1
       '@veramo/core': 6.0.0
       '@veramo/credential-eip712': 6.0.0
@@ -9906,9 +10080,9 @@ snapshots:
       - utf-8-validate
       - web-streams-polyfill
 
-  '@blockchain-lab-um/oidc-types@0.0.8':
+  '@blockchain-lab-um/oidc-types@0.1.0':
     dependencies:
-      '@veramo/core': 5.4.1
+      '@veramo/core': 6.0.0
     transitivePeerDependencies:
       - supports-color
 
@@ -9946,6 +10120,47 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(ajv@8.16.0)':
+    dependencies:
+      '@cef-ebsi/ebsi-did-resolver': 4.0.3
+      '@cef-ebsi/key-did-resolver': 2.0.4
+      '@cef-ebsi/verifiable-presentation': 7.1.0(ajv@8.16.0)
+      '@sphereon/pex': 3.3.3
+      '@sphereon/pex-models': 2.3.1
+      axios: 1.7.7
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      did-jwt: 8.0.4
+      did-resolver: 4.1.0
+      jose: 4.15.7
+      level: 8.0.1
+      lodash.defaults: 4.2.0
+      lodash.isequal: 4.5.0
+      multiformats: 9.9.0
+      type-fest: 4.26.1
+      validator: 13.12.0
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - ajv
+      - bufferutil
+      - debug
+      - utf-8-validate
+
+  '@cef-ebsi/credential-issuer@1.0.0-alpha.24':
+    dependencies:
+      '@cef-ebsi/verifiable-credential': 6.1.0
+      axios: 1.7.7
+      did-jwt: 8.0.4
+      did-resolver: 4.1.0
+      ethers: 5.7.2
+      jose: 4.15.7
+      level: 8.0.1
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
+
   '@cef-ebsi/ebsi-did-resolver@3.2.0':
     dependencies:
       axios: 1.7.2
@@ -9954,6 +10169,16 @@ snapshots:
       multiformats: 9.9.0
     transitivePeerDependencies:
       - debug
+
+  '@cef-ebsi/ebsi-did-resolver@4.0.3':
+    dependencies:
+      axios: 1.7.7
+      did-resolver: 4.1.0
+      multiformats: 9.9.0
+    transitivePeerDependencies:
+      - debug
+
+  '@cef-ebsi/ebsi-uri@0.1.0': {}
 
   '@cef-ebsi/key-did-resolver@1.1.0':
     dependencies:
@@ -9969,6 +10194,13 @@ snapshots:
       jose: 4.15.7
       lodash.isplainobject: 4.0.6
       multiformats: 12.1.3
+
+  '@cef-ebsi/key-did-resolver@2.0.4':
+    dependencies:
+      did-resolver: 4.1.0
+      lodash.isplainobject: 4.0.6
+      multiformats: 9.9.0
+      uint8arrays: 3.1.1
 
   '@cef-ebsi/siop-auth@3.2.0':
     dependencies:
@@ -9987,6 +10219,18 @@ snapshots:
       - bufferutil
       - debug
       - utf-8-validate
+
+  '@cef-ebsi/vcdm1.1-accreditation-schema@1.3.0':
+    dependencies:
+      '@cef-ebsi/vcdm1.1-attestation-schema': 1.3.0
+
+  '@cef-ebsi/vcdm1.1-attestation-schema@1.3.0': {}
+
+  '@cef-ebsi/vcdm1.1-presentation-schema@1.0.3': {}
+
+  '@cef-ebsi/vcdm1.1-revocation-statuslist-schema@1.3.0':
+    dependencies:
+      '@cef-ebsi/vcdm1.1-attestation-schema': 1.3.0
 
   '@cef-ebsi/verifiable-credential@4.5.2(web-streams-polyfill@3.3.3)':
     dependencies:
@@ -10013,6 +10257,32 @@ snapshots:
       - utf-8-validate
       - web-streams-polyfill
 
+  '@cef-ebsi/verifiable-credential@6.1.0':
+    dependencies:
+      '@cef-ebsi/ebsi-did-resolver': 4.0.3
+      '@cef-ebsi/ebsi-uri': 0.1.0
+      '@cef-ebsi/key-did-resolver': 2.0.4
+      '@cef-ebsi/vcdm1.1-accreditation-schema': 1.3.0
+      '@cef-ebsi/vcdm1.1-attestation-schema': 1.3.0
+      '@cef-ebsi/vcdm1.1-revocation-statuslist-schema': 1.3.0
+      '@noble/curves': 1.6.0
+      '@segment/ajv-human-errors': 2.14.0(ajv@8.17.1)
+      ajv: 8.17.1
+      ajv-formats: 2.1.1(ajv@8.17.1)
+      axios: 1.7.7
+      did-jwt: 8.0.4
+      did-resolver: 4.1.0
+      ethers: 5.7.2
+      lodash.clonedeep: 4.5.0
+      memoize: 10.0.0
+      multiformats: 9.9.0
+      pako: 2.1.0
+      uint8arrays: 3.1.1
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - utf-8-validate
+
   '@cef-ebsi/verifiable-presentation@5.4.2(web-streams-polyfill@3.3.3)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 3.2.0
@@ -10032,6 +10302,23 @@ snapshots:
       - encoding
       - utf-8-validate
       - web-streams-polyfill
+
+  '@cef-ebsi/verifiable-presentation@7.1.0(ajv@8.16.0)':
+    dependencies:
+      '@cef-ebsi/ebsi-did-resolver': 4.0.3
+      '@cef-ebsi/ebsi-uri': 0.1.0
+      '@cef-ebsi/key-did-resolver': 2.0.4
+      '@cef-ebsi/vcdm1.1-presentation-schema': 1.0.3
+      '@cef-ebsi/verifiable-credential': 6.1.0
+      '@segment/ajv-human-errors': 2.14.0(ajv@8.16.0)
+      did-jwt: 8.0.4
+      did-resolver: 4.1.0
+      memoize: 10.0.0
+    transitivePeerDependencies:
+      - ajv
+      - bufferutil
+      - debug
+      - utf-8-validate
 
   '@ceramicnetwork/codecs@1.14.0':
     dependencies:
@@ -10247,15 +10534,15 @@ snapshots:
   '@didtools/pkh-ethereum@0.4.1':
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@stablelib/random': 1.0.2
       caip: 1.1.1
 
   '@didtools/pkh-solana@0.1.1':
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       '@stablelib/random': 1.0.2
       caip: 1.1.1
       uint8arrays: 4.0.10
@@ -10275,8 +10562,8 @@ snapshots:
   '@didtools/pkh-tezos@0.2.2':
     dependencies:
       '@didtools/cacao': 2.1.0
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@stablelib/random': 1.0.2
       caip: 1.1.1
       uint8arrays: 4.0.10
@@ -11347,7 +11634,7 @@ snapshots:
     dependencies:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.1.0
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.5.0
       '@scure/base': 1.1.7
       '@types/debug': 4.1.12
       debug: 4.3.5
@@ -12366,6 +12653,10 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.4.0
 
+  '@noble/curves@1.6.0':
+    dependencies:
+      '@noble/hashes': 1.5.0
+
   '@noble/ed25519@1.7.3': {}
 
   '@noble/hashes@1.1.5': {}
@@ -12373,6 +12664,8 @@ snapshots:
   '@noble/hashes@1.3.2': {}
 
   '@noble/hashes@1.4.0': {}
+
+  '@noble/hashes@1.5.0': {}
 
   '@noble/secp256k1@1.7.1': {}
 
@@ -13798,7 +14091,7 @@ snapshots:
 
   '@scure/bip32@1.4.0':
     dependencies:
-      '@noble/curves': 1.4.0
+      '@noble/curves': 1.4.2
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.7
 
@@ -13816,6 +14109,32 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.7
+
+  '@sd-jwt/decode@0.6.1':
+    dependencies:
+      '@sd-jwt/types': 0.6.1
+      '@sd-jwt/utils': 0.6.1
+
+  '@sd-jwt/present@0.6.1':
+    dependencies:
+      '@sd-jwt/decode': 0.6.1
+      '@sd-jwt/types': 0.6.1
+      '@sd-jwt/utils': 0.6.1
+
+  '@sd-jwt/types@0.6.1': {}
+
+  '@sd-jwt/utils@0.6.1':
+    dependencies:
+      '@sd-jwt/types': 0.6.1
+      js-base64: 3.7.7
+
+  '@segment/ajv-human-errors@2.14.0(ajv@8.16.0)':
+    dependencies:
+      ajv: 8.16.0
+
+  '@segment/ajv-human-errors@2.14.0(ajv@8.17.1)':
+    dependencies:
+      ajv: 8.17.1
 
   '@segment/loosely-validate-event@2.0.0':
     dependencies:
@@ -13865,11 +14184,11 @@ snapshots:
       str2buf: 1.3.0
       webcrypto-shim: 0.1.7
 
-  '@sphereon/pex-models@2.2.4': {}
+  '@sphereon/pex-models@2.3.1': {}
 
   '@sphereon/pex@2.0.1':
     dependencies:
-      '@sphereon/pex-models': 2.2.4
+      '@sphereon/pex-models': 2.3.1
       '@sphereon/ssi-types': 0.10.0
       ajv: 8.16.0
       ajv-formats: 2.1.1(ajv@8.16.0)
@@ -13878,8 +14197,28 @@ snapshots:
       nanoid: 3.3.7
       string.prototype.matchall: 4.0.11
 
+  '@sphereon/pex@3.3.3':
+    dependencies:
+      '@astronautlabs/jsonpath': 1.1.2
+      '@sd-jwt/decode': 0.6.1
+      '@sd-jwt/present': 0.6.1
+      '@sd-jwt/types': 0.6.1
+      '@sphereon/pex-models': 2.3.1
+      '@sphereon/ssi-types': 0.22.0
+      ajv: 8.16.0
+      ajv-formats: 2.1.1(ajv@8.16.0)
+      jwt-decode: 3.1.2
+      nanoid: 3.3.7
+      string.prototype.matchall: 4.0.11
+      uint8arrays: 3.1.1
+
   '@sphereon/ssi-types@0.10.0':
     dependencies:
+      jwt-decode: 3.1.2
+
+  '@sphereon/ssi-types@0.22.0':
+    dependencies:
+      '@sd-jwt/decode': 0.6.1
       jwt-decode: 3.1.2
 
   '@stablelib/aead@1.0.1': {}
@@ -14296,6 +14635,8 @@ snapshots:
 
   '@types/stack-utils@2.0.3': {}
 
+  '@types/validator@13.12.2': {}
+
   '@types/yargs-parser@21.0.3': {}
 
   '@types/yargs@13.0.12':
@@ -14514,7 +14855,7 @@ snapshots:
 
   '@veramo/key-manager@6.0.0':
     dependencies:
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       '@veramo/core-types': 6.0.0
       '@veramo/utils': 6.0.0
       debug: 4.3.5
@@ -14530,7 +14871,7 @@ snapshots:
 
   '@veramo/kms-local@6.0.0':
     dependencies:
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       '@stablelib/nacl': 1.0.4
       '@stablelib/random': 1.0.2
       '@veramo/core-types': 6.0.0
@@ -14556,8 +14897,8 @@ snapshots:
     dependencies:
       '@ethersproject/signing-key': 5.7.0
       '@ethersproject/transactions': 5.7.0
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@veramo/core-types': 5.6.0
       credential-status: 2.0.6
       cross-fetch: 3.1.8
@@ -14574,7 +14915,7 @@ snapshots:
   '@veramo/utils@5.6.1-next.57':
     dependencies:
       '@ipld/dag-pb': 4.1.2
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       '@veramo/core-types': 5.6.1-unstable.36
       credential-status: 3.0.4
       cross-fetch: 4.0.0
@@ -14584,7 +14925,7 @@ snapshots:
       did-resolver: 4.1.0
       ethers: 6.13.1
       ipfs-unixfs: 11.1.4
-      multiformats: 13.1.0
+      multiformats: 13.1.3
       uint8arrays: 4.0.10
     transitivePeerDependencies:
       - bufferutil
@@ -14595,7 +14936,7 @@ snapshots:
   '@veramo/utils@6.0.0':
     dependencies:
       '@ipld/dag-pb': 4.1.2
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       '@veramo/core-types': 6.0.0
       credential-status: 3.0.4
       cross-fetch: 4.0.0
@@ -14641,6 +14982,16 @@ snapshots:
     dependencies:
       event-target-shim: 5.0.1
 
+  abstract-level@1.0.4:
+    dependencies:
+      buffer: 6.0.3
+      catering: 2.1.1
+      is-buffer: 2.0.5
+      level-supports: 4.0.1
+      level-transcoder: 1.0.1
+      module-error: 1.0.2
+      queue-microtask: 1.2.3
+
   abstract-logging@2.0.1: {}
 
   accepts@1.3.8:
@@ -14673,6 +15024,10 @@ snapshots:
     optionalDependencies:
       ajv: 8.16.0
 
+  ajv-formats@2.1.1(ajv@8.17.1):
+    optionalDependencies:
+      ajv: 8.17.1
+
   ajv-formats@3.0.1(ajv@8.16.0):
     optionalDependencies:
       ajv: 8.16.0
@@ -14683,6 +15038,13 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+
+  ajv@8.17.1:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-uri: 3.0.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
 
   anser@1.4.10: {}
 
@@ -14820,6 +15182,14 @@ snapshots:
       fastq: 1.17.1
 
   axios@1.7.2:
+    dependencies:
+      follow-redirects: 1.15.6
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+
+  axios@1.7.7:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -15010,6 +15380,13 @@ snapshots:
 
   brorand@1.1.0: {}
 
+  browser-level@1.0.1:
+    dependencies:
+      abstract-level: 1.0.4
+      catering: 2.1.1
+      module-error: 1.0.2
+      run-parallel-limit: 1.1.0
+
   browserify-aes@1.2.0:
     dependencies:
       buffer-xor: 1.0.3
@@ -15112,7 +15489,7 @@ snapshots:
 
   c32check@2.0.0:
     dependencies:
-      '@noble/hashes': 1.1.5
+      '@noble/hashes': 1.5.0
       base-x: 4.0.0
 
   cacache@18.0.3:
@@ -15170,6 +15547,8 @@ snapshots:
       multiformats: 11.0.2
       multihashes-sync: 1.1.3
       varintes: 2.0.5
+
+  catering@2.1.1: {}
 
   cborg@1.10.2: {}
 
@@ -15229,6 +15608,22 @@ snapshots:
   circom_runtime@0.1.21:
     dependencies:
       ffjavascript: 0.2.56
+
+  class-transformer@0.5.1: {}
+
+  class-validator@0.14.1:
+    dependencies:
+      '@types/validator': 13.12.2
+      libphonenumber-js: 1.11.12
+      validator: 13.12.0
+
+  classic-level@1.4.1:
+    dependencies:
+      abstract-level: 1.0.4
+      catering: 2.1.1
+      module-error: 1.0.2
+      napi-macros: 2.2.2
+      node-gyp-build: 4.8.1
 
   clean-stack@2.2.0: {}
 
@@ -15692,8 +16087,8 @@ snapshots:
   did-jwt@7.4.7:
     dependencies:
       '@noble/ciphers': 0.4.1
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@scure/base': 1.1.7
       canonicalize: 2.0.0
       did-resolver: 4.1.0
@@ -15704,8 +16099,8 @@ snapshots:
   did-jwt@8.0.4:
     dependencies:
       '@noble/ciphers': 0.5.3
-      '@noble/curves': 1.4.2
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
       '@scure/base': 1.1.7
       canonicalize: 2.0.0
       did-resolver: 4.1.0
@@ -16310,6 +16705,8 @@ snapshots:
   fast-text-encoding@1.0.6: {}
 
   fast-uri@2.4.0: {}
+
+  fast-uri@3.0.3: {}
 
   fast-xml-parser@4.4.0:
     dependencies:
@@ -16952,6 +17349,8 @@ snapshots:
 
   is-buffer@1.1.6: {}
 
+  is-buffer@2.0.5: {}
+
   is-callable@1.2.7: {}
 
   is-ci@3.0.1:
@@ -17202,6 +17601,8 @@ snapshots:
 
   joycon@3.1.1: {}
 
+  js-base64@3.7.7: {}
+
   js-beautify@1.15.1:
     dependencies:
       config-chain: 1.1.13
@@ -17351,7 +17752,7 @@ snapshots:
 
   jsontokens@4.0.1:
     dependencies:
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.5.0
       '@noble/secp256k1': 1.7.1
       base64-js: 1.5.1
 
@@ -17365,7 +17766,7 @@ snapshots:
 
   key-did-provider-ed25519@3.0.2:
     dependencies:
-      '@noble/curves': 1.4.2
+      '@noble/curves': 1.6.0
       did-jwt: 7.4.7
       dids: 4.0.4
       fast-json-stable-stringify: 2.1.0
@@ -17418,12 +17819,27 @@ snapshots:
 
   leac@0.6.0: {}
 
+  level-supports@4.0.1: {}
+
+  level-transcoder@1.0.1:
+    dependencies:
+      buffer: 6.0.3
+      module-error: 1.0.2
+
+  level@8.0.1:
+    dependencies:
+      abstract-level: 1.0.4
+      browser-level: 1.0.1
+      classic-level: 1.4.1
+
   leven@3.1.0: {}
 
   levn@0.3.0:
     dependencies:
       prelude-ls: 1.1.2
       type-check: 0.3.2
+
+  libphonenumber-js@1.11.12: {}
 
   light-my-request@5.13.0:
     dependencies:
@@ -17527,6 +17943,8 @@ snapshots:
   lodash.clonedeep@4.5.0: {}
 
   lodash.debounce@4.0.8: {}
+
+  lodash.defaults@4.2.0: {}
 
   lodash.foreach@4.5.0: {}
 
@@ -17660,6 +18078,10 @@ snapshots:
       mimic-fn: 3.1.0
 
   memoize-one@5.2.1: {}
+
+  memoize@10.0.0:
+    dependencies:
+      mimic-function: 5.0.1
 
   memory-cache@0.2.0: {}
 
@@ -17866,6 +18288,8 @@ snapshots:
 
   mimic-fn@4.0.0: {}
 
+  mimic-function@5.0.1: {}
+
   minimalistic-assert@1.0.1: {}
 
   minimalistic-crypto-utils@1.0.1: {}
@@ -17933,6 +18357,8 @@ snapshots:
     dependencies:
       obliterator: 2.0.4
 
+  module-error@1.0.2: {}
+
   moment@2.30.1: {}
 
   ms@2.0.0: {}
@@ -17959,7 +18385,7 @@ snapshots:
 
   multihashes-sync@1.1.3:
     dependencies:
-      '@noble/hashes': 1.4.0
+      '@noble/hashes': 1.5.0
       multiformats: 11.0.2
 
   mute-stream@0.0.8: {}
@@ -17988,6 +18414,8 @@ snapshots:
   nanoassert@2.0.0: {}
 
   nanoid@3.3.7: {}
+
+  napi-macros@2.2.2: {}
 
   ncp@2.0.0:
     optional: true
@@ -19013,6 +19441,10 @@ snapshots:
 
   run-async@2.4.1: {}
 
+  run-parallel-limit@1.1.0:
+    dependencies:
+      queue-microtask: 1.2.3
+
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
@@ -19620,6 +20052,8 @@ snapshots:
   type-fest@0.3.1: {}
 
   type-fest@0.7.1: {}
+
+  type-fest@4.26.1: {}
 
   type-is@1.6.18:
     dependencies:

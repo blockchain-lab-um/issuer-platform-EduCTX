@@ -3,8 +3,10 @@ import { fileURLToPath } from 'node:url';
 import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
 import type { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
+import authServerPlugin from './plugins/authServer.js';
 
 import { Schemas } from './utils/schemas/index.js';
+import issuerServerPlugin from './plugins/issuerServer.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -33,11 +35,25 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // through your application
   await fastify.register(AutoLoad, {
     dir: path.join(dirname, 'plugins'),
+    ignorePattern: /(authServer|issuerServer)/,
     options: opts,
     forceESM: true,
     ignoreFilter(file) {
       return ignored.some((i) => file.includes(i));
     },
+  });
+
+  // Load other plugins
+  await fastify.register(authServerPlugin, (parent) => {
+    return {
+      veramoAgent: parent.veramoAgent,
+    };
+  });
+
+  await fastify.register(issuerServerPlugin, (parent) => {
+    return {
+      veramoAgent: parent.veramoAgent,
+    };
   });
 
   // This loads all plugins defined in routes

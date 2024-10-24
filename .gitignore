@@ -5,3 +5,6 @@ build
 .next
 .DS_STORE
 ngrok.yml
+
+# LEVEL DB
+db/

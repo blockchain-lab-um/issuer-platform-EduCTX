@@ -24,7 +24,6 @@ import {
   type IIdentifier,
   type IKeyManager,
   type IResolver,
-  type MinimalImportableKey,
   type TAgent,
 } from '@veramo/core';
 import { CredentialPlugin } from '@veramo/credential-w3c';

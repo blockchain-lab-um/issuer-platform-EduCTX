@@ -2,9 +2,10 @@ import { isError } from '@blockchain-lab-um/oidc-rp-plugin';
 import { fastifyFormbody } from '@fastify/formbody';
 
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
-import type { UserSessionsTable } from '../../db/types/index.js';
-import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
-import { routeSchemas } from '../../utils/schemas/index.js';
+import type { UserSessionsTable } from '../../../db/types/index.js';
+import { apiKeyAuth } from '../../../middlewares/apiKeyAuth.js';
+import { routeSchemas } from '../../../utils/schemas/index.js';
+import { validatePostCredential } from '@cef-ebsi/credential-issuer';
 
 const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -13,6 +14,9 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
 
   const pool = fastify.pg.pool;
 
+  /**
+   * Issuer server endpoints
+   */
   fastify.get(
     '/.well-known/openid-credential-issuer',
     {
@@ -28,7 +32,12 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
         throw res.error;
       }
 
-      return reply.code(200).send(res.data);
+      return reply.code(200).send({
+        ...res.data,
+        credential_issuer: `${process.env.ISSUER_URL}/oidc/issuer`,
+        credential_endpoint: `${process.env.ISSUER_URL}/oidc/issuer/credential`,
+        deferred_credential_endpoint: `${process.env.ISSUER_URL}/oidc/issuer/credential-deffered`,
+      });
     },
   );
 
@@ -266,62 +275,32 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
-      const authorizationHeader = request.headers.authorization;
+      const {
+        did,
+        url,
+        authorizationMockPublicKeyJwk,
+        resolver,
+        credentialTypesSupported,
+      } = fastify.issuerServerConfig;
 
-      const [_, token] = authorizationHeader.split(' ');
+      console.log(request.body);
 
-      let userSession: UserSessionsTable;
-      try {
-        const { rows } = await pool.query<UserSessionsTable>(
-          'SELECT * FROM user_sessions WHERE access_token = $1',
-          [token],
-        );
-        if (rows.length === 0) {
-          // Return unauthorized
-          return reply.code(401).send('Unauthorized');
-        }
-        userSession = rows[0];
-      } catch (error) {
-        return reply.code(500).send({
-          error: 'internal_server_error: Error getting user session.',
-        });
-      }
+      const result = await validatePostCredential(
+        fastify.dbIssuerServer,
+        did,
+        url,
+        authorizationMockPublicKeyJwk,
+        resolver,
+        resolver,
+        credentialTypesSupported,
+        undefined,
+        request.headers.authorization,
+        request.body,
+      );
 
-      // Check expiration
-      if (new Date(userSession.expires_in) < new Date()) {
-        return reply.code(401).send('Session expired');
-      }
+      console.log(result.credentialRequest);
 
-      const proofOfPossessionResult =
-        await fastify.veramoAgent.proofOfPossession({
-          cNonce: userSession.c_nonce,
-          cNonceExpiresIn: Number(userSession.c_nonce_expires_in),
-          proof: request.body.proof,
-        });
-
-      if (isError(proofOfPossessionResult)) {
-        return reply.code(400).send({
-          error: proofOfPossessionResult.error.error,
-          error_description: proofOfPossessionResult.error.errorDescription,
-        });
-      }
-
-      const { did } = proofOfPossessionResult.data;
-
-      // TODO: Check if same credentials were requested as in the credential offer
-      const credentialResponse =
-        await fastify.veramoAgent.handleCredentialRequest({
-          body: request.body,
-          issuerDid: fastify.issuerIdentifier.did,
-          subjectDid: did,
-          credentialSubjectClaims: userSession.claims,
-        });
-
-      if (isError(credentialResponse)) {
-        throw credentialResponse.error;
-      }
-
-      return reply.code(200).send(credentialResponse.data);
+      return reply.code(200).send(null);
     },
   );
 };

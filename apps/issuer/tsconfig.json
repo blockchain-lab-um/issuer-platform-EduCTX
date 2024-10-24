@@ -8,11 +8,13 @@
     "target": "ES2022",
     "esModuleInterop": true,
     "types": ["node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "strict": true,
     "noStrictGenericChecks": false
   },
 
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/plugins/dbAuthServer"],
 
   "exclude": ["node_modules", ".taprc"],
   "watchOptions": {
