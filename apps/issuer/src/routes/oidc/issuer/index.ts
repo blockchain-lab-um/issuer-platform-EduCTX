@@ -6,6 +6,16 @@ import type { UserSessionsTable } from '../../../db/types/index.js';
 import { apiKeyAuth } from '../../../middlewares/apiKeyAuth.js';
 import { routeSchemas } from '../../../utils/schemas/index.js';
 import { validatePostCredential } from '@cef-ebsi/credential-issuer';
+import type { CredentialResponse } from '@blockchain-lab-um/oidc-types';
+import { ES256Signer } from 'did-jwt';
+import {
+  createVerifiableCredentialJwt,
+  type CreateVerifiableCredentialOptions,
+  type EbsiIssuer,
+  type EbsiVerifiableAttestation,
+} from '@cef-ebsi/verifiable-credential';
+import * as utils from '@noble/curves/abstract/utils';
+import { randomUUID } from 'node:crypto';
 
 const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -283,24 +293,74 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
         credentialTypesSupported,
       } = fastify.issuerServerConfig;
 
-      console.log(request.body);
+      const { accessTokenPayload, credentialRequest } =
+        await validatePostCredential(
+          fastify.dbIssuerServer,
+          did,
+          url,
+          authorizationMockPublicKeyJwk,
+          resolver,
+          resolver,
+          credentialTypesSupported,
+          undefined,
+          request.headers.authorization,
+          request.body,
+        );
 
-      const result = await validatePostCredential(
-        fastify.dbIssuerServer,
-        did,
-        url,
-        authorizationMockPublicKeyJwk,
-        resolver,
-        resolver,
-        credentialTypesSupported,
-        undefined,
-        request.headers.authorization,
-        request.body,
+      console.log(credentialRequest);
+
+      console.log(accessTokenPayload);
+      console.log(accessTokenPayload.claims.authorization_details);
+
+      const issuer = {
+        did: fastify.issuerIdentifier.did,
+        kid: `${fastify.issuerIdentifier.did}#${fastify.issuerIdentifier.did.split(':')[2]}`,
+        alg: 'ES256',
+        signer: ES256Signer(utils.hexToBytes(process.env.ISSUER_PRIVATE_KEY!)),
+      } satisfies EbsiIssuer;
+
+      const vcPayload = {
+        '@context': ['https://www.w3.org/2018/credentials/v1'],
+        id: `urn:uuid:${randomUUID()}`,
+        type: credentialRequest.types,
+        issuer: issuer.did,
+        issuanceDate: '2021-11-01T00:00:00Z',
+        validFrom: '2021-11-01T00:00:00Z',
+        validUntil: '2050-11-01T00:00:00Z',
+        expirationDate: '2031-11-30T00:00:00Z',
+        issued: '2021-10-30T00:00:00Z',
+        credentialSubject: {
+          id: accessTokenPayload.sub,
+        },
+        credentialSchema: {
+          id: 'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM',
+          type: 'FullJsonSchemaValidator2021',
+        },
+        // termsOfUse: {
+        //   id: 'https://api-pilot.ebsi.eu/trusted-issuers-registry/v5/issuers/did:ebsi:zxaYaUtb8pvoAtYNWbKcveg/attributes/b40fd9b404418a44d2d9911377a03130dde450eb546c755b5b80acd782902e6d',
+        //   type: 'IssuanceCertificate',
+        // },
+      } satisfies EbsiVerifiableAttestation;
+
+      const options = {
+        network: 'conformance',
+        hosts: ['api-conformance.ebsi.eu'],
+      } satisfies CreateVerifiableCredentialOptions;
+
+      const vcJwt = await createVerifiableCredentialJwt(
+        vcPayload,
+        issuer,
+        options,
       );
 
-      console.log(result.credentialRequest);
+      const response: CredentialResponse = {
+        format: 'jwt_vc_json',
+        credential: vcJwt,
+        c_nonce: accessTokenPayload.claims.c_nonce,
+        c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
+      };
 
-      return reply.code(200).send(null);
+      return reply.code(200).send(response);
     },
   );
 };

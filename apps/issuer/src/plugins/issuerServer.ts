@@ -6,7 +6,8 @@ import type {
 } from '@cef-ebsi/credential-issuer';
 import { Level } from 'level';
 import { Resolver } from 'did-resolver';
-
+import { ebsiDidResolver } from '@blockchain-lab-um/did-provider-ebsi';
+import { getDidKeyResolver as keyDidResolver } from '@blockchain-lab-um/did-provider-key';
 declare module 'fastify' {
   export interface FastifyInstance {
     dbIssuerServer: Level<LevelDbKeyIssuer, LevelDbObjectIssuer>;
@@ -32,12 +33,15 @@ export default fp(async (fastify, _) => {
     alias: 'issuer-primary',
   });
 
-  const { privateKeyJwk, publicKeyJwk } = await getKeyPair(
+  const { publicKeyJwk } = await getKeyPair(
     process.env.ISSUER_PRIVATE_KEY!,
     'ES256',
   );
 
-  const resolver = new Resolver();
+  const resolver = new Resolver({
+    ...keyDidResolver(),
+    ...ebsiDidResolver(),
+  });
 
   const credentialTypesSupported = [
     [

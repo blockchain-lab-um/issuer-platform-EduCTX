@@ -124,7 +124,6 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
       const redirectLocation = await fastify.authServer.authorize(
         request.query,
       );
-      console.log(redirectLocation);
       return reply.redirect(redirectLocation);
     },
   );
