@@ -1,23 +1,17 @@
 {
-  "extends": "fastify-tsconfig",
   "compilerOptions": {
     "outDir": "dist",
-    "sourceMap": true,
     "moduleResolution": "nodenext",
     "module": "nodenext",
-    "target": "es2022",
+    "target": "es2023",
+    "declaration": true,
+    "inlineSourceMap": true,
     "esModuleInterop": true,
     "types": ["node"],
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "incremental": false,
     "strict": true,
     "noStrictGenericChecks": false
   },
-
   "include": ["src/**/*.ts"],
-
-  "exclude": ["node_modules"],
-  "watchOptions": {
-    "excludeDirectories": ["**/node_modules"]
-  }
+  "exclude": ["node_modules", "dist"]
 }
