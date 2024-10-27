@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
 import type { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
+import auth from './plugins/auth.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -25,9 +26,16 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // through your application
   await fastify.register(AutoLoad, {
     dir: path.join(dirname, 'plugins'),
-    // ignorePattern: /(authServer|issuerServer)/,
+    ignorePattern: /(auth)/,
     options: opts,
     forceESM: true,
+  });
+
+  // Load auth server plugin
+  await fastify.register(auth, (parent) => {
+    return {
+      config: parent.config,
+    };
   });
 
   // This loads all plugins defined in routes

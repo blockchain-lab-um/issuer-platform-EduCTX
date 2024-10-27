@@ -42,7 +42,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               display: [],
             }),
           ),
-        authorization_server: `${fastify.config.AUTHORIZATION_SERVER_URL}/`,
+        authorization_server: `${fastify.config.AUTHORIZATION_SERVER_URL}`,
       };
 
       return reply.code(200).send(metadata);
@@ -101,7 +101,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const {
         did,
         url,
-        authorizationMockPublicKeyJwk,
+        authorizationServerPublicJwk,
         resolver,
         credentialTypesSupported,
       } = fastify.issuerServerConfig;
@@ -111,7 +111,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           fastify.dbOidc,
           did,
           url,
-          authorizationMockPublicKeyJwk,
+          authorizationServerPublicJwk,
           resolver,
           resolver,
           credentialTypesSupported,
@@ -129,7 +129,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         did: fastify.issuerServerConfig.did,
         kid: `${fastify.issuerServerConfig.kid}`,
         alg: 'ES256',
-        signer: ES256Signer(utils.hexToBytes(process.env.ISSUER_PRIVATE_KEY!)),
+        signer: ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
       } satisfies EbsiIssuer;
 
       const vcPayload = {

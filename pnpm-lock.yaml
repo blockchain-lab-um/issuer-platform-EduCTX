@@ -71,8 +71,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1
       '@fastify/formbody':
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.1
+        version: 8.0.1
       '@fastify/sensible':
         specifier: ^6.0.1
         version: 6.0.1
@@ -388,6 +388,9 @@ importers:
       '@fastify/cors':
         specifier: ^10.0.1
         version: 10.0.1
+      '@fastify/formbody':
+        specifier: ^8.0.1
+        version: 8.0.1
       '@fastify/sensible':
         specifier: ^6.0.1
         version: 6.0.1
@@ -2090,6 +2093,9 @@ packages:
 
   '@fastify/formbody@7.4.0':
     resolution: {integrity: sha512-H3C6h1GN56/SMrZS8N2vCT2cZr7mIHzBHzOBa5OPpjfB/D6FzP9mMpE02ZzrFX0ANeh0BAJdoXKOF2e7IbV+Og==}
+
+  '@fastify/formbody@8.0.1':
+    resolution: {integrity: sha512-LPrcadSIK8TrQk510Zdj56fnw7cyHq0/PW0YHGGM8ycGL4X7XAex+FKcwpzB4i5lF9eykc71a4EtcO9AEoByqw==}
 
   '@fastify/merge-json-schemas@0.1.1':
     resolution: {integrity: sha512-fERDVz7topgNjtXsJTTW1JKLy0rhuLRcquYqNR9rF7OcVpCa2OVW49ZPDIhaRRCaUuvVxI+N416xUoF76HNSXA==}
@@ -12063,6 +12069,11 @@ snapshots:
     dependencies:
       fast-querystring: 1.1.2
       fastify-plugin: 4.5.1
+
+  '@fastify/formbody@8.0.1':
+    dependencies:
+      fast-querystring: 1.1.2
+      fastify-plugin: 5.0.1
 
   '@fastify/merge-json-schemas@0.1.1':
     dependencies:

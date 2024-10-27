@@ -54,7 +54,7 @@ server.addHook('onClose', (_, done) => {
 // Read the PORT from the .env file. Defaults to 3003.
 server.listen(
   {
-    port: Number.parseInt(process.env.PORT ?? '3001', 10),
+    port: Number.parseInt(process.env.PORT ?? '3002', 10),
     host: process.env.HOST ?? '0.0.0.0',
   },
   (err: any) => {

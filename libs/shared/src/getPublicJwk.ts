@@ -15,8 +15,10 @@ export async function getPublicJwk(
 
   const ctx = new EC(alg === 'ES256K' ? 'secp256k1' : 'p256');
 
+  const publicKeyBytes = Buffer.from(publicKey, 'hex');
+
   // Create key pair from hex public key
-  const keyPair = ctx.keyFromPublic(publicKey, 'hex');
+  const keyPair = ctx.keyFromPublic(publicKeyBytes);
 
   // Validate key pair
   const validation = keyPair.validate();

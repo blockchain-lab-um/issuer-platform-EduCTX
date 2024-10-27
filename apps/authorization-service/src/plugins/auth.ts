@@ -53,10 +53,13 @@ export default fp(async (fastify, _) => {
     fastify.config.KEY_ALG,
   );
 
-  const ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID);
+  let ebsiSubjectId;
+  if (fastify.config.DID_METHOD === 'ebsi') {
+    ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID);
 
-  if (ebsiSubjectId.length !== 16) {
-    throw new Error('EBSI_SUBJECT_ID must be 16 bytes');
+    if (ebsiSubjectId.length !== 16) {
+      throw new Error('EBSI_SUBJECT_ID must be 16 bytes');
+    }
   }
 
   const did =
@@ -67,7 +70,7 @@ export default fp(async (fastify, _) => {
           x: publicKeyJwk.x,
           y: publicKeyJwk.y,
         })
-      : didEbsiUtil.createDid(ebsiSubjectId);
+      : didEbsiUtil.createDid(ebsiSubjectId!);
 
   console.log(`Using DID: ${did}`);
 
@@ -85,10 +88,10 @@ export default fp(async (fastify, _) => {
   await fastify.dbOidc.put({ did: did, jwks: true }, [privateKeyJwk]);
 
   // Create the auth server
-  const authServer = new AuthServer({
+  const auth = new AuthServer({
     db: fastify.dbOidc,
     did: did,
-    url: fastify.config.SERVER_URL,
+    url: `${fastify.config.SERVER_URL}/oidc`,
     didRegistryApiUrl: didRegistryApiUrl,
     verifyPresentationJwtOptions,
     ebsiAuthority: '',
@@ -102,5 +105,5 @@ export default fp(async (fastify, _) => {
     credentialTypesSupported: SUPPORTED_CREDENTIALS,
   });
 
-  fastify.decorate('authServer', authServer);
+  fastify.decorate('auth', auth);
 });

@@ -121,6 +121,7 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
+      console.log(request.query);
       const redirectLocation = await fastify.auth.authorize(request.query);
       return reply.redirect(redirectLocation);
     },
@@ -159,9 +160,12 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
     {
       schema: {
         headers: {
-          'content-type': {
-            type: 'string',
-            enum: ['application/x-www-form-urlencoded'],
+          type: 'object',
+          properties: {
+            'content-type': {
+              type: 'string',
+              enum: ['application/x-www-form-urlencoded'],
+            },
           },
         },
         body: {

@@ -18,7 +18,7 @@ type IssuerServerConfig = {
   did: string;
   kid: string;
   url: string;
-  authorizationMockPublicKeyJwk: JWKWithKid;
+  authorizationServerPublicJwk: JWKWithKid;
   resolver: Resolver;
   credentialTypesSupported: string[][];
 };
@@ -58,10 +58,13 @@ export default fp(async (fastify, _) => {
     fastify.config.KEY_ALG,
   );
 
-  const ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID);
+  let ebsiSubjectId;
+  if (fastify.config.DID_METHOD === 'ebsi') {
+    ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID);
 
-  if (ebsiSubjectId.length !== 16) {
-    throw new Error('EBSI_SUBJECT_ID must be 16 bytes');
+    if (ebsiSubjectId.length !== 16) {
+      throw new Error('EBSI_SUBJECT_ID must be 16 bytes');
+    }
   }
 
   const did =
@@ -72,7 +75,7 @@ export default fp(async (fastify, _) => {
           x: publicKeyJwk.x,
           y: publicKeyJwk.y,
         })
-      : didEbsiUtil.createDid(ebsiSubjectId);
+      : didEbsiUtil.createDid(ebsiSubjectId!);
 
   // TODO: Check if correct for did:ebsi
   const kid = `${did}#${
