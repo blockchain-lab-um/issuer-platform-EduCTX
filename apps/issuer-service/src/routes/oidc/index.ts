@@ -384,7 +384,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         await fastify.cache.set(id, credentialOffer);
 
         location = `${credentialOfferEndpoint}?${new URLSearchParams({
-          credential_offer_uri: `${fastify.issuerServerConfig.url}/credeential_offer/${id}`,
+          credential_offer_uri: `${fastify.issuerServerConfig.url}/credential_offer/${id}`,
         }).toString()}`;
       }
 

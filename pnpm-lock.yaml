@@ -8,6 +8,9 @@ patchedDependencies:
   '@blockchain-lab-um/did-provider-ebsi':
     hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
     path: patches/@blockchain-lab-um__did-provider-ebsi.patch
+  '@cef-ebsi/auth-server':
+    hash: cdhzjs2vdxwscm67k733z6avpe
+    path: patches/@cef-ebsi__auth-server.patch
 
 importers:
 
@@ -54,7 +57,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -230,7 +233,7 @@ importers:
         version: 1.1.0-beta.1
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
         version: 1.0.0-alpha.24
@@ -366,7 +369,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
         version: 1.0.0-alpha.24
@@ -10764,7 +10767,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@cef-ebsi/auth-server@1.0.0-alpha.45(ajv@8.17.1)':
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4

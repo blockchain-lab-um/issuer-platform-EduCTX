@@ -1,0 +1,60 @@
+diff --git a/dist/utils.js b/dist/utils.js
+index a705aaff3a43eec239630358032631961a60ff38..b222352f97edfe922614be6b4ec91f19ffa4085a 100644
+--- a/dist/utils.js
++++ b/dist/utils.js
+@@ -1180,11 +1180,11 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+     const query = parsedQuery.data;
+     const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
+     const preAuthorizedCodePayload = decodeJwt(preAuthorizedCode);
+-    if (typeof preAuthorizedCodePayload["client_id"] !== "string") {
+-        throw new OAuth2TokenError("invalid_request", {
+-            errorDescription: "invalid pre-authorised code: client_id is missing",
+-        });
+-    }
++    // if (typeof preAuthorizedCodePayload["client_id"] !== "string") {
++    //     throw new OAuth2TokenError("invalid_request", {
++    //         errorDescription: "invalid pre-authorised code: client_id is missing",
++    //     });
++    // }
+     if (typeof preAuthorizedCodePayload.iss !== "string") {
+         throw new OAuth2TokenError("invalid_request", {
+             errorDescription: "invalid pre-authorised code: iss is missing",
+@@ -1236,12 +1236,12 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+             errorDescription: `error while verifying the signature of pre-authorized_code: ${e instanceof Error ? e.message : "invalid signature"}`,
+         });
+     }
+-    const clientId = preAuthorizedCodePayload["client_id"];
+-    if (userPin !== getUserPin(clientId)) {
+-        throw new OAuth2TokenError("invalid_request", {
+-            errorDescription: "Invalid PIN",
+-        });
+-    }
++    // const clientId = preAuthorizedCodePayload["client_id"];
++    // if (userPin !== getUserPin(clientId)) {
++    //     throw new OAuth2TokenError("invalid_request", {
++    //         errorDescription: "Invalid PIN",
++    //     });
++    // }
+     const authorizationDetails = parsedAuthorizationDetails.data;
+     const cNonce = randomUUID();
+     const now = Math.floor(Date.now() / 1000);
+@@ -1254,7 +1254,7 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+             client_id: clientId,
+         },
+         iss: serverUrl,
+-        sub: clientId,
++        // sub: clientId,
+         aud: authorizationDetails[0].locations ?? serverUrl,
+         iat: now,
+         exp: now + ACCESS_TOKEN_EXP,
+@@ -1269,8 +1269,8 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+     const idToken = await createJWT({
+         nonce: randomUUID(),
+         iss: serverUrl,
+-        sub: clientId,
+-        aud: clientId,
++        // sub: clientId,
++        // aud: clientId,
+         iat: now,
+         exp: now + ID_TOKEN_EXP,
+     }, {

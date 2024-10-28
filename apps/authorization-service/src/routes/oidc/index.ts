@@ -215,7 +215,10 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
-      const response = await fastify.auth.token(request.body);
+      const response = await fastify.auth.token({
+        ...request.body,
+        user_pin: '0929', // FIXME: Remove
+      });
 
       const preAuthorizedCode = request.body['pre-authorized_code'];
       if (preAuthorizedCode) {
