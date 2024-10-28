@@ -58,15 +58,6 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
-  // [App]   scope: 'openid',
-  // [App]   client_id: 'did:key:z2dmzD81cgPx8Vki7JbuuMmFYrWPgYoytykUZ3eyqht1j9Kboj7g9PfXJxbbs4KYegyr7ELnFVnpDMzbJJDDNZjavX6jvtDmALMbXAGW67pdTgFea2FrGGSFs8Ejxi96oFLGHcL4P6bjLDPBJEvRRHSrG4LsPne52fczt2MWjHLLJBvhAC',
-  // [App]   client_metadata: '{"redirect_uris":["openid://redirect"],"jwks_uri":"https://api-conformance.ebsi.eu/conformance/v3/issuer-mock/jwks","authorization_endpoint":"openid:"}',
-  // [App]   authorization_details: '[{"type":"openid_credential","locations":["https://4ff1-2a00-1a20-217f-f797-e84e-2517-97cc-f585.ngrok-free.app/oidc"],"format":"jwt_vc_json","types":["VerifiableCredential","VerifiableAttestation","CTWalletSameAuthorisedInTime"]}]',
-  // [App]   redirect_uri: 'openid://redirect',
-  // [App]   response_type: 'code',
-  // [App]   state: '07e6a794-01d3-45dd-aa47-b9afe1736fae',
-  // [App]   code_challenge: 'XgTf7JUFfpi913BSCyucy51hvryZDagKCTLrNPoQJvc',
-  // [App]   code_challenge_method: 'S256'
   fastify.get(
     '/authorize',
     {
@@ -76,6 +67,11 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
           properties: {
             scope: {
               type: 'string',
+              enum: [
+                'openid',
+                'openid ver_test:id_token',
+                'openid ver_test:vp_token',
+              ],
             },
             client_id: {
               type: 'string',
@@ -91,8 +87,12 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
             },
             response_type: {
               type: 'string',
+              enum: ['code'],
             },
             state: {
+              type: 'string',
+            },
+            issuer_state: {
               type: 'string',
             },
             code_challenge: {
@@ -100,19 +100,19 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
             },
             code_challenge_method: {
               type: 'string',
+              enum: ['S256', 'plain'],
+            },
+            nonce: {
+              type: 'string',
+            },
+            request: {
+              type: 'string',
+            },
+            request_uri: {
+              type: 'string',
             },
           },
-          required: [
-            'scope',
-            'client_id',
-            'client_metadata',
-            'authorization_details',
-            'redirect_uri',
-            'response_type',
-            'state',
-            'code_challenge',
-            'code_challenge_method',
-          ],
+          required: ['scope', 'client_id', 'redirect_uri', 'response_type'],
         },
       },
       config: {
@@ -121,7 +121,6 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
-      console.log(request.query);
       const redirectLocation = await fastify.auth.authorize(request.query);
       return reply.redirect(redirectLocation);
     },
@@ -170,15 +169,34 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
         },
         body: {
           type: 'object',
-          properties: {},
-          required: [],
+          properties: {
+            grant_type: {
+              type: 'string',
+              enum: [
+                'authorization_code',
+                'urn:ietf:params:oauth:grant-type:pre-authorized_code',
+              ],
+            },
+            code: {
+              type: 'string',
+            },
+            client_id: {
+              type: 'string',
+            },
+            'pre-authorized_code': {
+              type: 'string',
+            },
+            user_pin: {
+              type: 'string',
+            },
+          },
+          required: ['grant_type'],
         },
       },
 
       config: {
         description: 'Token endpoint for OpenID credential issuer',
       },
-      // response: {},
     },
     async (request, reply) => {
       const response = await fastify.auth.token(request.body);

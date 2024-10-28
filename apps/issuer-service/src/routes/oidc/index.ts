@@ -1,11 +1,10 @@
 import {
-  type CredentialResponse,
   validatePostCredential,
   type CredentialIssuerMetadata,
 } from '@cef-ebsi/credential-issuer';
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { randomUUID } from 'node:crypto';
-import { ES256Signer } from 'did-jwt';
+import { ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import {
   createVerifiableCredentialJwt,
@@ -17,9 +16,6 @@ import {
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
 ): Promise<void> => {
-  /**
-   * Issuer server endpoints
-   */
   fastify.get(
     '/.well-known/openid-credential-issuer',
     {
@@ -63,35 +59,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           },
           required: ['Authorization'],
         },
-        body: {
-          type: 'object',
-          properties: {
-            format: {
-              type: 'string',
-              enum: ['jwt_vc_json'],
-            },
-            types: {
-              type: 'array',
-              items: {
-                type: 'string',
-              },
-            },
-            proof: {
-              type: 'object',
-              properties: {
-                proof_type: {
-                  type: 'string',
-                  enum: ['jwt'],
-                },
-                jwt: {
-                  type: 'string',
-                },
-              },
-              required: ['proof_type', 'jwt'],
-            },
-          },
-          required: ['format', 'types', 'proof'],
-        },
       },
       config: {
         description: 'Credential endpoint for OpenID credential issuer',
@@ -120,16 +87,16 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           request.body,
         );
 
-      console.log(credentialRequest);
-
-      console.log(accessTokenPayload);
-      console.log(accessTokenPayload.claims.authorization_details);
+      const signer =
+        fastify.config.KEY_ALG === 'ES256'
+          ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+          : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY));
 
       const issuer = {
         did: fastify.issuerServerConfig.did,
         kid: `${fastify.issuerServerConfig.kid}`,
-        alg: 'ES256',
-        signer: ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+        alg: fastify.config.KEY_ALG,
+        signer: signer,
       } satisfies EbsiIssuer;
 
       const vcPayload = {
@@ -146,7 +113,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           id: accessTokenPayload.sub,
         },
         credentialSchema: {
-          id: 'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM',
+          id: `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`,
           type: 'FullJsonSchemaValidator2021',
         },
         // termsOfUse: {
@@ -156,8 +123,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       } satisfies EbsiVerifiableAttestation;
 
       const options = {
-        network: 'conformance',
-        hosts: ['api-conformance.ebsi.eu'],
+        network: fastify.config.NETWORK,
+        hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
       } satisfies CreateVerifiableCredentialOptions;
 
       const vcJwt = await createVerifiableCredentialJwt(
@@ -166,12 +133,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         options,
       );
 
-      // TODO: Check correct type
-      const response: CredentialResponse = {
+      // TODO: Check if we should include `c_nonce` and `c_nonce_expires_in` in the response
+      const response = {
         format: 'jwt_vc_json',
         credential: vcJwt,
-        // c_nonce: accessTokenPayload.claims.c_nonce,
-        // c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
+        c_nonce: accessTokenPayload.claims.c_nonce,
+        c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
       };
 
       return reply.code(200).send(response);
