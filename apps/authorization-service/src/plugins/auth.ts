@@ -37,6 +37,7 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'CTWalletSamePreAuthorisedDeferred',
   ],
+  ['VerifiableCredential', 'EducationCredential'],
 ];
 
 export default fp(async (fastify, _) => {

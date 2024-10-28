@@ -13,6 +13,7 @@ export interface Env {
   SERVER_URL: string;
 
   // Issuer server
+  ISSUER_SERVER_URL: string;
   ISSUER_SERVER_PUBLIC_KEY: string;
   ISSUER_SERVER_KEY_ALG: 'ES256' | 'ES256K';
 }
@@ -38,6 +39,7 @@ export default fp(async (fastify, _) => {
       'PRIVATE_KEY',
       'DID_METHOD',
       'SERVER_URL',
+      'ISSUER_SERVER_URL',
       'ISSUER_SERVER_PUBLIC_KEY',
       'ISSUER_SERVER_KEY_ALG',
     ],
@@ -64,6 +66,9 @@ export default fp(async (fastify, _) => {
         type: 'string',
       },
       SERVER_URL: {
+        type: 'string',
+      },
+      ISSUER_SERVER_URL: {
         type: 'string',
       },
       ISSUER_SERVER_PUBLIC_KEY: {

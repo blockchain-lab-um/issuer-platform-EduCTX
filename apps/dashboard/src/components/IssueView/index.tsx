@@ -140,7 +140,12 @@ export const IssueView = () => {
       headers,
       body: JSON.stringify({
         email: email,
-        data: inputs,
+        data: {
+          credential_type: ['VerifiableCredential', 'EducationCredential'],
+          flow: 'pre-authorized_code',
+          format: 'jwt_vc_json',
+          credential_subject: inputs,
+        },
       }),
     });
 

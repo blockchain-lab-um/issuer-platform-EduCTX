@@ -1,5 +1,7 @@
 import { fastifyFormbody } from '@fastify/formbody';
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
+import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
+import * as utils from '@noble/curves/abstract/utils';
 
 const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -214,6 +216,47 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async (request, reply) => {
       const response = await fastify.auth.token(request.body);
+
+      const preAuthorizedCode = request.body['pre-authorized_code'];
+      if (preAuthorizedCode) {
+        const now = Math.floor(Date.now() / 1000);
+
+        const jwt = await createJWT(
+          {
+            iss: `${fastify.config.SERVER_URL}/oidc`,
+            aud: fastify.config.ISSUER_SERVER_URL,
+            iat: now,
+            exp: now + 180, // 3 minutes
+            data: {
+              id: preAuthorizedCode,
+              newId: response.access_token,
+            },
+          },
+          {
+            issuer: fastify.config.SERVER_URL,
+            signer:
+              fastify.config.KEY_ALG === 'ES256'
+                ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+                : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+          },
+          {
+            type: 'JWT',
+            alg: fastify.config.KEY_ALG,
+            kid: fastify.kid,
+          },
+        );
+
+        await fetch(
+          `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              authorization: `Bearer ${jwt}`,
+            },
+          },
+        );
+      }
 
       return reply.code(200).send(response);
     },

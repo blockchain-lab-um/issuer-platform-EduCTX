@@ -1,11 +1,11 @@
-import { createCache, type CacheManagerStore } from 'cache-manager';
+import { createCache } from 'cache-manager';
 import fp from 'fastify-plugin';
 import { Keyv } from 'keyv';
 import { KeyvCacheableMemory } from 'cacheable';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    cache: CacheManagerStore;
+    cache: any; // TODO: Type for this ?
   }
 }
 

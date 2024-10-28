@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     const { data, email } = body;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/oidc/credential-offer`,
+      `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/oidc/create-credential-offer`,
       {
         method: 'POST',
         headers,
@@ -64,9 +64,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract id from response
-    const { id, credentialOfferRequest, userPin } = await response.json();
+    const { id, location } = await response.json();
 
-    if (!id || !credentialOfferRequest) {
+    if (!id || !location) {
       throw new Error('Something went wrong');
     }
 
@@ -82,22 +82,22 @@ export async function POST(req: NextRequest) {
     };
 
     // Send email with credential offer request
-    let sendMessageInfo = await transporter.sendMail(emailOptions);
+    const sendMessageInfo = await transporter.sendMail(emailOptions);
 
     if (sendMessageInfo.rejected.length > 0) {
       throw new Error('Failed to send first email');
     }
 
     // Send PIN in separate email
-    const pinEmailHtml = await renderPinEmail({ pin: userPin });
+    // const pinEmailHtml = await renderPinEmail({ pin: userPin });
 
-    emailOptions.html = pinEmailHtml;
+    // emailOptions.html = pinEmailHtml;
 
-    sendMessageInfo = await transporter.sendMail(emailOptions);
+    // sendMessageInfo = await transporter.sendMail(emailOptions);
 
-    if (sendMessageInfo.rejected.length > 0) {
-      throw new Error('Failed to send second email');
-    }
+    // if (sendMessageInfo.rejected.length > 0) {
+    //   throw new Error('Failed to send second email');
+    // }
 
     return NextResponse.json({
       success: true,

@@ -13,6 +13,8 @@ import {
   type EbsiIssuer,
   type EbsiVerifiableAttestation,
 } from '@cef-ebsi/verifiable-credential';
+import { importJWK, jwtVerify } from 'jose';
+import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -112,6 +114,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const issuedAt = `${new Date(Date.now()).toISOString().slice(0, -5)}Z`;
 
+      // Check if any cached data is available
+      const cachedData = await fastify.cache.get(
+        request.headers.authorization.replace('Bearer ', ''),
+      );
+
       const vcPayload = {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: `urn:uuid:${randomUUID()}`,
@@ -120,13 +127,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         issuanceDate: issuedAt,
         validFrom: issuedAt,
         issued: issuedAt,
-        validUntil: '2050-11-01T00:00:00Z', // TODO: Check if we can issue without expiration
-        expirationDate: '2031-11-30T00:00:00Z',
         credentialSubject: {
           id: accessTokenPayload.sub,
+          ...(cachedData ?? {}),
         },
         credentialSchema: {
-          // TODO: Use schema base on types ?
+          // TODO: Use schema base on type ?
           id: `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`,
           type: 'FullJsonSchemaValidator2021',
         },
@@ -233,11 +239,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
   );
 
   // TODO: Protect by API key
-  fastify.get(
+  fastify.post(
     '/create-credential-offer',
     {
       schema: {
-        querystring: {
+        body: {
           type: 'object',
           properties: {
             credential_type: {
@@ -245,10 +251,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               items: {
                 type: 'string',
               },
-            },
-            // The client id (DID)
-            client_id: {
-              type: 'string',
             },
             format: {
               type: 'string',
@@ -261,11 +263,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               type: 'string',
               enum: ['authorization_code', 'pre-authorized_code'],
             },
-            credential_data: {
+            credential_subject: {
               type: 'object',
             },
           },
-          required: ['credential_type', 'client_id'],
+          required: ['credential_type'],
         },
       },
       config: {
@@ -274,11 +276,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async (request, reply) => {
       const credentialOfferEndpoint =
-        request.query.credential_offer_endpoint ?? 'openid-credential-offer://';
-      const format = request.query.format ?? 'jwt_vc_json';
-      const flow = request.query.flow ?? 'pre-authorized_code';
+        request.body.credential_offer_endpoint ?? 'openid-credential-offer://';
+      const format = request.body.format ?? 'jwt_vc_json';
+      const flow = request.body.flow ?? 'pre-authorized_code';
 
-      const { credential_type, client_id } = request.query;
+      const { credential_type } = request.body;
 
       // Check if we support the credential type
       const isSupportedCredentialType =
@@ -302,9 +304,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const now = Math.floor(Date.now() / 1000);
 
       const response: {
+        id: string;
         location: string;
-        pin?: string;
       } = {
+        id: '',
         location: '',
       };
 
@@ -312,11 +315,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         // Authorized code flow
         const issuerState = await createJWT(
           {
-            client_id: client_id,
             credential_types: [],
             iss: `${fastify.config.SERVER_URL}/oidc`,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
-            sub: client_id,
             iat: now,
             exp: now + 600, // 10 minutes
           },
@@ -341,15 +342,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         };
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
-        if (request.query.credential_data) {
-          const credentialData = request.query.credential_data;
-          await fastify.cache.set(issuerState, credentialData);
+        if (request.body.credential_subject) {
+          const credentialSubject = request.body.credential_subject;
+          await fastify.cache.set(issuerState, credentialSubject);
         }
       } else {
         // Pre-authorized code flow
         const preAuthorizedCode = await createJWT(
           {
-            client_id: client_id,
             authorization_details: [
               {
                 type: 'openid_credential',
@@ -360,7 +360,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             ],
             iss: fastify.config.SERVER_URL,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
-            sub: client_id,
             iat: now,
             exp: now + 600, // 10 minutes
           },
@@ -381,25 +380,17 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         grants = {
           'urn:ietf:params:oauth:grant-type:pre-authorized_code': {
             'pre-authorized_code': preAuthorizedCode,
-            user_pin_required: true,
+            user_pin_required: false, // TODO: Enable and handle PIN
           },
         };
 
-        const cacheData: {
-          pin: string;
-          credentialData?: Record<string, unknown>;
-        } = {
-          pin: '123456', // TODO: Make random
-        };
-
         // If credential_data is provided, we need to add store it so we can retrieve it later
-        if (request.query.credential_data) {
-          cacheData.credentialData = request.query.credential_data;
+        if (request.body.credential_subject) {
+          await fastify.cache.set(
+            preAuthorizedCode,
+            request.body.credential_subject,
+          );
         }
-
-        await fastify.cache.set(preAuthorizedCode, cacheData);
-
-        response.pin = cacheData.pin;
       }
 
       const credentialOffer = {
@@ -433,6 +424,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         }).toString()}`;
       }
 
+      // Store location in cache (needed for generating images)
+      const requestId = randomUUID();
+      await fastify.cache.set(requestId, location);
+
+      response.id = requestId;
       response.location = location;
 
       return reply.code(200).send(response);
@@ -465,6 +461,65 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send(credentialOffer);
+    },
+  );
+
+  fastify.post(
+    '/stored-credential-data',
+    {
+      schema: {
+        headers: {
+          type: 'object',
+          properties: {
+            authorization: {
+              type: 'string',
+              pattern: '^Bearer .+$',
+            },
+          },
+          required: ['authorization'],
+        },
+      },
+      config: {
+        description: 'Credential endpoint for OpenID credential issuer',
+      },
+    },
+    async (request, reply) => {
+      const authorizationServerPublicJwk = await getPublicJwk(
+        fastify.config.AUTHORIZATION_SERVER_PUBLIC_KEY,
+        fastify.config.AUTHORIZATION_SERVER_KEY_ALG,
+      );
+
+      const issuerMockPublicKey = await importJWK(
+        authorizationServerPublicJwk,
+        fastify.config.AUTHORIZATION_SERVER_KEY_ALG,
+      );
+
+      try {
+        const { payload } = await jwtVerify(
+          request.headers.authorization.replace('Bearer ', ''),
+          issuerMockPublicKey,
+        );
+
+        const data = payload.data as
+          | { id?: string; newId?: string }
+          | undefined;
+
+        if (!data?.id || !data?.newId) return reply.code(400).send();
+
+        const cachedData = await fastify.cache.get(data.id);
+
+        if (!cachedData) return reply.code(400).send();
+
+        await fastify.cache.del(data.id);
+
+        await fastify.cache.set(data.newId, cachedData);
+      } catch (error) {
+        return reply.code(401).send({
+          error: 'Unauthorized',
+        });
+      }
+
+      return reply.code(200).send();
     },
   );
 };
