@@ -39,7 +39,17 @@ const SUPPORTED_CREDENTIALS: string[][] = [
   [
     'VerifiableCredential',
     'VerifiableAttestation',
+    'CTWalletSameAuthorisedDeferred',
+  ],
+  [
+    'VerifiableCredential',
+    'VerifiableAttestation',
     'CTWalletSamePreAuthorisedInTime',
+  ],
+  [
+    'VerifiableCredential',
+    'VerifiableAttestation',
+    'CTWalletSamePreAuthorisedDeferred',
   ],
 ];
 

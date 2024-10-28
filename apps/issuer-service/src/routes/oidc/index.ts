@@ -3,7 +3,7 @@ import {
   type CredentialIssuerMetadata,
 } from '@cef-ebsi/credential-issuer';
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID } from 'node:crypto';
 import { ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import {
@@ -99,16 +99,28 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         signer: signer,
       } satisfies EbsiIssuer;
 
+      // Store c_nonce to prevent replay attacks
+      const dbKey = {
+        did: fastify.issuerServerConfig.did,
+        nonceAccessToken: accessTokenPayload.claims.c_nonce,
+      };
+
+      await fastify.dbOidc.put(dbKey, {
+        nonce: accessTokenPayload.claims.c_nonce,
+      });
+
+      const issuedAt = `${new Date(Date.now()).toISOString().slice(0, -5)}Z`;
+
       const vcPayload = {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: `urn:uuid:${randomUUID()}`,
         type: credentialRequest.types,
         issuer: issuer.did,
-        issuanceDate: '2021-11-01T00:00:00Z',
-        validFrom: '2021-11-01T00:00:00Z',
-        validUntil: '2050-11-01T00:00:00Z',
+        issuanceDate: issuedAt,
+        validFrom: issuedAt,
+        issued: issuedAt,
+        validUntil: '2050-11-01T00:00:00Z', // TODO: Check if we can issue without expiration
         expirationDate: '2031-11-30T00:00:00Z',
-        issued: '2021-10-30T00:00:00Z',
         credentialSubject: {
           id: accessTokenPayload.sub,
         },
@@ -133,6 +145,41 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         options,
       );
 
+      // TODO: Should we maybe issue in the deffered endpoint ?
+      const deferredCredentials = [
+        'CTWalletSameAuthorisedDeferred',
+        'CTWalletSamePreAuthorisedDeferred',
+      ];
+
+      if (
+        credentialRequest.types.some((type) =>
+          deferredCredentials.includes(type),
+        )
+      ) {
+        const acceptanceToken = Buffer.from(randomBytes(32)).toString(
+          'base64url',
+        );
+
+        const defferedCredentialId = `deffered-credential-${acceptanceToken}`;
+
+        await fastify.cache.set(
+          defferedCredentialId,
+          {
+            credential: vcJwt,
+            format: credentialRequest.format,
+          },
+          // 7 days
+          604_800_000,
+        );
+
+        // TODO: Check if we should include `c_nonce` and `c_nonce_expires_in` in the response
+        return reply.code(200).send({
+          acceptance_token: acceptanceToken,
+          c_nonce: accessTokenPayload.claims.c_nonce,
+          c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
+        });
+      }
+
       // TODO: Check if we should include `c_nonce` and `c_nonce_expires_in` in the response
       const response = {
         format: 'jwt_vc_json',
@@ -142,6 +189,44 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       };
 
       return reply.code(200).send(response);
+    },
+  );
+
+  fastify.post(
+    '/credential-deffered',
+    {
+      schema: {
+        headers: {
+          type: 'object',
+          properties: {
+            authorization: {
+              type: 'string',
+              pattern: '^Bearer .+$',
+            },
+          },
+          required: ['authorization'],
+        },
+      },
+      config: {
+        description: 'Credential endpoint for OpenID credential issuer',
+      },
+    },
+    async (request, reply) => {
+      const accessToken = request.headers.authorization.replace('Bearer ', '');
+      const defferedCredentialId = `deffered-credential-${accessToken}`;
+
+      const deferredCredential = await fastify.cache.get(defferedCredentialId);
+
+      if (!deferredCredential) {
+        return reply.code(404).send();
+      }
+
+      await fastify.cache.del(defferedCredentialId);
+
+      return reply.code(200).send({
+        format: deferredCredential.format,
+        credential: deferredCredential.credential,
+      });
     },
   );
 };
