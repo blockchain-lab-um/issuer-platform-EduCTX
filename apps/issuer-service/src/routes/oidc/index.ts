@@ -202,6 +202,203 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
+  // TODO: Protect by API key
+  fastify.post(
+    '/create-credential-offer',
+    {
+      schema: {
+        body: {
+          type: 'object',
+          properties: {
+            credential_type: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+            format: {
+              type: 'string',
+              enum: ['jwt_vc', 'jwt_vc_json'],
+            },
+            credential_offer_endpoint: {
+              type: 'string',
+            },
+            flow: {
+              type: 'string',
+              enum: ['authorization_code', 'pre-authorized_code'],
+            },
+            credential_subject: {
+              type: 'object',
+            },
+          },
+          required: ['credential_type'],
+        },
+      },
+      config: {
+        description: 'Credential endpoint for OpenID credential issuer',
+      },
+    },
+    async (request, reply) => {
+      const credentialOfferEndpoint =
+        request.body.credential_offer_endpoint ?? 'openid-credential-offer://';
+      const format = request.body.format ?? 'jwt_vc_json';
+      const flow = request.body.flow ?? 'pre-authorized_code';
+
+      const { credential_type } = request.body;
+
+      // Check if we support the credential type
+      const isSupportedCredentialType =
+        fastify.issuerServerConfig.credentialTypesSupported.some(
+          (credentialTypes) => {
+            if (credentialTypes.length !== credential_type.length) return false;
+
+            for (let i = 0; i < credentialTypes.length; i++) {
+              if (credentialTypes[i] !== credential_type[i]) return false;
+            }
+
+            return true;
+          },
+        );
+
+      if (!isSupportedCredentialType) {
+        return reply.code(400).send('Unsupported credential type');
+      }
+
+      let grants = {};
+      const now = Math.floor(Date.now() / 1000);
+
+      const response: {
+        id: string;
+        location: string;
+      } = {
+        id: '',
+        location: '',
+      };
+
+      if (flow === 'authorization_code') {
+        // Authorized code flow
+        const issuerState = await createJWT(
+          {
+            credential_types: [],
+            iss: `${fastify.config.SERVER_URL}/oidc`,
+            aud: fastify.config.AUTHORIZATION_SERVER_URL,
+            iat: now,
+            exp: now + 600, // 10 minutes
+          },
+          {
+            issuer: fastify.config.SERVER_URL,
+            signer:
+              fastify.config.KEY_ALG === 'ES256'
+                ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+                : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+          },
+          {
+            type: 'JWT',
+            alg: fastify.config.KEY_ALG,
+            kid: fastify.issuerServerConfig.kid,
+          },
+        );
+
+        grants = {
+          authorization_code: {
+            issuer_state: issuerState,
+          },
+        };
+
+        // If credential_data is provided, we need to add store it so we can retrieve it later
+        if (request.body.credential_subject) {
+          const credentialSubject = request.body.credential_subject;
+          await fastify.cache.set(issuerState, credentialSubject);
+        }
+      } else {
+        // Pre-authorized code flow
+        const preAuthorizedCode = await createJWT(
+          {
+            authorization_details: [
+              {
+                type: 'openid_credential',
+                format: format,
+                locations: [fastify.issuerServerConfig.url],
+                types: [],
+              },
+            ],
+            iss: fastify.config.SERVER_URL,
+            aud: fastify.config.AUTHORIZATION_SERVER_URL,
+            iat: now,
+            exp: now + 600, // 10 minutes
+          },
+          {
+            issuer: fastify.config.SERVER_URL,
+            signer:
+              fastify.config.KEY_ALG === 'ES256'
+                ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+                : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+          },
+          {
+            type: 'JWT',
+            alg: fastify.config.KEY_ALG,
+            kid: fastify.issuerServerConfig.kid,
+          },
+        );
+
+        grants = {
+          'urn:ietf:params:oauth:grant-type:pre-authorized_code': {
+            'pre-authorized_code': preAuthorizedCode,
+            user_pin_required: false, // TODO: Enable and handle PIN
+          },
+        };
+
+        // If credential_data is provided, we need to add store it so we can retrieve it later
+        if (request.body.credential_subject) {
+          await fastify.cache.set(
+            preAuthorizedCode,
+            request.body.credential_subject,
+          );
+        }
+      }
+
+      const credentialOffer = {
+        credential_issuer: fastify.issuerServerConfig.url,
+        credentials: [
+          {
+            format: format,
+            types: [],
+            trust_framework: {
+              name: 'ebsi',
+              type: 'Accreditation',
+              uri: '', // TODO: Add URI ?
+            },
+          },
+        ],
+        grants,
+      } satisfies CredentialOfferPayload;
+
+      let location = `${credentialOfferEndpoint}?${new URLSearchParams({
+        credential_offer: JSON.stringify(credentialOffer),
+      }).toString()}`;
+
+      // For long credential offers we return `credential_offer_uri`
+      if (location.length > 500) {
+        // Store request
+        const id = randomUUID();
+        await fastify.cache.set(id, credentialOffer);
+
+        location = `${credentialOfferEndpoint}?${new URLSearchParams({
+          credential_offer_uri: `${fastify.issuerServerConfig.url}/credeential_offer/${id}`,
+        }).toString()}`;
+      }
+
+      // Store location in cache (needed for generating images)
+      const requestId = randomUUID();
+      await fastify.cache.set(requestId, location);
+
+      response.id = requestId;
+      response.location = location;
+
+      return reply.code(200).send(response);
+    },
+  );
+
   fastify.get(
     '/credential_offer/:id',
     {
