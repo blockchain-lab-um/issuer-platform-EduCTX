@@ -28,6 +28,20 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
       schema: {
         body: {
           type: 'object',
+          properties: {
+            vp_token: {
+              type: 'string',
+            },
+            presentation_submission: {
+              type: 'string',
+            },
+            state: {
+              type: 'string',
+            },
+            id_token: {
+              type: 'string',
+            },
+          },
         },
       },
       config: {
