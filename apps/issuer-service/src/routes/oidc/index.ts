@@ -250,15 +250,19 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             client_id: {
               type: 'string',
             },
-            redirect: {
-              type: 'string',
-            },
             format: {
               type: 'string',
               enum: ['jwt_vc', 'jwt_vc_json'],
             },
             credential_offer_endpoint: {
               type: 'string',
+            },
+            flow: {
+              type: 'string',
+              enum: ['authorization_code', 'pre-authorized_code'],
+            },
+            credential_data: {
+              type: 'object',
             },
           },
           required: ['credential_type', 'client_id'],
@@ -272,7 +276,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const credentialOfferEndpoint =
         request.query.credential_offer_endpoint ?? 'openid-credential-offer://';
       const format = request.query.format ?? 'jwt_vc_json';
-      const redirect = request.query.redirect === 'true';
+      const flow = request.query.flow ?? 'pre-authorized_code';
 
       const { credential_type, client_id } = request.query;
 
@@ -294,12 +298,17 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         return reply.code(400).send('Unsupported credential type');
       }
 
-      const a = true;
-
       let grants = {};
       const now = Math.floor(Date.now() / 1000);
 
-      if (a) {
+      const response: {
+        location: string;
+        pin?: string;
+      } = {
+        location: '',
+      };
+
+      if (flow === 'authorization_code') {
         // Authorized code flow
         const issuerState = await createJWT(
           {
@@ -330,6 +339,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             issuer_state: issuerState,
           },
         };
+
+        // If credential_data is provided, we need to add store it so we can retrieve it later
+        if (request.query.credential_data) {
+          const credentialData = request.query.credential_data;
+          await fastify.cache.set(issuerState, credentialData);
+        }
       } else {
         // Pre-authorized code flow
         const preAuthorizedCode = await createJWT(
@@ -366,9 +381,25 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         grants = {
           'urn:ietf:params:oauth:grant-type:pre-authorized_code': {
             'pre-authorized_code': preAuthorizedCode,
-            user_pin_required: false, // TODO: Enable and store it somewhere
+            user_pin_required: true,
           },
         };
+
+        const cacheData: {
+          pin: string;
+          credentialData?: Record<string, unknown>;
+        } = {
+          pin: '123456', // TODO: Make random
+        };
+
+        // If credential_data is provided, we need to add store it so we can retrieve it later
+        if (request.query.credential_data) {
+          cacheData.credentialData = request.query.credential_data;
+        }
+
+        await fastify.cache.set(preAuthorizedCode, cacheData);
+
+        response.pin = cacheData.pin;
       }
 
       const credentialOffer = {
@@ -402,11 +433,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         }).toString()}`;
       }
 
-      if (redirect) {
-        return reply.redirect(location);
-      }
+      response.location = location;
 
-      return reply.code(200).send(location);
+      return reply.code(200).send(response);
     },
   );
 
