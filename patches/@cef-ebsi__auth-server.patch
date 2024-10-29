@@ -1,13 +1,52 @@
+diff --git a/dist/AuthServer.d.ts b/dist/AuthServer.d.ts
+index 13272b41fff8d6ec6ebb4c592d70d45fcd7e7da4..b6e67e1aefc5b61e14eef76ecc71313d3996af92 100644
+--- a/dist/AuthServer.d.ts
++++ b/dist/AuthServer.d.ts
+@@ -43,6 +43,6 @@ export declare class AuthServer {
+     authorize(query: GetAuthorizeDto): Promise<string>;
+     getRequestById(requestId: string): Promise<string>;
+     directPost(query: unknown, validAt?: number): Promise<string>;
+-    token(query: unknown): Promise<TokenResponse>;
++    token(query: unknown, options: any): Promise<TokenResponse>;
+ }
+ //# sourceMappingURL=AuthServer.d.ts.map
+\ No newline at end of file
+diff --git a/dist/AuthServer.js b/dist/AuthServer.js
+index 92c3c5e9da30648d1507d22332b7954fda1cabdd..8340137ca0141b4f9067a666dd7659d0b1577327 100644
+--- a/dist/AuthServer.js
++++ b/dist/AuthServer.js
+@@ -86,12 +86,12 @@ export class AuthServer {
+             validAt: validAt ?? Math.floor(Date.now() / 1000) + 60,
+         }, this.ebsiResolver, this.keyResolver, this.timeout, query, this.presentationDefinitionSelector);
+     }
+-    async token(query) {
++    async token(query, options) {
+         if (!this.privateKey) {
+             this.privateKey = await this.getPrivateKey();
+         }
+         const { kid } = this.privateKeyJwk;
+-        return token(this.db, this.did, this.url, kid, this.privateKey, query, this.credentialTypesSupported, this.timeout);
++        return token(this.db, this.did, this.url, kid, this.privateKey, query, this.credentialTypesSupported, this.timeout, options);
+     }
+ }
+ //# sourceMappingURL=AuthServer.js.map
+\ No newline at end of file
 diff --git a/dist/utils.js b/dist/utils.js
-index a705aaff3a43eec239630358032631961a60ff38..a6ddf961caf76ff5347b4c514e9174f2f9138ea8 100644
+index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5096543d2 100644
 --- a/dist/utils.js
 +++ b/dist/utils.js
-@@ -1178,13 +1178,13 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
-         });
-     }
+@@ -1170,7 +1170,7 @@ async function authorizationCodeToken(db, serverDid, serverUrl, serverKid, priva
+         c_nonce_expires_in: C_NONCE_EXP,
+     };
+ }
+-async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQuery, credentialTypesSupported, timeout) {
++async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQuery, credentialTypesSupported, timeout, options) {
+     const parsedQuery = parseDto(unsafeQuery, PostTokenPreAuthorizedCodeDto);
+     if (!parsedQuery.success) {
+         throw new OAuth2TokenError("invalid_request", {
+@@ -1180,11 +1180,11 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
      const query = parsedQuery.data;
--    const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
-+    const { "pre-authorized_code": preAuthorizedCode } = query;
+     const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
      const preAuthorizedCodePayload = decodeJwt(preAuthorizedCode);
 -    if (typeof preAuthorizedCodePayload["client_id"] !== "string") {
 -        throw new OAuth2TokenError("invalid_request", {
@@ -22,26 +61,24 @@ index a705aaff3a43eec239630358032631961a60ff38..a6ddf961caf76ff5347b4c514e9174f2
      if (typeof preAuthorizedCodePayload.iss !== "string") {
          throw new OAuth2TokenError("invalid_request", {
              errorDescription: "invalid pre-authorised code: iss is missing",
-@@ -1236,12 +1236,12 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1236,12 +1236,13 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
              errorDescription: `error while verifying the signature of pre-authorized_code: ${e instanceof Error ? e.message : "invalid signature"}`,
          });
      }
 -    const clientId = preAuthorizedCodePayload["client_id"];
 -    if (userPin !== getUserPin(clientId)) {
 -        throw new OAuth2TokenError("invalid_request", {
--            errorDescription: "Invalid PIN",
--        });
--    }
-+    // const clientId = preAuthorizedCodePayload["client_id"];
-+    // if (userPin !== getUserPin(clientId)) {
-+    //     throw new OAuth2TokenError("invalid_request", {
-+    //         errorDescription: "Invalid PIN",
-+    //     });
-+    // }
++
++    if(!options.pin || options.pin !== userPin) {
++              throw new OAuth2TokenError("invalid_request", {
+             errorDescription: "Invalid PIN",
+         });
+     }
++
      const authorizationDetails = parsedAuthorizationDetails.data;
      const cNonce = randomUUID();
      const now = Math.floor(Date.now() / 1000);
-@@ -1251,10 +1251,10 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1251,10 +1252,10 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
              authorization_details: authorizationDetails,
              c_nonce: cNonce,
              c_nonce_expires_in: C_NONCE_EXP,
@@ -54,7 +91,7 @@ index a705aaff3a43eec239630358032631961a60ff38..a6ddf961caf76ff5347b4c514e9174f2
          aud: authorizationDetails[0].locations ?? serverUrl,
          iat: now,
          exp: now + ACCESS_TOKEN_EXP,
-@@ -1269,8 +1269,8 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1269,8 +1270,8 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
      const idToken = await createJWT({
          nonce: randomUUID(),
          iss: serverUrl,
@@ -65,3 +102,33 @@ index a705aaff3a43eec239630358032631961a60ff38..a6ddf961caf76ff5347b4c514e9174f2
          iat: now,
          exp: now + ID_TOKEN_EXP,
      }, {
+@@ -1290,7 +1291,7 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+         c_nonce_expires_in: C_NONCE_EXP,
+     };
+ }
+-export async function token(db, serverDid, serverUrl, serverKid, privateKey, unsafeQuery, credentialTypesSupported, timeout) {
++export async function token(db, serverDid, serverUrl, serverKid, privateKey, unsafeQuery, credentialTypesSupported, timeout, options) {
+     const parsedQuery = parseDto(unsafeQuery, PostTokenDto);
+     if (!parsedQuery.success) {
+         throw new OAuth2TokenError("invalid_request", {
+@@ -1301,6 +1302,6 @@ export async function token(db, serverDid, serverUrl, serverKid, privateKey, uns
+     if (query.grant_type === "authorization_code") {
+         return authorizationCodeToken(db, serverDid, serverUrl, serverKid, privateKey, query);
+     }
+-    return preAuthorizedCodeToken(serverUrl, serverKid, privateKey, query, credentialTypesSupported, timeout);
++    return preAuthorizedCodeToken(serverUrl, serverKid, privateKey, query, credentialTypesSupported, timeout, options);
+ }
+ //# sourceMappingURL=utils.js.map
+diff --git a/src/AuthServer.ts b/src/AuthServer.ts
+index 905ca29de966698d75bdf83cc1f29c522e94560c..a7898d472c55a79a7b728170e3b31bbdbbb802eb 100644
+--- a/src/AuthServer.ts
++++ b/src/AuthServer.ts
+@@ -252,7 +252,7 @@ export class AuthServer {
+    * @param query - The POST /token request payload
+    * @returns A token response.
+    */
+-  async token(query: unknown): Promise<TokenResponse> {
++  async token(query: unknown, options: any): Promise<TokenResponse> {
+     if (!this.privateKey) {
+       this.privateKey = await this.getPrivateKey();
+     }

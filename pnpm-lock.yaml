@@ -9,7 +9,7 @@ patchedDependencies:
     hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
     path: patches/@blockchain-lab-um__did-provider-ebsi.patch
   '@cef-ebsi/auth-server':
-    hash: tkpnevhu7bw5txkbv656z4ihie
+    hash: pmptvahcsd5u223phgunlgbyc4
     path: patches/@cef-ebsi__auth-server.patch
   '@cef-ebsi/credential-issuer':
     hash: ap36rwavsvku27t6c455fqbep4
@@ -63,7 +63,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=pmptvahcsd5u223phgunlgbyc4)(ajv@8.17.1)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -91,6 +91,12 @@ importers:
       '@noble/curves':
         specifier: 1.6.0
         version: 1.6.0
+      cache-manager:
+        specifier: 6.1.2
+        version: 6.1.2
+      cacheable:
+        specifier: 1.8.2
+        version: 1.8.2
       close-with-grace:
         specifier: ^1.3.0
         version: 1.3.0
@@ -118,6 +124,9 @@ importers:
       jose:
         specifier: ^5.6.2
         version: 5.6.2
+      keyv:
+        specifier: 5.1.2
+        version: 5.1.2
       level:
         specifier: 8.0.1
         version: 8.0.1
@@ -239,7 +248,7 @@ importers:
         version: 1.1.0-beta.1
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=pmptvahcsd5u223phgunlgbyc4)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
         version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
@@ -375,7 +384,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=pmptvahcsd5u223phgunlgbyc4)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
         version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
@@ -10773,7 +10782,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)':
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=pmptvahcsd5u223phgunlgbyc4)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4

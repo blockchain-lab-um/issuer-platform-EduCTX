@@ -4,7 +4,7 @@ import {
   type CredentialIssuerMetadata,
 } from '@cef-ebsi/credential-issuer';
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
-import { randomBytes, randomUUID } from 'node:crypto';
+import { randomBytes, randomInt, randomUUID } from 'node:crypto';
 import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import {
@@ -35,7 +35,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         credential_issuer: `${fastify.config.SERVER_URL}/oidc`,
         credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential`,
         deferred_credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential_deffered`,
-        // TODO: Move this to config
         credentials_supported:
           fastify.issuerServerConfig.credentialTypesSupported.map(
             (credentialTypes) => ({
@@ -191,7 +190,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           604_800_000,
         );
 
-        // TODO: Check if we should include `c_nonce` and `c_nonce_expires_in` in the response
         return reply.code(200).send({
           acceptance_token: acceptanceToken,
           c_nonce: accessTokenPayload.claims.c_nonce,
@@ -199,7 +197,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         });
       }
 
-      // TODO: Check if we should include `c_nonce` and `c_nonce_expires_in` in the response
       const response = {
         format: 'jwt_vc_json',
         credential: vcJwt,
@@ -316,6 +313,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const response: {
         id: string;
+        pin?: string;
         location: string;
       } = {
         id: '',
@@ -396,7 +394,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         grants = {
           'urn:ietf:params:oauth:grant-type:pre-authorized_code': {
             'pre-authorized_code': preAuthorizedCode,
-            user_pin_required: false, // TODO: Enable and handle PIN
+            user_pin_required: true,
           },
         };
 
@@ -407,6 +405,42 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             request.body.credential_subject,
           );
         }
+
+        // Geneate PIN code and post it to the auth server (random 6 digit number)
+        // TODO: Adjust so it works with conformance tests
+        const pin = randomInt(100000, 999999).toString();
+        response.pin = pin;
+
+        const jwt = await createJWT(
+          {
+            iss: fastify.issuerServerConfig.url,
+            aud: `${fastify.config.AUTHORIZATION_SERVER_URL}/oidc`,
+            iat: now,
+            exp: now + 180, // 3 minutes
+            data: {
+              preAuthorizedCode,
+              pin,
+            },
+          },
+          {
+            issuer: fastify.issuerServerConfig.url,
+            signer:
+              fastify.config.KEY_ALG === 'ES256'
+                ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+                : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+          },
+          {
+            type: 'JWT',
+            alg: fastify.config.KEY_ALG,
+          },
+        );
+
+        await fetch(`${fastify.config.AUTHORIZATION_SERVER_URL}/set-pin`, {
+          method: 'POST',
+          headers: {
+            authorization: `Bearer ${jwt}`,
+          },
+        });
       }
 
       const credentialOffer = {
@@ -415,15 +449,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           {
             format: format,
             types: credential_type,
-            trust_framework: {
-              name: 'ebsi',
-              type: 'Accreditation',
-              uri: '', // TODO: Add URI ?
-            },
           },
         ],
         grants,
-      } satisfies CredentialOfferPayload;
+      };
 
       let location = `${credentialOfferEndpoint}?${new URLSearchParams({
         credential_offer: JSON.stringify(credentialOffer),

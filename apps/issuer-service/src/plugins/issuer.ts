@@ -88,7 +88,7 @@ export default fp(async (fastify, _) => {
         })
       : didEbsiUtil.createDid(ebsiSubjectId!);
 
-  // TODO: Check if correct for did:ebsi
+  // TODO: Verify this works and is correct for `did:ebsi`
   const kid = `${did}#${
     fastify.config.DID_METHOD === 'key' ? did.split(':')[2] : publicKeyJwk.kid
   }`;

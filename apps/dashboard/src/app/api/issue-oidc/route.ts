@@ -67,9 +67,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract id from response
-    const { id, location } = await response.json();
+    const { id, pin, location } = await response.json();
 
-    if (!id || !location) {
+    if (!id || !location || !pin) {
       throw new Error('Something went wrong');
     }
 
@@ -85,22 +85,22 @@ export async function POST(req: NextRequest) {
     };
 
     // Send email with credential offer request
-    const sendMessageInfo = await transporter.sendMail(emailOptions);
+    let sendMessageInfo = await transporter.sendMail(emailOptions);
 
     if (sendMessageInfo.rejected.length > 0) {
       throw new Error('Failed to send first email');
     }
 
     // Send PIN in separate email
-    // const pinEmailHtml = await renderPinEmail({ pin: userPin });
+    const pinEmailHtml = await renderPinEmail({ pin });
 
-    // emailOptions.html = pinEmailHtml;
+    emailOptions.html = pinEmailHtml;
 
-    // sendMessageInfo = await transporter.sendMail(emailOptions);
+    sendMessageInfo = await transporter.sendMail(emailOptions);
 
-    // if (sendMessageInfo.rejected.length > 0) {
-    //   throw new Error('Failed to send second email');
-    // }
+    if (sendMessageInfo.rejected.length > 0) {
+      throw new Error('Failed to send second email');
+    }
 
     return NextResponse.json({
       success: true,

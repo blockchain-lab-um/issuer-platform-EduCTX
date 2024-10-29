@@ -2,6 +2,8 @@ import { fastifyFormbody } from '@fastify/formbody';
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
+import { importJWK, jwtVerify } from 'jose';
+import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -206,18 +208,20 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           required: ['grant_type'],
         },
       },
-
       config: {
         description: 'Token endpoint for OpenID credential issuer',
       },
     },
     async (request, reply) => {
-      const response = await fastify.auth.token({
-        ...request.body,
-        user_pin: '0929', // FIXME: Remove
-      });
+      let pin: null | string = null;
 
       const preAuthorizedCode = request.body['pre-authorized_code'];
+      if (preAuthorizedCode) {
+        pin = await fastify.cache.get(preAuthorizedCode);
+      }
+
+      const response = await fastify.auth.token(request.body, { pin });
+
       if (preAuthorizedCode) {
         const now = Math.floor(Date.now() / 1000);
 
@@ -258,6 +262,60 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send(response);
+    },
+  );
+
+  fastify.post(
+    '/set-pin',
+    {
+      schema: {
+        headers: {
+          type: 'object',
+          properties: {
+            authorization: {
+              type: 'string',
+              pattern: '^Bearer .+$',
+            },
+          },
+          required: ['authorization'],
+        },
+      },
+      config: {
+        description: '',
+      },
+    },
+    async (request, reply) => {
+      const issuerServerPublicJwk = await getPublicJwk(
+        fastify.config.ISSUER_SERVER_PUBLIC_KEY,
+        fastify.config.ISSUER_SERVER_KEY_ALG,
+      );
+
+      const issuerMockPublicKey = await importJWK(
+        issuerServerPublicJwk,
+        fastify.config.ISSUER_SERVER_KEY_ALG,
+      );
+
+      try {
+        const { payload } = await jwtVerify(
+          request.headers.authorization.replace('Bearer ', ''),
+          issuerMockPublicKey,
+        );
+
+        const data = payload.data as
+          | { preAuthorizedCode?: string; pin?: string }
+          | undefined;
+
+        if (!data?.preAuthorizedCode || !data?.pin)
+          return reply.code(400).send();
+
+        await fastify.cache.set(data.preAuthorizedCode, data.pin);
+      } catch (error) {
+        return reply.code(401).send({
+          error: 'Unauthorized',
+        });
+      }
+
+      return reply.code(200).send();
     },
   );
 };
