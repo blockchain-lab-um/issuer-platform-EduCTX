@@ -10,9 +10,7 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "workspaces": [
-    "apps/**/*"
-  ],
+  "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
     "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-base && pnpm -r docker:build",
@@ -42,7 +40,9 @@
   "pnpm": {
     "patchedDependencies": {
       "@blockchain-lab-um/did-provider-ebsi": "patches/@blockchain-lab-um__did-provider-ebsi.patch",
-      "@cef-ebsi/auth-server": "patches/@cef-ebsi__auth-server.patch"
+      "@cef-ebsi/auth-server": "patches/@cef-ebsi__auth-server.patch",
+      "@cef-ebsi/credential-issuer": "patches/@cef-ebsi__credential-issuer.patch",
+      "@cef-ebsi/verifiable-credential@6.1.0": "patches/@cef-ebsi__verifiable-credential@6.1.0.patch"
     }
   }
 }

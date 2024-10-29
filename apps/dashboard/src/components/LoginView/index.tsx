@@ -8,15 +8,15 @@ import { MascaDescription } from './MascaDescription';
 import ConnectButton from './MetaMaskConnectButton';
 
 export const LoginView = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const router = useRouter();
   const [userType, setUserType] = useState<number>(0);
 
-  useEffect(() => {
-    if (session) {
-      router.push('/issue');
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     router.push('/issue');
+  //   }
+  // }, [session]);
 
   return (
     <div className="flex min-h-screen w-screen items-center justify-center bg-gray-50">
@@ -65,14 +65,14 @@ export const LoginView = () => {
                     >
                       User Login
                     </Button>
-                    <Button
+                    {/* <Button
                       className="font-medium"
                       color="success"
                       variant="bordered"
                       onClick={() => setUserType(1)}
                     >
                       Administrator Login
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 <div>

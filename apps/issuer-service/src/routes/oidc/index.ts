@@ -13,8 +13,11 @@ import {
   type EbsiIssuer,
   type EbsiVerifiableAttestation,
 } from '@cef-ebsi/verifiable-credential';
-import { importJWK, jwtVerify } from 'jose';
-import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
+import { decodeJwt, importJWK, jwtVerify } from 'jose';
+import {
+  getKeyPair,
+  getPublicJwk,
+} from '@blockchain-lab-um/eductx-platform-shared';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -119,6 +122,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         request.headers.authorization.replace('Bearer ', ''),
       );
 
+      const proofJwt = decodeJwt(credentialRequest.proof.jwt);
+
       const vcPayload = {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: `urn:uuid:${randomUUID()}`,
@@ -128,8 +133,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         validFrom: issuedAt,
         issued: issuedAt,
         credentialSubject: {
-          id: accessTokenPayload.sub,
-          ...(cachedData ?? {}),
+          ...(cachedData?.credentialSubject ?? {}),
+          id: accessTokenPayload.sub ?? proofJwt.iss,
         },
         credentialSchema: {
           // TODO: Improve handling of this
@@ -146,7 +151,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const options = {
         network: fastify.config.NETWORK,
-        hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
+        hosts: [
+          `api-${fastify.config.NETWORK}.ebsi.eu`,
+          'raw.githubusercontent.com',
+        ],
+        skipValidation: true,
       } satisfies CreateVerifiableCredentialOptions;
 
       const vcJwt = await createVerifiableCredentialJwt(
@@ -317,14 +326,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         // Authorized code flow
         const issuerState = await createJWT(
           {
-            credential_types: [],
-            iss: `${fastify.config.SERVER_URL}/oidc`,
+            credential_types: credential_type,
+            iss: fastify.issuerServerConfig.url,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
             exp: now + 600, // 10 minutes
           },
           {
-            issuer: fastify.config.SERVER_URL,
+            issuer: fastify.issuerServerConfig.url,
             signer:
               fastify.config.KEY_ALG === 'ES256'
                 ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
@@ -350,6 +359,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         }
       } else {
         // Pre-authorized code flow
+        const { publicKeyJwk } = await getKeyPair(
+          fastify.config.PRIVATE_KEY,
+          fastify.config.KEY_ALG,
+        );
+
         const preAuthorizedCode = await createJWT(
           {
             authorization_details: [
@@ -357,16 +371,16 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
                 type: 'openid_credential',
                 format: format,
                 locations: [fastify.issuerServerConfig.url],
-                types: [],
+                types: credential_type,
               },
             ],
-            iss: fastify.config.SERVER_URL,
+            iss: fastify.issuerServerConfig.url,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
             exp: now + 600, // 10 minutes
           },
           {
-            issuer: fastify.config.SERVER_URL,
+            issuer: fastify.issuerServerConfig.url,
             signer:
               fastify.config.KEY_ALG === 'ES256'
                 ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
@@ -375,7 +389,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           {
             type: 'JWT',
             alg: fastify.config.KEY_ALG,
-            kid: fastify.issuerServerConfig.kid,
+            kid: publicKeyJwk.kid,
           },
         );
 
@@ -400,7 +414,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         credentials: [
           {
             format: format,
-            types: [],
+            types: credential_type,
             trust_framework: {
               name: 'ebsi',
               type: 'Accreditation',
@@ -522,6 +536,26 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send();
+    },
+  );
+
+  fastify.get(
+    '/jwks',
+    {
+      config: {
+        description: '',
+        response: {},
+      },
+    },
+    async (_, reply) => {
+      const { publicKeyJwk } = await getKeyPair(
+        fastify.config.PRIVATE_KEY,
+        fastify.config.KEY_ALG,
+      );
+
+      return reply.code(200).send({
+        keys: [publicKeyJwk],
+      });
     },
   );
 };

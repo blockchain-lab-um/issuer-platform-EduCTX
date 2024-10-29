@@ -1,10 +1,13 @@
 diff --git a/dist/utils.js b/dist/utils.js
-index a705aaff3a43eec239630358032631961a60ff38..b222352f97edfe922614be6b4ec91f19ffa4085a 100644
+index a705aaff3a43eec239630358032631961a60ff38..a6ddf961caf76ff5347b4c514e9174f2f9138ea8 100644
 --- a/dist/utils.js
 +++ b/dist/utils.js
-@@ -1180,11 +1180,11 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1178,13 +1178,13 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+         });
+     }
      const query = parsedQuery.data;
-     const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
+-    const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
++    const { "pre-authorized_code": preAuthorizedCode } = query;
      const preAuthorizedCodePayload = decodeJwt(preAuthorizedCode);
 -    if (typeof preAuthorizedCodePayload["client_id"] !== "string") {
 -        throw new OAuth2TokenError("invalid_request", {
@@ -38,8 +41,12 @@ index a705aaff3a43eec239630358032631961a60ff38..b222352f97edfe922614be6b4ec91f19
      const authorizationDetails = parsedAuthorizationDetails.data;
      const cNonce = randomUUID();
      const now = Math.floor(Date.now() / 1000);
-@@ -1254,7 +1254,7 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
-             client_id: clientId,
+@@ -1251,10 +1251,10 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+             authorization_details: authorizationDetails,
+             c_nonce: cNonce,
+             c_nonce_expires_in: C_NONCE_EXP,
+-            client_id: clientId,
++            // client_id: clientId,
          },
          iss: serverUrl,
 -        sub: clientId,

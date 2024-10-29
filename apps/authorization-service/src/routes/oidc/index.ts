@@ -3,14 +3,11 @@ import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-js
 import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 
-const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
+const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
 ): Promise<void> => {
   await fastify.register(fastifyFormbody, { bodyLimit: 1048576 * 10 });
 
-  /**
-   * Authorization server endpoints
-   */
   fastify.get(
     '/.well-known/openid-configuration',
     {
@@ -254,7 +251,6 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
           {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
               authorization: `Bearer ${jwt}`,
             },
           },
@@ -266,4 +262,4 @@ const authorization: FastifyPluginAsyncJsonSchemaToTs = async (
   );
 };
 
-export default authorization;
+export default route;

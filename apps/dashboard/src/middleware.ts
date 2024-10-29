@@ -6,4 +6,8 @@ export default withAuth({
   },
 });
 
-export const config = { matcher: ['/issue'] };
+export const config = {
+  matcher: [
+    // '/issue'
+  ],
+};

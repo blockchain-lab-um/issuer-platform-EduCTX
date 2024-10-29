@@ -307,11 +307,6 @@ const oidc: FastifyPluginAsyncJsonSchemaToTs = async (
           request.body,
         );
 
-      console.log(credentialRequest);
-
-      console.log(accessTokenPayload);
-      console.log(accessTokenPayload.claims.authorization_details);
-
       const issuer = {
         did: fastify.issuerIdentifier.did,
         kid: `${fastify.issuerIdentifier.did}#${fastify.issuerIdentifier.did.split(':')[2]}`,

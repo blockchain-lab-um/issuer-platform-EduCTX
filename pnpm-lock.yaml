@@ -9,8 +9,14 @@ patchedDependencies:
     hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
     path: patches/@blockchain-lab-um__did-provider-ebsi.patch
   '@cef-ebsi/auth-server':
-    hash: cdhzjs2vdxwscm67k733z6avpe
+    hash: tkpnevhu7bw5txkbv656z4ihie
     path: patches/@cef-ebsi__auth-server.patch
+  '@cef-ebsi/credential-issuer':
+    hash: ap36rwavsvku27t6c455fqbep4
+    path: patches/@cef-ebsi__credential-issuer.patch
+  '@cef-ebsi/verifiable-credential@6.1.0':
+    hash: raocmf7ienkptihhpaikww5gjy
+    path: patches/@cef-ebsi__verifiable-credential@6.1.0.patch
 
 importers:
 
@@ -57,7 +63,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -233,13 +239,13 @@ importers:
         version: 1.1.0-beta.1
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
-        version: 1.0.0-alpha.24
+        version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
       '@cef-ebsi/verifiable-credential':
         specifier: 6.1.0
-        version: 6.1.0
+        version: 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
         version: 7.1.0(ajv@8.17.1)
@@ -369,10 +375,10 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
-        version: 1.0.0-alpha.24
+        version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -381,7 +387,7 @@ importers:
         version: 2.0.4
       '@cef-ebsi/verifiable-credential':
         specifier: 6.1.0
-        version: 6.1.0
+        version: 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
         version: 7.1.0(ajv@8.17.1)
@@ -10767,7 +10773,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=cdhzjs2vdxwscm67k733z6avpe)(ajv@8.17.1)':
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=tkpnevhu7bw5txkbv656z4ihie)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4
@@ -10793,9 +10799,9 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@cef-ebsi/credential-issuer@1.0.0-alpha.24':
+  '@cef-ebsi/credential-issuer@1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)':
     dependencies:
-      '@cef-ebsi/verifiable-credential': 6.1.0
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
       axios: 1.7.7
       did-jwt: 8.0.4
       did-resolver: 4.1.0
@@ -10897,7 +10903,7 @@ snapshots:
       - utf-8-validate
       - web-streams-polyfill
 
-  '@cef-ebsi/verifiable-credential@6.1.0':
+  '@cef-ebsi/verifiable-credential@6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/ebsi-uri': 0.1.0
@@ -10949,7 +10955,7 @@ snapshots:
       '@cef-ebsi/ebsi-uri': 0.1.0
       '@cef-ebsi/key-did-resolver': 2.0.4
       '@cef-ebsi/vcdm1.1-presentation-schema': 1.0.3
-      '@cef-ebsi/verifiable-credential': 6.1.0
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
       '@segment/ajv-human-errors': 2.14.0(ajv@8.17.1)
       did-jwt: 8.0.4
       did-resolver: 4.1.0
