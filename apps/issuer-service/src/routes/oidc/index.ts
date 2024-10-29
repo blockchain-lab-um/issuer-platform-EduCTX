@@ -202,6 +202,44 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
+  fastify.post(
+    '/credential_deffered',
+    {
+      schema: {
+        headers: {
+          type: 'object',
+          properties: {
+            authorization: {
+              type: 'string',
+              pattern: '^Bearer .+$',
+            },
+          },
+          required: ['authorization'],
+        },
+      },
+      config: {
+        description: 'Credential endpoint for OpenID credential issuer',
+      },
+    },
+    async (request, reply) => {
+      const accessToken = request.headers.authorization.replace('Bearer ', '');
+      const defferedCredentialId = `deffered-credential-${accessToken}`;
+
+      const deferredCredential = await fastify.cache.get(defferedCredentialId);
+
+      if (!deferredCredential) {
+        return reply.code(404).send();
+      }
+
+      await fastify.cache.del(defferedCredentialId);
+
+      return reply.code(200).send({
+        format: deferredCredential.format,
+        credential: deferredCredential.credential,
+      });
+    },
+  );
+
   // TODO: Protect by API key
   fastify.post(
     '/create-credential-offer',
