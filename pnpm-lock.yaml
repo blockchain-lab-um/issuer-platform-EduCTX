@@ -91,6 +91,9 @@ importers:
       '@noble/curves':
         specifier: 1.6.0
         version: 1.6.0
+      '@sphereon/pex-models':
+        specifier: 2.3.1
+        version: 2.3.1
       cache-manager:
         specifier: 6.1.2
         version: 6.1.2
