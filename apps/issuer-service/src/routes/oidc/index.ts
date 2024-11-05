@@ -18,6 +18,7 @@ import {
   getKeyPair,
   getPublicJwk,
 } from '@blockchain-lab-um/eductx-platform-shared';
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -281,6 +282,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       config: {
         description: 'Credential endpoint for OpenID credential issuer',
       },
+      preValidation: apiKeyAuth,
     },
     async (request, reply) => {
       const credentialOfferEndpoint =
@@ -406,8 +408,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           );
         }
 
-        // Geneate PIN code and post it to the auth server (random 6 digit number)
-        // TODO: Adjust so it works with conformance tests
         const pin = randomInt(100000, 999999).toString();
         response.pin = pin;
 

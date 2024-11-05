@@ -17,7 +17,13 @@ COPY pnpm-lock.yaml package.json pnpm-workspace.yaml .npmrc ./
 #  APPS  #
 ##########
 COPY ./apps/dashboard/package.json ./apps/dashboard/
-COPY ./apps/issuer/package.json ./apps/issuer/
+COPY ./apps/issuer-service/package.json ./apps/issuer-service/
+COPY ./apps/authorization-service/package.json ./apps/authorization-service/
+
+##########
+#  LIBS  #
+##########
+COPY ./libs/shared/package.json ./libs/shared/
 
 # Remove prepare script
 RUN npm pkg delete scripts.prepare
@@ -25,6 +31,8 @@ RUN npm pkg delete scripts.prepare
 RUN npm i -g pnpm@9.12.2 && pnpm i --frozen-lockfile
 
 COPY . .
+
+RUN rm -rf apps/issuer-old
 
 ENV NODE_ENV=production
 

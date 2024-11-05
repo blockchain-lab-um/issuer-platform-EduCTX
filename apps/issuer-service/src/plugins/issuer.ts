@@ -30,7 +30,7 @@ declare module 'fastify' {
   }
 }
 
-const SUPPORTED_CREDENTIALS: string[][] = [
+const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
   [
     'VerifiableCredential',
     'VerifiableAttestation',
@@ -51,6 +51,9 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'CTWalletSamePreAuthorisedDeferred',
   ],
+];
+
+const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
 ];
 
@@ -108,14 +111,21 @@ export default fp(async (fastify, _) => {
     ...didEbsiResolver,
   });
 
-  // Create the auth server
+  const credentialTypesSupported = [
+    ...SUPPORTED_CREDENTIALS,
+    ...(fastify.config.CONFORMANCE_TEST_ENABLED
+      ? CONFORMANCE_TEST_SUPPORTED_CREDENTIALS
+      : []),
+  ];
+
+  // Create the issuer server configuration
   const issuerServerConfig = {
     did: did,
     kid: kid,
     url: `${fastify.config.SERVER_URL}/oidc`,
     authorizationServerPublicJwk: authorizationServerPublicJwk,
     resolver: didResolver,
-    credentialTypesSupported: SUPPORTED_CREDENTIALS,
+    credentialTypesSupported: credentialTypesSupported,
     timeout: undefined,
   };
 

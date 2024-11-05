@@ -13,9 +13,6 @@
   "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
-    "docker:build": "docker build . -t blockchain-lab-um/eductx-platform-base && pnpm -r docker:build",
-    "docker:run": "pnpm docker:build && docker compose --env-file apps/dashboard/.env --env-file apps/issuer/.env up",
-    "docker:run:issuer": "pnpm docker:build && docker compose --env-file apps/issuer/.env up issuer db",
     "lint": "pnpm biome check .",
     "lint:fix": "pnpm biome check --write --unsafe .",
     "prepare": "is-ci || husky install"

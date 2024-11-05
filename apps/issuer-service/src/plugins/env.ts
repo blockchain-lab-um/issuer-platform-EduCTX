@@ -16,6 +16,10 @@ export interface Env {
   AUTHORIZATION_SERVER_URL: string;
   AUTHORIZATION_SERVER_PUBLIC_KEY: string;
   AUTHORIZATION_SERVER_KEY_ALG: 'ES256' | 'ES256K';
+
+  API_KEY: string;
+
+  CONFORMANCE_TEST_ENABLED: boolean;
 }
 
 declare module 'fastify' {
@@ -42,6 +46,8 @@ export default fp(async (fastify, _) => {
       'AUTHORIZATION_SERVER_URL',
       'AUTHORIZATION_SERVER_PUBLIC_KEY',
       'AUTHORIZATION_SERVER_KEY_ALG',
+      'API_KEY',
+      'CONFORMANCE_TEST_ENABLED',
     ],
     properties: {
       VERSION: {
@@ -77,6 +83,12 @@ export default fp(async (fastify, _) => {
       AUTHORIZATION_SERVER_KEY_ALG: {
         type: 'string',
         enum: ['ES256', 'ES256K'],
+      },
+      API_KEY: {
+        type: 'string',
+      },
+      CONFORMANCE_TEST_ENABLED: {
+        type: 'boolean',
       },
     },
   };
