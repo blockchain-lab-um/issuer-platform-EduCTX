@@ -6,6 +6,7 @@ import { signIn, useSession } from 'next-auth/react';
 
 import { MascaDescription } from './MascaDescription';
 import ConnectButton from './MetaMaskConnectButton';
+import Link from 'next/link';
 
 export const LoginView = () => {
   // const { data: session } = useSession();
@@ -57,7 +58,7 @@ export const LoginView = () => {
                     documents (e.g., micro-credentials) in the form of
                     Verifiable Credentials
                   </div>
-                  <div className="mt-4 flex gap-x-2">
+                  <div className="mt-4 flex gap-x-4">
                     <Button
                       className="font-medium text-white"
                       color="success"
@@ -65,6 +66,12 @@ export const LoginView = () => {
                     >
                       User Login
                     </Button>
+                    <Link
+                      className="flex justify-center items-center hover:underline"
+                      href="/issue"
+                    >
+                      Issue Credentials
+                    </Link>
                     {/* <Button
                       className="font-medium"
                       color="success"

@@ -16,6 +16,7 @@ import { Logo } from '@/components/Logo';
 import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
+import Link from 'next/link';
 
 interface SchemaNode {
   title: string;
@@ -256,7 +257,13 @@ export const IssueView = () => {
                   </button>
                 </nav>
                 <div className="flex justify-center p-4">
-                  <Button
+                  <Link
+                    className="flex justify-center items-center hover:underline"
+                    href="/"
+                  >
+                    Logout
+                  </Link>
+                  {/* <Button
                     size="md"
                     color="danger"
                     onClick={() => {
@@ -268,7 +275,7 @@ export const IssueView = () => {
                     }}
                   >
                     Logout
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
             </div>
@@ -312,7 +319,13 @@ export const IssueView = () => {
             </nav>
           </div>
           <div className="flex justify-center p-4">
-            <Button
+            <Link
+              className="flex justify-center items-center hover:underline"
+              href="/"
+            >
+              Logout
+            </Link>
+            {/* <Button
               size="md"
               color="danger"
               onClick={() => {
@@ -324,7 +337,7 @@ export const IssueView = () => {
               }}
             >
               Logout
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
