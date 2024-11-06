@@ -1,58 +1,138 @@
 # Onboarding a Legal Entity DID
 
-> More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).  
+More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).
 
-01. [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs). 
+01. [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
+02. Install `pnpm`.
 
-02. Install `pnpm`.  
-```bash 
-npm install -g pnpm@9.12.2 
-
+```bash
+npm install -g pnpm@9.12.2
 ```
 
-03. Clone the repository.  
-```bash 
-git clone git@github.com:blockchain-lab-um/issuer-platform-EduCTX.git 
-```  
+03. Clone the repository.
 
-04. Go into the cloned repo and run install dependencies.  
-```bash 
-cd issuer-platform-EduCTX 
-pnpm install 
-```  
-
-05. Generate key by going into the scripts folder and running the command.  
-```bash 
-cd libs/shared/scripts 
-pnpm keygen 
-```  
-
-06. Save those private keys somewhere safe. 
-
-07. Start EBSI CLI.  
-```bash 
-pnpm dlx @cef-ebsi/cli 
-```  
-
-08. Connect to the pilot environment.
 ```bash
+git clone git@github.com:blockchain-lab-um/issuer-platform-EduCTX.git
+```
+
+04. Go into the cloned repo and run install dependencies.
+
+```bash
+cd issuer-platform-EduCTX
+pnpm install
+```
+
+05. Generate key by going into the scripts folder and running the command.
+
+```bash
+cd libs/shared/scripts
+pnpm keygen
+```
+
+06. Save those private keys somewhere safe.
+07. Start EBSI CLI.
+
+```bash
+pnpm dlx @cef-ebsi/cli
+```
+
+It will prompt you with `==>` indicating it's ready to start accepting commands.
+01. Create new DID with 2 key pairs. Run:
+
+```
+==> using user ES256
+==> using user ES256K
+```
+
+The commands above output something like this:
+
+```json
+{
+	"keys": {
+		"ES256K": {
+			"id": "k0G8kZ0UxsxGLYiiAhRUgtLtFzu-ZpbvzFtpJIH63ZI",
+			"kid": "did:ebsi:zzcJJuM4Z4AUKdL8kdMEKNw#k0G8kZ0UxsxGLYiiAhRUgtLtFzu-ZpbvzFtpJIH63ZI",
+			"privateKeyJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "gmT8xLpAGaGX2JnfxTnlOs5JUy7SXSQbIErwPNBbu68",
+				"y": "r9JVbckK24sbIw4Nyz16qoHaAZdhNmossxyO6a_Naxo",
+				"d": "O26b4UPVx_MMrzs8ibq0PCIHInEcHdouYy9mDcYcCk8"
+			},
+			"publicKeyJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "gmT8xLpAGaGX2JnfxTnlOs5JUy7SXSQbIErwPNBbu68",
+				"y": "r9JVbckK24sbIw4Nyz16qoHaAZdhNmossxyO6a_Naxo"
+			},
+			"privateKeyEncryptionJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "gmT8xLpAGaGX2JnfxTnlOs5JUy7SXSQbIErwPNBbu68",
+				"y": "r9JVbckK24sbIw4Nyz16qoHaAZdhNmossxyO6a_Naxo",
+				"d": "O26b4UPVx_MMrzs8ibq0PCIHInEcHdouYy9mDcYcCk8"
+			},
+			"publicKeyEncryptionJwk": {
+				"kty": "EC",
+				"crv": "secp256k1",
+				"x": "gmT8xLpAGaGX2JnfxTnlOs5JUy7SXSQbIErwPNBbu68",
+				"y": "r9JVbckK24sbIw4Nyz16qoHaAZdhNmossxyO6a_Naxo"
+			}
+		},
+		"ES256": {
+			"id": "eJYROV5PYyRZxjF7QABzsd7ooTw5bFNm2Ytt6bAxySQ",
+			"kid": "did:ebsi:zzcJJuM4Z4AUKdL8kdMEKNw#eJYROV5PYyRZxjF7QABzsd7ooTw5bFNm2Ytt6bAxySQ",
+			"privateKeyJwk": {
+				"kty": "EC",
+				"crv": "P-256",
+				"x": "Vm7_Vhz07e9UoblDw1rmd29bV6ykcut4npLnqhhQlVk",
+				"y": "uISs1AK-TVo0duSg3AvFuBNgBPp7ex4dWmYvkFN8uRk",
+				"d": "O26b4UPVx_MMrzs8ibq0PCIHInEcHdouYy9mDcYcCk8"
+			},
+			"publicKeyJwk": {
+				"kty": "EC",
+				"crv": "P-256",
+				"x": "Vm7_Vhz07e9UoblDw1rmd29bV6ykcut4npLnqhhQlVk",
+				"y": "uISs1AK-TVo0duSg3AvFuBNgBPp7ex4dWmYvkFN8uRk"
+			},
+			"privateKeyEncryptionJwk": {
+				"kty": "EC",
+				"x": "ORK0V91Xg9IAFAMMcl73AxXv6n2ptYKEn5nBfiKCIm4",
+				"y": "yRMSUPrqVtF2-Q_HkCDYjhNcrvkJeaf9PZdY1BLs8Jc",
+				"crv": "P-256",
+				"d": "p4B-UL0hzwNTJFA4taL3N0a1jCmIjUMPgKiwSjO1ZjM"
+			},
+			"publicKeyEncryptionJwk": {
+				"kty": "EC",
+				"x": "ORK0V91Xg9IAFAMMcl73AxXv6n2ptYKEn5nBfiKCIm4",
+				"y": "yRMSUPrqVtF2-Q_HkCDYjhNcrvkJeaf9PZdY1BLs8Jc",
+				"crv": "P-256"
+			}
+		}
+	},
+	"privateKeyHex": "0x3b6e9be143d5c7f30caf3b3c89bab43c220722711c1dda2e632f660dc61c0a4f",
+	"publicKeyHex": "0x048264fcc4ba4019a197d899dfc539e53ace49532ed25d241b204af03cd05bbbafafd2556dc90adb8b1b230e0dcb3d7aaa81da019761366a2cb31c8ee9afcd6b1a",
+	"address": "0x8390f8b75Dfb727dD53C25a048DC4887CF482330",
+	"did": "did:ebsi:zy8Psj9ez9wrsSZ7vrHE221",
+	"didVersion": 1
+}
+```
+
+Make sure to store those keys someplace **SAFE**.
+
+11. Connect to the pilot environment
+
+```
 ==> env pilot
 ```
 
-09. Create new DID with 2 key pairs:
+12. Get your generated DID. It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n`.
 
-```bash
-==> using user ES256K
-==> using user ES256
 ```
-
-10. View your generated DID:
-
-```bash
 ==> view user.did
 ```
 
-11. Request a credential to onboard by contacting the Trusted Issuer and providing your DID.
+13. Request a credential to onboard. Contact the Trusted Issuer related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
 
 12. Request an "invite" access token:
 
