@@ -2,35 +2,39 @@
 
 More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).
 
-01.  [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
-02.  Install `pnpm`.
+## Using the CLI
+
+### [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
+
+### Install `pnpm` .
 
 ```bash
 pnpm install -g pnpm@9.12.2
 ```
 
-03.  Clone the repository.
+### Clone the repository.
 
 ```bash
 git clone git@github.com:blockchain-lab-um/issuer-platform-EduCTX.git
 ```
 
-04.  Go into the cloned repo and run install dependencies.
+### Go into the cloned repo and install dependencies.
 
 ```bash
 cd issuer-platform-EduCTX
 pnpm install
 ```
 
-05.  Generate key by going into the scripts folder and running the command.
+### Generate key by going into the scripts folder and running the command.
 
 ```bash
 cd libs/shared/scripts
 pnpm keygen
 ```
 
-06.  Save those private keys somewhere safe.
-07.  Start EBSI CLI.
+### Save those private keys somewhere safe.
+
+### Start EBSI CLI.
 
 ```bash
 pnpm dlx @cef-ebsi/cli
@@ -38,9 +42,9 @@ pnpm dlx @cef-ebsi/cli
 
 It will prompt you with `==>` indicating it's ready to start accepting commands.
 
-08.  Create new DID with 2 key pairs. Run:
+### Create new DID with 2 key pairs. Run:
 
-```
+```bash
 ==> using user ES256
 ==> using user ES256K
 ```
@@ -121,79 +125,61 @@ The commands above output something like this:
 
 Make sure to store those keys someplace **SAFE**.
 
-09.  Connect to the pilot environment
+### Connect to the pilot environment
 
-```
+```bash
 ==> env pilot
 ```
 
-10. Get your generated DID. It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n`.
+### Get your generated DID. It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n` .
 
-```
+```bash
 ==> view user.did
 ```
 
-11. Request a credential to onboard. Contact the Trusted Issuer related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
+> Request a credential to onboard. Contact the Trusted Issuer related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
 
-12. We now have two options on how to continue. There's a simple script to run for onboarding (12.1.), or we can go step-by-step (12.2.).
-    12.1. Use the script.
-    
-    
+### Use the script OR go step-by-step
 
-```
+#### Use the script
+
+```bash
 ==> run registerDidDocument_ES256K_ES256 <VC_TO_ONBOARD>
 ```
 
-    12.2. Go step-by-step.
+#### Go step-by-step
 
-        12.2.1. Request an "invite" access token.
-        
-        
+1. Request an "invite" access token.
 
-```
+```bash
 ==> resAuthDIDRInvite: authorisation auth didr_invite_presentation ES256 <VC_TO_ONBOARD>
 ```
 
-        
-        12.2.2. Load the access token:
-        
-        
+2. Load the access token:
 
-```
+```bash
 ==> using token resAuthDIDRInvite.access_token
 ```
 
-        
-        12.2.3. Register first part of the DID Document:
-        
-        
+3. Register first part of the DID Document:
 
-```
+```bash
 ==> did insertDidDocument
 ```
 
-        
-        12.2.4. Request a "write" access token:
-        
-        
+4. Request a "write" access token:
 
-```
+```bash
 ==> resAuthDIDRWrite: authorisation auth didr_write_presentation ES256K
 ```
 
-        
-        12.2.5. Load the write access token:
-        
-        
+5. Load the write access token:     
 
 ```bash
 ==> using token resAuthDIDRWrite.access_token
 ```
 
-        
-        12.2.6. Complete DID Document registration:
-        
-        
+6. Complete DID Document registration:
 
 ```bash
 ==> did addVerificationMethod user.did ES256
@@ -201,10 +187,7 @@ Make sure to store those keys someplace **SAFE**.
 ==> did addVerificationRelationship user.did assertionMethod ES256
 ```
 
-        
-        12.2.7. Verify final DID Document:
-        
-        
+7. Verify final DID Document:
 
 ```bash
 ==> did get /identifiers/ user.did
