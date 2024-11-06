@@ -135,37 +135,37 @@ Make sure to store those keys someplace **SAFE**.
 
 11. Request a credential to onboard. Contact the Trusted Issuer related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
 
-12. Request an "invite" access token:
+12. Request an "invite" access token.
 
 ```bash
 ==> resAuthDIDRInvite: authorisation auth didr_invite_presentation ES256 <VC_TO_ONBOARD>
 ```
 
-13. Load the access token:
+13. Load the access token.
 
 ```bash
 ==> using token resAuthDIDRInvite.access_token
 ```
 
-14. Register first part of the DID Document:
+14. Register first part of the DID Document.
 
 ```bash
 ==> did insertDidDocument
 ```
 
-15. Request a "write" access token:
+15. Request a "write" access token.
 
 ```bash
 ==> resAuthDIDRWrite: authorisation auth didr_write_presentation ES256K
 ```
 
-16. Load the write access token:
+16. Load the write access token.
 
 ```bash
 ==> using token resAuthDIDRWrite.access_token
 ```
 
-17. Complete DID Document registration:
+17. Complete DID Document registration.
 
 ```bash
 ==> did addVerificationMethod user.did ES256
@@ -173,7 +173,7 @@ Make sure to store those keys someplace **SAFE**.
 ==> did addVerificationRelationship user.did assertionMethod ES256
 ```
 
-18. Verify final DID Document:
+18. Verify final DID Document.
 
 ```bash
 ==> did get /identifiers/ user.did
