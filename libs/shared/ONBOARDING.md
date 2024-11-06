@@ -137,53 +137,54 @@ Make sure to store those keys someplace **SAFE**.
 
 12. We now have two options on how to continue. There's a simple script to run for onboarding (12.1.), or we can go step-by-step (12.2.).
 
-12.1. Use the script.
-
-```bash
-==> run registerDidDocument_ES256K_ES256 <VC_TO_ONBOARD>
-```
-
-12.2. Go step-by-step.
-12.2.1. Request an "invite" access token.
-
-```bash
-==> resAuthDIDRInvite: authorisation auth didr_invite_presentation ES256 <VC_TO_ONBOARD>
-```
-
-12.2.2. Load the access token:
-
-```bash
-==> using token resAuthDIDRInvite.access_token
-```
-
-12.2.3. Register first part of the DID Document:
-
-```bash
-==> did insertDidDocument
-```
-
-12.2.4. Request a "write" access token:
-
-```bash
-==> resAuthDIDRWrite: authorisation auth didr_write_presentation ES256K
-```
-
-12.2.5. Load the write access token:
-
-```bash
-==> using token resAuthDIDRWrite.access_token
-```
-
-12.2.6. Complete DID Document registration:
-
-```bash
-==> did addVerificationMethod user.did ES256
-==> did addVerificationRelationship user.did authentication ES256
-==> did addVerificationRelationship user.did assertionMethod ES256
-```
-
-12.2.7. Verify final DID Document:
-
-```bash
-==> did get /identifiers/ user.did
-```
+    12.1. Use the script.
+    
+    ```bash
+    ==> run registerDidDocument_ES256K_ES256 <VC_TO_ONBOARD>
+    ```
+    
+    12.2. Go step-by-step.
+        12.2.1. Request an "invite" access token.
+        
+        ```bash
+        ==> resAuthDIDRInvite: authorisation auth didr_invite_presentation ES256 <VC_TO_ONBOARD>
+        ```
+        
+        12.2.2. Load the access token:
+        
+        ```bash
+        ==> using token resAuthDIDRInvite.access_token
+        ```
+        
+        12.2.3. Register first part of the DID Document:
+        
+        ```bash
+        ==> did insertDidDocument
+        ```
+        
+        12.2.4. Request a "write" access token:
+        
+        ```bash
+        ==> resAuthDIDRWrite: authorisation auth didr_write_presentation ES256K
+        ```
+        
+        12.2.5. Load the write access token:
+        
+        ```bash
+        ==> using token resAuthDIDRWrite.access_token
+        ```
+        
+        12.2.6. Complete DID Document registration:
+        
+        ```bash
+        ==> did addVerificationMethod user.did ES256
+        ==> did addVerificationRelationship user.did authentication ES256
+        ==> did addVerificationRelationship user.did assertionMethod ES256
+        ```
+        
+        12.2.7. Verify final DID Document:
+        
+        ```bash
+        ==> did get /identifiers/ user.did
+        ```
+    
