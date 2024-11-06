@@ -6,38 +6,10 @@ More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).
 
 ### [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
 
-### Install `pnpm` .
-
-```bash
-pnpm install -g pnpm@9.12.2
-```
-
-### Clone the repository.
-
-```bash
-git clone git@github.com:blockchain-lab-um/issuer-platform-EduCTX.git
-```
-
-### Go into the cloned repo and install dependencies.
-
-```bash
-cd issuer-platform-EduCTX
-pnpm install
-```
-
-### Generate key by going into the scripts folder and running the command.
-
-```bash
-cd libs/shared/scripts
-pnpm keygen
-```
-
-### Save those private keys somewhere safe.
-
 ### Start EBSI CLI.
 
 ```bash
-pnpm dlx @cef-ebsi/cli
+npx @cef-ebsi/cli
 ```
 
 It will prompt you with `==>` indicating it's ready to start accepting commands.
