@@ -2,28 +2,23 @@ import { secp256k1 } from '@noble/curves/secp256k1';
 import { p256 } from '@noble/curves/p256';
 
 const main = async () => {
-  // Key type is first argument
-  const keyType = process.argv[2]; // ES256 | ES256K
-
   // Generate random private key
-  const privateKey =
-    keyType === 'ES256K'
-      ? secp256k1.utils.randomPrivateKey()
-      : p256.utils.randomPrivateKey();
+  const k1PrivateKey = secp256k1.utils.randomPrivateKey();
+  const p256PrivateKey = p256.utils.randomPrivateKey();
 
   // Generate public key from private key
-  const publicKey =
-    keyType === 'ES256K'
-      ? secp256k1.getPublicKey(privateKey)
-      : p256.getPublicKey(privateKey);
+  const k1PublicKey = secp256k1.getPublicKey(k1PrivateKey);
+  const p256PublicKey = p256.getPublicKey(p256PrivateKey);
+  console.log(`
+  ============================== ES256K Keypair ==============================
+  Private key: ${Buffer.from(k1PrivateKey).toString('hex')}
+  Public key: ${Buffer.from(k1PublicKey).toString('hex')}
 
-  console.log(`Private key: ${Buffer.from(privateKey).toString('hex')}`);
-  console.log(`Public key: ${Buffer.from(publicKey).toString('hex')}`);
+  ============================== ES256 Keypair ===============================
+  Private key: ${Buffer.from(p256PrivateKey).toString('hex')}
+  Public key: ${Buffer.from(p256PublicKey).toString('hex')}`);
 
   process.exit(0);
 };
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main().catch((error) => {});
