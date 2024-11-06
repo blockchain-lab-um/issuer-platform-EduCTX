@@ -6,7 +6,7 @@ More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).
 
 ### [Install Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
 
-### Start EBSI CLI.
+### Start EBSI CLI
 
 ```bash
 npx @cef-ebsi/cli
@@ -14,7 +14,7 @@ npx @cef-ebsi/cli
 
 It will prompt you with `==>` indicating it's ready to start accepting commands.
 
-### Create new DID with 2 key pairs. Run:
+### Create new DID with 2 key pairs
 
 ```bash
 ==> using user ES256
@@ -103,7 +103,9 @@ Make sure to store those keys someplace **SAFE**.
 ==> env pilot
 ```
 
-### Get your generated DID. It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n` .
+### Get your generated DID
+
+It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n` .
 
 ```bash
 ==> view user.did
