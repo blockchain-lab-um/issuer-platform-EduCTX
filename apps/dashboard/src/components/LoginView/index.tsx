@@ -59,13 +59,13 @@ export const LoginView = () => {
                     Verifiable Credentials
                   </div>
                   <div className="mt-4 flex gap-x-4">
-                    <Button
+                    {/* <Button
                       className="font-medium text-white"
                       color="success"
                       onClick={() => setUserType(2)}
                     >
                       User Login
-                    </Button>
+                    </Button> */}
                     <Link
                       className="flex justify-center items-center hover:underline"
                       href="/issue"
