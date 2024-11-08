@@ -9,8 +9,11 @@ import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: 587,
-  secure: false,
+  // port: 587,
+  // secure: false,
+  secure: true,
+  port: 465,
+
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
@@ -27,20 +30,20 @@ export async function POST(req: NextRequest) {
     authorized = true;
   }
 
-  if (!authorized) {
-    const session = await getServerSession(authOptions);
+  // if (!authorized) {
+  //   const session = await getServerSession(authOptions);
 
-    if (!session) {
-      return NextResponse.json(
-        {
-          error: 'Not authenticated',
-        },
-        {
-          status: 401,
-        },
-      );
-    }
-  }
+  //   if (!session) {
+  //     return NextResponse.json(
+  //       {
+  //         error: 'Not authenticated',
+  //       },
+  //       {
+  //         status: 401,
+  //       },
+  //     );
+  //   }
+  // }
 
   const body = await req.json();
   const headers = new Headers();
@@ -51,7 +54,7 @@ export async function POST(req: NextRequest) {
     const { data, email } = body;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/oidc/credential-offer`,
+      `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/oidc/create-credential-offer`,
       {
         method: 'POST',
         headers,
@@ -64,9 +67,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Extract id from response
-    const { id, credentialOfferRequest, userPin } = await response.json();
+    const { id, pin, location } = await response.json();
 
-    if (!id || !credentialOfferRequest) {
+    if (!id || !location || !pin) {
       throw new Error('Something went wrong');
     }
 
@@ -75,7 +78,7 @@ export async function POST(req: NextRequest) {
     });
 
     const emailOptions = {
-      from: process.env.EMAIL_USERNAME,
+      from: 'example@skippy-ai.com',
       to: email,
       subject: 'Blockchain Lab:UM (EduCTX)',
       html: basicEmailHtml,
@@ -89,7 +92,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Send PIN in separate email
-    const pinEmailHtml = await renderPinEmail({ pin: userPin });
+    const pinEmailHtml = await renderPinEmail({ pin });
 
     emailOptions.html = pinEmailHtml;
 

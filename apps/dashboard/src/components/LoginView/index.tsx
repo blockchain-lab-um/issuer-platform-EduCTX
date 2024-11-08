@@ -6,17 +6,18 @@ import { signIn, useSession } from 'next-auth/react';
 
 import { MascaDescription } from './MascaDescription';
 import ConnectButton from './MetaMaskConnectButton';
+import Link from 'next/link';
 
 export const LoginView = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const router = useRouter();
   const [userType, setUserType] = useState<number>(0);
 
-  useEffect(() => {
-    if (session) {
-      router.push('/issue');
-    }
-  }, [session]);
+  // useEffect(() => {
+  //   if (session) {
+  //     router.push('/issue');
+  //   }
+  // }, [session]);
 
   return (
     <div className="flex min-h-screen w-screen items-center justify-center bg-gray-50">
@@ -57,7 +58,7 @@ export const LoginView = () => {
                     documents (e.g., micro-credentials) in the form of
                     Verifiable Credentials
                   </div>
-                  <div className="mt-4 flex gap-x-2">
+                  <div className="mt-4 flex gap-x-4">
                     <Button
                       className="font-medium text-white"
                       color="success"
@@ -65,14 +66,20 @@ export const LoginView = () => {
                     >
                       User Login
                     </Button>
-                    <Button
+                    <Link
+                      className="flex justify-center items-center hover:underline"
+                      href="/issue"
+                    >
+                      Issue Credentials
+                    </Link>
+                    {/* <Button
                       className="font-medium"
                       color="success"
                       variant="bordered"
                       onClick={() => setUserType(1)}
                     >
                       Administrator Login
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 <div>

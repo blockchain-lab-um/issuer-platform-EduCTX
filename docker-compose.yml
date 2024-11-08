@@ -8,38 +8,9 @@ networks:
     name: eductx-network
 
 services:
-  db:
-    image: postgres:15.4-alpine3.18
-    container_name: eductx-issuer-db
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-credentials}
-      PGDATA: /data/postgres
-    volumes:
-      - eductx-issuer-db:/data/postgres
-    ports:
-      - '127.0.0.1:34569:5432'
-    restart: unless-stopped
-  issuer:
-    image: blockchain-lab-um/eductx-platform-issuer:latest
-    container_name: eductx-issuer
-    depends_on:
-      - db
-    ports:
-      - '34568:3001'
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-credentials}
-      PROOF_AUDIENCE: ${PROOF_AUDIENCE}
-      EBSI_BEARER_TOKEN: ${EBSI_BEARER_TOKEN}
-      EBSI_PRIVATE_KEY: ${EBSI_PRIVATE_KEY}
-      EBSI_ID: ${EBSI_ID}
-      API_KEY: ${API_KEY}
-      ISSUER_URL: ${ISSUER_URL}
-    restart: unless-stopped
   dashboard:
     image: blockchain-lab-um/eductx-platform-dashboard:latest
-    container_name: eductx-dashboard
+    container_name: eductx-platform-dashboard
     ports:
       - '34567:3000'
     environment:
@@ -54,3 +25,42 @@ services:
       EMAIL_USERNAME: blockchain-lab@um.si
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
     restart: unless-stopped
+
+  issuer-service:
+    image: blockchain-lab-um/eductx-platform-issuer-service:latest
+    container_name: eductx-platform-issuer-service
+    ports:
+      - '34568:3001'
+    environment:
+      VERSION: ${VERSION}
+      NETWORK: ${NETWORK}
+      KEY_ALG: ${KEY_ALG}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      DID_METHOD: ${DID_METHOD}
+      EBSI_SUBJECT_ID: ${EBSI_SUBJECT_ID}
+      SERVER_URL: ${SERVER_URL}
+      AUTHORIZATION_SERVER_URL: ${AUTHORIZATION_SERVER_URL}
+      AUTHORIZATION_SERVER_PUBLIC_KEY: ${AUTHORIZATION_SERVER_PUBLIC_KEY}
+      AUTHORIZATION_SERVER_KEY_ALG: ${AUTHORIZATION_SERVER_KEY_ALG}
+      API_KEY: ${API_KEY}
+      CONFORMANCE_TEST_ENABLED: ${CONFORMANCE_TEST_ENABLED}
+    restart: unless-stopped
+
+  authorization-service:
+    image: blockchain-lab-um/eductx-platform-authorization-service:latest
+    container_name: eductx-platform-authorization-service
+    ports:
+      - '34569:3001'
+    environment:
+      VERSION: ${VERSION}
+      NETWORK: ${NETWORK}
+      KEY_ALG: ${KEY_ALG}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      DID_METHOD: ${DID_METHOD}
+      EBSI_SUBJECT_ID: ${EBSI_SUBJECT_ID}
+      SERVER_URL: ${SERVER_URL}
+      ISSUER_SERVER_URL: ${ISSUER_SERVER_URL}
+      ISSUER_SERVER_PUBLIC_KEY: ${ISSUER_SERVER_PUBLIC_KEY}
+      ISSUER_SERVER_KEY_ALG: ${ISSUER_SERVER_KEY_ALG}
+    restart: unless-stopped
+

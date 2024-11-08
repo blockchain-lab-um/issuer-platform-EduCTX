@@ -1,0 +1,35 @@
+{
+  "name": "@blockchain-lab-um/eductx-platform-shared",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Shared utilities for the EduCTX platform.",
+  "keywords": [],
+  "author": {
+    "name": "Blockchain Lab:UM",
+    "email": "blockchain-lab@um.si",
+    "url": "https://blockchain-lab.um.si"
+  },
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": ["dist/**", "README.md", "package.json"],
+  "scripts": {
+    "build": "pnpm clean && pnpm compile",
+    "keygen": "tsx scripts/generateKey.ts",
+    "clean": "rimraf dist",
+    "compile": "tsup"
+  },
+  "dependencies": {
+    "@noble/curves": "1.6.0",
+    "@types/elliptic": "^6.4.18",
+    "elliptic": "^6.5.5",
+    "jose": "^5.6.2"
+  },
+  "devDependencies": {
+    "tsup": "8.3.5",
+    "tsx": "4.19.2"
+  }
+}
