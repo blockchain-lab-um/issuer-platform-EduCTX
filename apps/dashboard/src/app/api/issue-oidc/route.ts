@@ -9,10 +9,10 @@ import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  // port: 587,
-  // secure: false,
-  secure: true,
-  port: 465,
+  port: 587,
+  secure: false,
+  // secure: true,
+  // port: 465,
 
   auth: {
     user: process.env.EMAIL_USERNAME,
@@ -30,20 +30,20 @@ export async function POST(req: NextRequest) {
     authorized = true;
   }
 
-  // if (!authorized) {
-  //   const session = await getServerSession(authOptions);
+  if (!authorized) {
+    const session = await getServerSession(authOptions);
 
-  //   if (!session) {
-  //     return NextResponse.json(
-  //       {
-  //         error: 'Not authenticated',
-  //       },
-  //       {
-  //         status: 401,
-  //       },
-  //     );
-  //   }
-  // }
+    if (!session) {
+      return NextResponse.json(
+        {
+          error: 'Not authenticated',
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+  }
 
   const body = await req.json();
   const headers = new Headers();
@@ -78,7 +78,8 @@ export async function POST(req: NextRequest) {
     });
 
     const emailOptions = {
-      from: 'example@skippy-ai.com',
+      // from: 'example@skippy-ai.com',
+      fron: process.env.EMAIL_USERNAME,
       to: email,
       subject: 'Blockchain Lab:UM (EduCTX)',
       html: basicEmailHtml,

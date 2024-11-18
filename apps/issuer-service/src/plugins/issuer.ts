@@ -74,7 +74,7 @@ export default fp(async (fastify, _) => {
 
   let ebsiSubjectId;
   if (fastify.config.DID_METHOD === 'ebsi') {
-    ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID);
+    ebsiSubjectId = Buffer.from(fastify.config.EBSI_SUBJECT_ID, 'hex');
 
     if (ebsiSubjectId.length !== 16) {
       throw new Error('EBSI_SUBJECT_ID must be 16 bytes');

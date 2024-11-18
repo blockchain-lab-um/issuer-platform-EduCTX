@@ -66,20 +66,20 @@ export const LoginView = () => {
                     >
                       User Login
                     </Button> */}
-                    <Link
-                      className="flex justify-center items-center hover:underline"
+                    {/* <Link
+                      className="flex text-green-500 justify-center items-center hover:underline"
                       href="/issue"
                     >
                       Issue Credentials
-                    </Link>
-                    {/* <Button
+                    </Link> */}
+                    <Button
                       className="font-medium"
                       color="success"
                       variant="bordered"
                       onClick={() => setUserType(1)}
                     >
                       Administrator Login
-                    </Button> */}
+                    </Button>
                   </div>
                 </div>
                 <div>
