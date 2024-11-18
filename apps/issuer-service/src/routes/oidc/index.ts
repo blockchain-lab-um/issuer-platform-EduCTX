@@ -247,7 +247,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
-  // TODO: Protect by API key
   fastify.post(
     '/create-credential-offer',
     {
@@ -377,7 +376,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             iss: fastify.issuerServerConfig.url,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
-            exp: now + 600, // 10 minutes
+            exp: now + 8035200, // 3 Months
           },
           {
             issuer: fastify.issuerServerConfig.url,
@@ -416,7 +415,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             iss: fastify.issuerServerConfig.url,
             aud: `${fastify.config.AUTHORIZATION_SERVER_URL}/oidc`,
             iat: now,
-            exp: now + 180, // 3 minutes
+            exp: now + 8035200, // 3 Months
             data: {
               preAuthorizedCode,
               pin,
