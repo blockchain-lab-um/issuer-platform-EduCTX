@@ -8,3 +8,4 @@ ngrok.yml
 
 # LEVEL DB
 db/
+docker-compose.local.yml
