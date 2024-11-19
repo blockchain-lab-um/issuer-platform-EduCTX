@@ -25,6 +25,9 @@ RUN npm pkg delete scripts.prepare
 
 RUN pnpm i --frozen-lockfile --prod && pnpm store prune
 
+RUN mkdir -p ./db
+RUN chown -R fastify:nodejs ./db
+
 USER fastify
 
 ENV HOST 0.0.0.0

@@ -1,7 +1,6 @@
-version: '3.6'
-
 volumes:
-  eductx-issuer-db:
+  eductx-issuer-service:
+  eductx-authorization-service:
 
 networks:
   default:
@@ -45,6 +44,8 @@ services:
       API_KEY: ${API_KEY}
       CONFORMANCE_TEST_ENABLED: ${CONFORMANCE_TEST_ENABLED}
     restart: unless-stopped
+    volumes:
+      - eductx-issuer-service:/app/db
 
   authorization-service:
     image: blockchain-lab-um/eductx-platform-authorization-service:latest
@@ -63,4 +64,5 @@ services:
       ISSUER_SERVER_PUBLIC_KEY: ${ISSUER_SERVER_PUBLIC_KEY}
       ISSUER_SERVER_KEY_ALG: ${ISSUER_SERVER_KEY_ALG}
     restart: unless-stopped
-
+    volumes:
+      - eductx-authorization-service:/app/db

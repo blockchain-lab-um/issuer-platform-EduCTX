@@ -4,6 +4,7 @@ import type {
   LevelDbObjectIssuer,
 } from '@cef-ebsi/credential-issuer';
 import fp from 'fastify-plugin';
+import path from 'node:path';
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -12,10 +13,13 @@ declare module 'fastify' {
 }
 
 export default fp(async (fastify, _) => {
-  const dbOidc = new Level<LevelDbKeyIssuer, LevelDbObjectIssuer>('db/oidc', {
-    keyEncoding: 'json',
-    valueEncoding: 'json',
-  });
+  const dbOidc = new Level<LevelDbKeyIssuer, LevelDbObjectIssuer>(
+    path.join(process.cwd(), 'db/oidc'),
+    {
+      keyEncoding: 'json',
+      valueEncoding: 'json',
+    },
+  );
 
   fastify.decorate('dbOidc', dbOidc);
 });
