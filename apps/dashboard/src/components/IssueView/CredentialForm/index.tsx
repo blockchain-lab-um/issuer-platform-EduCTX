@@ -111,7 +111,7 @@ export const CredentialForm = ({
           >
             Back
           </Button>
-          <Button
+          {/* <Button
             color="primary"
             variant="flat"
             className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
@@ -119,7 +119,7 @@ export const CredentialForm = ({
             onClick={() => handleFormSubmit(false)}
           >
             Issue Credential
-          </Button>
+          </Button> */}
           <Button
             color="primary"
             variant="flat"
