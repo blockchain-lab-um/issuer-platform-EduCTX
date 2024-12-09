@@ -16,6 +16,8 @@ export interface Env {
   ISSUER_SERVER_URL: string;
   ISSUER_SERVER_PUBLIC_KEY: string;
   ISSUER_SERVER_KEY_ALG: 'ES256' | 'ES256K';
+
+  CONFORMANCE_TEST_ENABLED: boolean;
 }
 
 declare module 'fastify' {
@@ -77,6 +79,9 @@ export default fp(async (fastify, _) => {
       ISSUER_SERVER_KEY_ALG: {
         type: 'string',
         enum: ['ES256', 'ES256K'],
+      },
+      CONFORMANCE_TEST_ENABLED: {
+        type: 'boolean',
       },
     },
   };

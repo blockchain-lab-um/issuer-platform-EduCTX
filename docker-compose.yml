@@ -63,6 +63,7 @@ services:
       ISSUER_SERVER_URL: ${ISSUER_SERVER_URL}
       ISSUER_SERVER_PUBLIC_KEY: ${ISSUER_SERVER_PUBLIC_KEY}
       ISSUER_SERVER_KEY_ALG: ${ISSUER_SERVER_KEY_ALG}
+      CONFORMANCE_TEST_ENABLED: ${CONFORMANCE_TEST_ENABLED}
     restart: unless-stopped
     volumes:
       - eductx-authorization-service:/app/db

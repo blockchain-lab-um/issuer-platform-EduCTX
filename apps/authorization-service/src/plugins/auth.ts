@@ -18,7 +18,7 @@ declare module 'fastify' {
   }
 }
 
-const SUPPORTED_CREDENTIALS: string[][] = [
+const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
   [
     'VerifiableCredential',
     'VerifiableAttestation',
@@ -39,6 +39,9 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'CTWalletSamePreAuthorisedDeferred',
   ],
+];
+
+const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
 ];
 
@@ -100,6 +103,13 @@ export default fp(async (fastify, _) => {
   // Store the DID and its private key in the database
   await fastify.dbOidc.put({ did: did, jwks: true }, [privateKeyJwk]);
 
+  const credentialTypesSupported = [
+    ...SUPPORTED_CREDENTIALS,
+    ...(fastify.config.CONFORMANCE_TEST_ENABLED
+      ? CONFORMANCE_TEST_SUPPORTED_CREDENTIALS
+      : []),
+  ];
+
   // Create the auth server
   const auth = new AuthServer({
     db: fastify.dbOidc,
@@ -121,7 +131,7 @@ export default fp(async (fastify, _) => {
         return presentationDefinition;
       }
     },
-    credentialTypesSupported: SUPPORTED_CREDENTIALS,
+    credentialTypesSupported: credentialTypesSupported,
   });
 
   fastify.decorate('auth', auth);
