@@ -10,13 +10,15 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: 587,
-  // secure: false,
-  secure: true,
+  secure: false,
+  // secure: true,
   // port: 465,
-
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
+  },
+  tls: {
+    ciphers: 'SSLv3',
   },
 });
 
@@ -78,7 +80,7 @@ export async function POST(req: NextRequest) {
     });
 
     const emailOptions = {
-      fron: process.env.EMAIL_USERNAME,
+      from: process.env.EMAIL_USERNAME,
       to: email,
       subject: 'Blockchain Lab:UM (EduCTX)',
       html: basicEmailHtml,
