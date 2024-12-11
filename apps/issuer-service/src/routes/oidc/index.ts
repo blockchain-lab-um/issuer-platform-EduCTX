@@ -19,6 +19,7 @@ import {
   getPublicJwk,
 } from '@blockchain-lab-um/eductx-platform-shared';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
+import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -124,7 +125,17 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const proofJwt = decodeJwt(credentialRequest.proof.jwt);
 
+      let schema = CREDENTIAL_TYPE_TO_SCHEMA.get(
+        JSON.stringify(credentialRequest.types),
+      );
+
+      // If schema is not found, fallback to the EBSI schema
+      if (!schema) {
+        schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
+      }
+
       const vcPayload = {
+        // TODO: Do we need to add contexts based on requested credential types ?
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: `urn:uuid:${randomUUID()}`,
         type: credentialRequest.types,
@@ -137,10 +148,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },
         credentialSchema: {
-          // TODO: Improve handling of this
-          id: credentialRequest.types.includes('EducationCredential')
-            ? 'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/356bce18f61e8d8d6ec0244510e56300f931dc2d/schemas/education/education-credential-schema.json'
-            : `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`,
+          id: schema,
           type: 'FullJsonSchemaValidator2021',
         },
         // termsOfUse: {

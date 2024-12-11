@@ -43,6 +43,7 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
+  ['VerifiableCredential', 'EventTicketCredential'],
 ];
 
 export default fp(async (fastify, _) => {

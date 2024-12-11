@@ -55,7 +55,19 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
+  ['VerifiableCredential', 'EventTicketCredential'],
 ];
+
+export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
+  [
+    '["VerifiableCredential","EducationCredential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/education/education-credential-schema.json',
+  ],
+  [
+    '["VerifiableCredential","EventTicketCredential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/event-ticket-credential-schema.json',
+  ],
+]);
 
 export default fp(async (fastify, _) => {
   if (fastify.config.DID_METHOD === 'ebsi' && !fastify.config.EBSI_SUBJECT_ID) {
