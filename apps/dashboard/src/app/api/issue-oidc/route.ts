@@ -4,8 +4,10 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { renderBasicEmail } from '@/components/EmailTemplates/BasicEmail';
 import { renderPinEmail } from '@/components/EmailTemplates/PinEmail';
-
 import nodemailer from 'nodemailer';
+import { UTApi } from 'uploadthing/server';
+import QRCode from 'qrcode';
+import { randomUUID } from 'node:crypto';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -68,15 +70,31 @@ export async function POST(req: NextRequest) {
       throw new Error('Something went wrong');
     }
 
-    // Extract id from response
-    const { id, pin, location } = await response.json();
+    const { pin, location } = await response.json();
 
-    if (!id || !location || !pin) {
+    if (!location || !pin) {
+      throw new Error('Something went wrong');
+    }
+
+    const qrCodeBuffer = await QRCode.toBuffer(location);
+
+    const utapi = new UTApi({
+      token: process.env.UPLOADTHING_TOKEN,
+    });
+
+    const file = new File([qrCodeBuffer], `${randomUUID()}.png`, {
+      type: 'image/png',
+    });
+
+    const uploadResponse = (await utapi.uploadFiles([file]))[0];
+
+    if (!uploadResponse || uploadResponse.error) {
+      console.error(uploadResponse.error);
       throw new Error('Something went wrong');
     }
 
     const basicEmailHtml = await renderBasicEmail({
-      qrCodeUrl: `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/image/${id}`,
+      qrCodeUrl: uploadResponse.data.url,
     });
 
     const emailOptions = {

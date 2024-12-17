@@ -476,11 +476,15 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         }).toString()}`;
       }
 
-      // Store location in cache (needed for generating images)
-      const requestId = randomUUID();
-      await fastify.cache.set(requestId, location);
+      /*
+        NOTE: This was replaced with uploading images to Uploadthing on the dashboard backend
 
-      response.id = requestId;
+        // Store location in cache (needed for generating images)
+        const requestId = randomUUID();
+        await fastify.cache.set(requestId, location);
+        response.id = requestId;
+      */
+
       response.location = location;
 
       return reply.code(200).send(response);
