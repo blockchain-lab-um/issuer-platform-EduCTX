@@ -66,7 +66,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/wallet_gray.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHSkpHbgIy6YXsEkvxeHDC0jV9m4SZMFnha1tQ'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -86,7 +88,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/phone_gray.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOH1yzZmLZPLlb6qMvhgsQyTpE7HVX3x8u2IDnF'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -100,7 +104,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/qr_code_gray.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHGrIG4Xgx3Xp5HKnkb2eyPuL6MNqlrUAZdozj'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -114,7 +120,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/lock_unlocked.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHsnxWHJMpfVtGRO0ljDo7UnvYm5kHAcM6CJ4b'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -140,7 +148,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 >
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/bclab.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHXGLnlaa80DxS4F8urC3ZiUMbdeWHLnKo6gz5'
+                    }
                   />
                 </Link>
               </Column>
@@ -148,7 +158,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Link href="https://eductx.org/" target="_blank">
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/eductx.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHbgDg6Pvg2r19STisaAOt6hbdNn0yUjFkQ8Ce'
+                    }
                   />
                 </Link>
               </Column>
@@ -156,7 +168,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                 <Link href="https://masca.io/" target="_blank">
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black_with_text.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHasXjqteSKupZeHwCykBiMO4xzE3nvGQ5LmTN'
+                    }
                   />
                 </Link>
               </Column>
@@ -175,7 +189,9 @@ export const PinEmail: React.FC<Readonly<PinEmailProps>> = ({ pin }) => (
                     <Img
                       width={36}
                       height={36}
-                      src={`${process.env.NEXT_PUBLIC_APP_URL}/images/question_mark.png`}
+                      src={
+                        'https://utfs.io/f/xiVgL8oEMuOHXZhqo780DxS4F8urC3ZiUMbdeWHLnKo6gz5O'
+                      }
                     />
                   </Column>
                   <Column className="pr-3" align="left">

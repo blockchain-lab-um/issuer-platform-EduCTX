@@ -62,7 +62,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/wallet.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHrFGsoAOBQOBbXLCRKwAmjJ469Zy0SPoznqcD'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -82,7 +84,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/phone.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHDJvBcBAxinQBZWzMLGJHFS62gmqdayEIl0jU'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -96,7 +100,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/qr_code.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHL4NciVZql0zWbp1d2YOASEaI3hK9mJfgstjF'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -110,7 +116,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Img
                   width={28}
                   height={28}
-                  src={`${process.env.NEXT_PUBLIC_APP_URL}/images/lock_unlocked.png`}
+                  src={
+                    'https://utfs.io/f/xiVgL8oEMuOHsnxWHJMpfVtGRO0ljDo7UnvYm5kHAcM6CJ4b'
+                  }
                 />
               </Column>
               <Column align="left">
@@ -134,7 +142,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                       <Column align="left">
                         <Img
                           className="max-w-[18px] mr-1"
-                          src={`${process.env.NEXT_PUBLIC_APP_URL}/images/globe.png`}
+                          src={
+                            'https://utfs.io/f/xiVgL8oEMuOHsnxWHJMpfVtGRO0ljDo7UnvYm5kHAcM6CJ4b'
+                          }
                         />
                       </Column>
                     </Row>
@@ -166,7 +176,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                       <Column align="left">
                         <Img
                           className="max-h-[18px] mr-1"
-                          src={`${process.env.NEXT_PUBLIC_APP_URL}/images/lock_locked.png`}
+                          src={
+                            'https://utfs.io/f/xiVgL8oEMuOHsH5xPWMpfVtGRO0ljDo7UnvYm5kHAcM6CJ4b'
+                          }
                         />
                       </Column>
                     </Row>
@@ -200,7 +212,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                       <Column align="left">
                         <Img
                           className="max-w-[20px] mr-1"
-                          src={`${process.env.NEXT_PUBLIC_APP_URL}/images/forward.png`}
+                          src={
+                            'https://utfs.io/f/xiVgL8oEMuOHotZLgedBrJaP0H1cF5XvtN6UdTZRg8WAEuLe'
+                          }
                         />
                       </Column>
                     </Row>
@@ -232,7 +246,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                       <Column align="left">
                         <Img
                           className="max-h-[18px] mr-1"
-                          src={`${process.env.NEXT_PUBLIC_APP_URL}/images/academic_hat.png`}
+                          src={
+                            'https://utfs.io/f/xiVgL8oEMuOHCISAwPYpYDkpWowKGulSj7mNMQnT6zbJs0fy'
+                          }
                         />
                       </Column>
                     </Row>
@@ -275,7 +291,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 >
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/bclab.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHXGLnlaa80DxS4F8urC3ZiUMbdeWHLnKo6gz5'
+                    }
                   />
                 </Link>
               </Column>
@@ -283,7 +301,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Link href="https://eductx.org/" target="_blank">
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/eductx.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHbgDg6Pvg2r19STisaAOt6hbdNn0yUjFkQ8Ce'
+                    }
                   />
                 </Link>
               </Column>
@@ -291,7 +311,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                 <Link href="https://masca.io/" target="_blank">
                   <Img
                     height={24}
-                    src={`${process.env.NEXT_PUBLIC_APP_URL}/images/masca_black_with_text.png`}
+                    src={
+                      'https://utfs.io/f/xiVgL8oEMuOHasXjqteSKupZeHwCykBiMO4xzE3nvGQ5LmTN'
+                    }
                   />
                 </Link>
               </Column>
@@ -310,7 +332,9 @@ export const BasicEmail: React.FC<Readonly<BasicEmailProps>> = ({
                     <Img
                       width={36}
                       height={36}
-                      src={`${process.env.NEXT_PUBLIC_APP_URL}/images/question_mark.png`}
+                      src={
+                        'https://utfs.io/f/xiVgL8oEMuOHXZhqo780DxS4F8urC3ZiUMbdeWHLnKo6gz5O'
+                      }
                     />
                   </Column>
                   <Column className="pr-3" align="left">
