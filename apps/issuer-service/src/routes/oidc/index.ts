@@ -409,10 +409,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
         if (request.body.credential_subject) {
-          await fastify.cache.set(
-            preAuthorizedCode,
-            request.body.credential_subject,
-          );
+          const credentialSubject = request.body.credential_subject;
+          await fastify.cache.set(preAuthorizedCode, { credentialSubject });
         }
 
         const pin = randomInt(100000, 999999).toString();
