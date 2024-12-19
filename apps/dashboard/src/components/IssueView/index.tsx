@@ -145,7 +145,7 @@ export const IssueView = () => {
           credential_type: ['VerifiableCredential', 'EducationCredential'],
           flow: 'pre-authorized_code',
           format: 'jwt_vc_json',
-          credential_subject: inputs,
+          credential_subject: inputs.credentialSubject,
         },
       }),
     });
