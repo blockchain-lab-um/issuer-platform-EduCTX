@@ -32,8 +32,6 @@ RUN npm i -g pnpm@9.12.2 && pnpm i --frozen-lockfile
 
 COPY . .
 
-RUN rm -rf apps/issuer-old
-
 ENV NODE_ENV=production
 
 RUN pnpm build

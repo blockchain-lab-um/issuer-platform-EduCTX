@@ -1,4 +1,3 @@
 packages:
   - "apps/**"
-  - "!apps/issuer-old/**"
   - "libs/**"
