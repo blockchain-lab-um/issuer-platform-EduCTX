@@ -257,13 +257,7 @@ export const IssueView = () => {
                   </button>
                 </nav>
                 <div className="flex justify-center p-4">
-                  <Link
-                    className="flex justify-center items-center hover:underline"
-                    href="/"
-                  >
-                    Logout
-                  </Link>
-                  {/* <Button
+                  <Button
                     size="md"
                     color="danger"
                     onClick={() => {
@@ -275,7 +269,7 @@ export const IssueView = () => {
                     }}
                   >
                     Logout
-                  </Button> */}
+                  </Button>
                 </div>
               </div>
             </div>
@@ -319,13 +313,7 @@ export const IssueView = () => {
             </nav>
           </div>
           <div className="flex justify-center p-4">
-            <Link
-              className="flex justify-center items-center hover:underline"
-              href="/"
-            >
-              Logout
-            </Link>
-            {/* <Button
+            <Button
               size="md"
               color="danger"
               onClick={() => {
@@ -337,7 +325,7 @@ export const IssueView = () => {
               }}
             >
               Logout
-            </Button> */}
+            </Button>
           </div>
         </div>
       </div>

@@ -53,9 +53,28 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     async (request, reply) => {
       const body = request.body;
 
-      const location = await fastify.auth.directPost(body);
-
-      return reply.redirect(location);
+      try {
+        const location = await fastify.auth.directPost(body);
+        // Note: Check if auth status exists
+        const authRequest = await fastify.cache.get(body.state);
+        if (authRequest && body.state) {
+          fastify.cache.set(body.state, {
+            status: 'Success',
+            data: body.vp_token,
+          });
+        }
+        return reply.redirect(location);
+      } catch (error) {
+        // Note: Check if auth status exists
+        const authRequest = await fastify.cache.get(body.state);
+        if (authRequest && body.state) {
+          fastify.cache.set(body.state, {
+            status: 'Failed',
+            error: JSON.stringify(error),
+          });
+        }
+        return reply.code(400).send();
+      }
     },
   );
 
@@ -86,6 +105,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
                 'openid',
                 'openid ver_test:id_token',
                 'openid ver_test:vp_token',
+                'openid coupon:demo',
               ],
             },
             client_id: {
@@ -127,7 +147,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               type: 'string',
             },
           },
-          required: ['scope', 'client_id', 'redirect_uri', 'response_type'],
+          required: ['scope', 'redirect_uri', 'response_type'], // Note: We removed required `client_id`
         },
       },
       config: {
@@ -137,6 +157,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async (request, reply) => {
       const redirectLocation = await fastify.auth.authorize(request.query);
+
+      // Note: We only track the auth status if we pass in the state
+      if (request.query.state) {
+        fastify.cache.set(request.query.state, {
+          status: 'Pending',
+        });
+      }
+
       return reply.redirect(redirectLocation);
     },
   );
@@ -250,6 +278,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         );
 
+        // TODO: Gracefull exit if not successful
         await fetch(
           `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
           {
@@ -316,6 +345,36 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send();
+    },
+  );
+
+  // Custom endpoints
+  fastify.get(
+    '/status/:authRequestId',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            authRequestId: {
+              type: 'string',
+            },
+          },
+          required: ['authRequestId'],
+        },
+      },
+      config: {
+        description: '',
+      },
+    },
+    async (request, reply) => {
+      const authRequest = await fastify.cache.get(request.params.authRequestId);
+
+      if (!authRequest) {
+        return reply.code(404).send();
+      }
+
+      return reply.code(200).send(authRequest);
     },
   );
 };

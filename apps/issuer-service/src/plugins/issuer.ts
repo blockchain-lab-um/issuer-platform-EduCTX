@@ -56,6 +56,7 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
   ['VerifiableCredential', 'EventTicketCredential'],
+  ['VerifiableCredential', 'CouponCredential'],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -66,6 +67,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","EventTicketCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/event-ticket-credential-schema.json',
+  ],
+  [
+    '["VerifiableCredential", "CouponCredential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/coupon-credential-schema.json',
   ],
 ]);
 

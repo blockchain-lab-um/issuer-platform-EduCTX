@@ -44,6 +44,7 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
   ['VerifiableCredential', 'EventTicketCredential'],
+  ['VerifiableCredential', 'CouponCredential'],
 ];
 
 export default fp(async (fastify, _) => {
@@ -126,9 +127,19 @@ export default fp(async (fastify, _) => {
     ) => {
       {
         let presentationDefinition: PresentationDefinitionV2 | null = null;
-        if (scope === 'openid ver_test:vp_token') {
-          presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+        switch (scope) {
+          case 'openid ver_test:vp_token': {
+            presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+            break;
+          }
+          case 'openid coupon:demo': {
+            // presentationDefinition = COUPON_DEMO_PRESENTATION_DEFINITION;
+            break;
+          }
+          default:
+            break;
         }
+
         return presentationDefinition;
       }
     },
