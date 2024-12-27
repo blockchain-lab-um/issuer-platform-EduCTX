@@ -53,3 +53,25 @@ export const VERIFIER_TEST_PRESENTATION_DEFINITION = {
     },
   ],
 } as const satisfies PresentationDefinitionV2;
+
+export const COUPON_DEMO_PRESENTATION_DEFINITION = {
+  id: '<any id, random or static>',
+  format: { jwt_vp: { alg: ['ES256'] }, jwt_vp_json: { alg: ['ES256'] } },
+  input_descriptors: [
+    {
+      id: '<any id, random or static>',
+      format: { jwt_vc: { alg: ['ES256'] }, jwt_vc_json: { alg: ['ES256'] } },
+      constraints: {
+        fields: [
+          {
+            path: ['$.vc.type'],
+            filter: {
+              type: 'array',
+              contains: { const: 'CouponCredential' },
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as const satisfies PresentationDefinitionV2;

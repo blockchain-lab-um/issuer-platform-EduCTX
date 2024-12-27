@@ -8,7 +8,10 @@ import {
 import { util as didKeyUtil } from '@cef-ebsi/key-did-resolver';
 import { util as didEbsiUtil } from '@cef-ebsi/ebsi-did-resolver';
 import type { PresentationDefinitionV2 } from '@sphereon/pex-models';
-import { VERIFIER_TEST_PRESENTATION_DEFINITION } from '../utils/presentationDefinitions.js';
+import {
+  COUPON_DEMO_PRESENTATION_DEFINITION,
+  VERIFIER_TEST_PRESENTATION_DEFINITION,
+} from '../utils/presentationDefinitions.js';
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -133,7 +136,7 @@ export default fp(async (fastify, _) => {
             break;
           }
           case 'openid coupon:demo': {
-            // presentationDefinition = COUPON_DEMO_PRESENTATION_DEFINITION;
+            presentationDefinition = COUPON_DEMO_PRESENTATION_DEFINITION;
             break;
           }
           default:

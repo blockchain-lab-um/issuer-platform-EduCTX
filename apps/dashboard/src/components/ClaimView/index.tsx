@@ -3,6 +3,7 @@
 import { useAuthRequestStatus } from '@/hooks';
 import { Button, Select, SelectItem } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 export const CLAIM_OPTIONS = [{ key: 'coupon', label: 'Coupon 123' }];
 
@@ -19,14 +20,24 @@ export const ClaimView = () => {
     isDisabled,
   );
 
-  const handleClaim = () => {
+  const handleClaim = async () => {
     // Reset state
     setAuthRequestId('test123');
     setQrCode('QR CODE');
     setIsDisabled(true);
 
-    console.log('claim');
-    console.log(selectedOption);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/`,
+      );
+
+      const data = await response.json();
+
+      setAuthRequestId(data.authRequestId);
+      setQrCode(data.location);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +84,9 @@ export const ClaimView = () => {
         {qrCode && step === 0 && (
           <div className="flex flex-col items-center justify-center gap-4">
             <div>Scan QR Code to authenticate</div>
-            <div className="w-64 h-64 bg-red-400">{qrCode}</div>
+            <div className="w-64 h-64 bg-red-400">
+              <QRCodeCanvas value={qrCode} size={256} />
+            </div>
             <div>
               <Button
                 onClick={() => {

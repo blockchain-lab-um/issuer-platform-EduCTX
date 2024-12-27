@@ -16,8 +16,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     async (_, reply) => {
       // Create state
       const state = randomUUID();
-      console.log(`State: ${state}`);
-      // Call `/oidc/authorize` with state
 
       const queryString = new URLSearchParams({
         response_type: 'code',
