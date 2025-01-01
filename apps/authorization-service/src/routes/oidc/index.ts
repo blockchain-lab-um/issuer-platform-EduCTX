@@ -248,6 +248,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         pin = await fastify.cache.get(preAuthorizedCode);
       }
 
+      console.log('preAuthorizedCode', preAuthorizedCode);
+      console.log('pin', pin);
       const response = await fastify.auth.token(request.body, { pin });
 
       if (preAuthorizedCode) {
@@ -330,12 +332,15 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           issuerMockPublicKey,
         );
 
+        console.log('payload', payload);
+
         const data = payload.data as
           | { preAuthorizedCode?: string; pin?: string }
           | undefined;
 
-        if (!data?.preAuthorizedCode || !data?.pin)
+        if (!data?.preAuthorizedCode || !data?.pin) {
           return reply.code(400).send();
+        }
 
         await fastify.cache.set(data.preAuthorizedCode, data.pin);
       } catch (error) {

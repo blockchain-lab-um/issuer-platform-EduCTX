@@ -4,19 +4,41 @@ import path from 'node:path';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    cache: FlatCache;
+    claimCache: FlatCache;
+    couponCache: FlatCache;
+    authRequestCache: FlatCache;
   }
 }
 
 export default fp(async (fastify, _) => {
-  const flatCache = new FlatCache({
-    cacheDir: path.join(process.cwd(), 'db/persistent-cache'),
+  const claimCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/claim-cache'),
     ttl: 8035200000, // 93 d
     lruSize: 10000, // 10000 items
     persistInterval: 1000 * 10, // 5 minutes
   });
 
-  flatCache.load();
+  claimCache.load();
 
-  fastify.decorate('cache', flatCache);
+  const couponCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/coupon-cache'),
+    ttl: 8035200000, // 93 d
+    lruSize: 10000, // 10000 items
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  couponCache.load();
+
+  const authRequestCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/auth-request-cache'),
+    ttl: 8035200000, // 93 d
+    lruSize: 10000, // 10000 items
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  authRequestCache.load();
+
+  fastify.decorate('couponCache', couponCache);
+  fastify.decorate('claimCache', claimCache);
+  fastify.decorate('authRequestCache', authRequestCache);
 });
