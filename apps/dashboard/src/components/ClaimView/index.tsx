@@ -2,7 +2,7 @@
 
 import { useAuthRequestStatus } from '@/hooks';
 import { Button, Select, SelectItem } from '@nextui-org/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useGetAllCoupons } from '@/hooks/getAllCoupons';
 
@@ -18,8 +18,6 @@ export const ClaimView = () => {
     authRequestId,
     isDisabled,
   );
-
-  console.log(authRequestStatus);
 
   const { data: coupons, isLoading: isLoadingCoupons } = useGetAllCoupons();
 
@@ -37,6 +35,13 @@ export const ClaimView = () => {
       console.error(error);
     }
   };
+
+  const reset = useCallback(() => {
+    setAuthRequestId('');
+    setQrCode('');
+    setIsDisabled(true);
+    setStep(0);
+  }, []);
 
   useEffect(() => {
     if (
@@ -69,14 +74,17 @@ export const ClaimView = () => {
                   <SelectItem key={coupon.id}>{coupon.name}</SelectItem>
                 ))}
               </Select>
-              <div>
+              <div className="flex gap-x-2">
                 <Button
-                  disabled={selectedOption === ''}
+                  disabled={selectedOption === '' || !!authRequestId}
                   color="default"
                   variant="flat"
                   onClick={handleClaim}
                 >
                   Claim
+                </Button>
+                <Button color="default" variant="bordered" onClick={reset}>
+                  Reset
                 </Button>
               </div>
             </div>
@@ -85,8 +93,8 @@ export const ClaimView = () => {
         {qrCode && step === 0 && (
           <div className="flex flex-col items-center justify-center gap-4">
             <div>Scan QR Code to authenticate</div>
-            <div className="w-64 h-64 bg-red-400">
-              <QRCodeCanvas value={qrCode} size={256} />
+            <div className="w-[512] h-[512] bg-red-400">
+              <QRCodeCanvas value={qrCode} size={512} />
             </div>
             <div>
               <Button
@@ -104,15 +112,21 @@ export const ClaimView = () => {
           <div className="flex flex-col items-center justify-center gap-4">
             {isLoading ||
               (authRequestStatus?.status === 'Pending' && (
-                <div>Authenticating...</div>
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <div>Authenticating...</div>
+                </div>
               ))}
             {authRequestStatus?.status === 'Success' && (
-              <div>
+              <div className="flex flex-col items-center justify-center gap-4">
                 <div>Authentication successful</div>
+                <div>{authRequestStatus?.data.coupon}</div>
               </div>
             )}
             {authRequestStatus?.status === 'Failed' && (
-              <div>Authentication failed</div>
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div>Authentication failed</div>
+                <div>{authRequestStatus?.error}</div>
+              </div>
             )}
           </div>
         )}

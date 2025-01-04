@@ -135,6 +135,8 @@ export default fp(async (fastify, _) => {
             presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
             break;
           }
+          // TODO: Change to `openid custom:<UUID>` and read presentation definition from cache
+          // TODO: We also need to add a route to create/store the presentation definitions
           case 'openid coupon:demo': {
             presentationDefinition = COUPON_DEMO_PRESENTATION_DEFINITION;
             break;

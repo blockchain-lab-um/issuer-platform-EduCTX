@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { decodeJwt } from 'jose';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import stringify from 'json-stable-stringify';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -93,8 +94,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.status === 'Success') {
         const vpToken = data.data;
 
@@ -103,11 +102,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           return reply.code(500).send();
         }
 
-        // Get the coupon from the cache
-        const couponData = (await fastify.couponCache.get(
-          await fastify.authRequestCache.get(request.params.authRequestId),
+        const couponDataId = (await fastify.authRequestCache.get(
+          request.params.authRequestId,
         )) as any;
-        console.log(couponData);
+
+        // Get the coupon from the cache
+        const couponData = (await fastify.couponCache.get(couponDataId)) as any;
 
         // Decode the vpToken
         const decodedVpToken = decodeJwt(vpToken) as any;
@@ -121,13 +121,50 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           decodeJwt(credential),
         );
 
-        // TODO - Extra business rules
-        // TODO - Use the Credential that matches the "requirements"
+        // TODO - Extra business rule checks (do we need this if everything is handled by the presentation definition?)
+
+        // Stable stringify of `credentials` to get consistent hash
+        const stringifiedCredentials = stringify({ credentials });
+
+        if (!stringifiedCredentials) {
+          return reply.code(200).send({
+            status: 'Failed',
+            error: 'Internal Server Error',
+          });
+        }
+
+        const claimId = createHash('sha256')
+          .update(stringifiedCredentials)
+          .digest('hex');
+
+        // If `couponId` was already used, return the existing coupon, otherwise take a new one
+        const coupon = await fastify.claimCache.get(claimId);
+
+        if (coupon) {
+          return reply.code(200).send({
+            status: 'Success',
+            data: {
+              coupon,
+            },
+          });
+        }
+
+        const newCoupon = (couponData.coupons as string[]).pop();
+
+        if (!newCoupon) {
+          return reply.code(200).send({
+            status: 'Failed',
+            error: 'No coupons available',
+          });
+        }
+
+        fastify.couponCache.set(couponDataId, couponData);
+        fastify.claimCache.set(claimId, newCoupon);
 
         return reply.code(200).send({
           status: 'Success',
           data: {
-            coupon: 'test-coupon-12',
+            coupon: newCoupon,
           },
         });
       }

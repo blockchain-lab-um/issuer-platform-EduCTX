@@ -13,8 +13,8 @@ declare module 'fastify' {
 export default fp(async (fastify, _) => {
   const claimCache = new FlatCache({
     cacheDir: path.join(process.cwd(), 'db/claim-cache'),
-    ttl: 8035200000, // 93 d
-    lruSize: 10000, // 10000 items
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
     persistInterval: 1000 * 10, // 5 minutes
   });
 
@@ -22,8 +22,8 @@ export default fp(async (fastify, _) => {
 
   const couponCache = new FlatCache({
     cacheDir: path.join(process.cwd(), 'db/coupon-cache'),
-    ttl: 8035200000, // 93 d
-    lruSize: 10000, // 10000 items
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
     persistInterval: 1000 * 10, // 5 minutes
   });
 
@@ -31,8 +31,8 @@ export default fp(async (fastify, _) => {
 
   const authRequestCache = new FlatCache({
     cacheDir: path.join(process.cwd(), 'db/auth-request-cache'),
-    ttl: 8035200000, // 93 d
-    lruSize: 10000, // 10000 items
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
     persistInterval: 1000 * 10, // 5 minutes
   });
 

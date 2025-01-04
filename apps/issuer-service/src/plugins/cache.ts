@@ -7,7 +7,7 @@ import path from 'node:path';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    cache: any; // TODO: Type for this ?
+    cache: any;
   }
 }
 

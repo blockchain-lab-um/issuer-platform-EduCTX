@@ -7,7 +7,7 @@ import path from 'node:path';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    cache: any; // TODO: Type for this ?
+    cache: any;
   }
 }
 
@@ -18,7 +18,7 @@ export default fp(async (fastify, _) => {
     cacheDir: path.join(process.cwd(), 'db/persistent-cache'),
     ttl: 8035200000, // 93 d
     lruSize: 10000, // 10000 items
-    persistInterval: 1000 * 10, // 5 minutes
+    persistInterval: 1000 * 5, // 5 minutes
   });
 
   flatCache.load();

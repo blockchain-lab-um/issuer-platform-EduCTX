@@ -35,7 +35,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         body: {
           type: 'object',
           properties: {
-            // TODO: Add extra checks object for bussines rules
             coupons: {
               type: 'array',
               items: {
@@ -48,12 +47,16 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             description: {
               type: 'string',
             },
+            // TODO: Replace scope with presentation definition
+            // Use the presentation definition to create a new scope (API call to the auth server)
+            // Use the UUID (scope) from the auth server response, the same way as the one in this request body
             scope: {
               type: 'string',
+
               enum: ['openid coupon:demo'], // Currenty this is mapped 1:1 to the verifier types (could be different)
             },
           },
-          required: ['scope', 'coupons', 'name', 'description'], // TODO
+          required: ['scope', 'coupons', 'name', 'description'],
         },
       },
       config: {

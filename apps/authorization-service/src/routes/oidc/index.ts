@@ -165,6 +165,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         });
       }
 
+      // TODO: QR Code is to large, can we do this by reference?
+      // Probably needs to be first implemented in `Masca`
+
       return reply.redirect(redirectLocation);
     },
   );
@@ -248,8 +251,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         pin = await fastify.cache.get(preAuthorizedCode);
       }
 
-      console.log('preAuthorizedCode', preAuthorizedCode);
-      console.log('pin', pin);
       const response = await fastify.auth.token(request.body, { pin });
 
       if (preAuthorizedCode) {
@@ -280,16 +281,19 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         );
 
-        // TODO: Gracefull exit if not successful
-        await fetch(
-          `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
-          {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${jwt}`,
+        try {
+          await fetch(
+            `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
+            {
+              method: 'POST',
+              headers: {
+                authorization: `Bearer ${jwt}`,
+              },
             },
-          },
-        );
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       return reply.code(200).send(response);
@@ -331,8 +335,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           request.headers.authorization.replace('Bearer ', ''),
           issuerMockPublicKey,
         );
-
-        console.log('payload', payload);
 
         const data = payload.data as
           | { preAuthorizedCode?: string; pin?: string }
