@@ -8,6 +8,10 @@ import nodemailer from 'nodemailer';
 import { UTApi } from 'uploadthing/server';
 import QRCode from 'qrcode';
 import { randomUUID } from 'node:crypto';
+import type { EducationCredentialType } from '@/lib/credentialSubjectTypes';
+import PdfPrinter from 'pdfmake';
+import { EducationCredentialPDF } from '@/components/PDFTemplates/EducationCredentialPDF';
+import type Mail from 'nodemailer/lib/mailer';
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -97,7 +101,7 @@ export async function POST(req: NextRequest) {
       qrCodeUrl: uploadResponse.data.url,
     });
 
-    const emailOptions = {
+    const emailOptions: Mail.Options = {
       from: process.env.EMAIL_USERNAME,
       to: email,
       subject: 'Blockchain Lab:UM (EduCTX)',
@@ -120,6 +124,74 @@ export async function POST(req: NextRequest) {
 
     if (sendMessageInfo.rejected.length > 0) {
       throw new Error('Failed to send second email');
+    }
+
+    // Send PDF email (only for education credentials)
+    if (
+      Array.isArray(data.credential_type) &&
+      data.credential_type.contains('EducationCredential')
+    ) {
+      const credentialSubject =
+        data.credential_subject as EducationCredentialType;
+
+      const docDefinition = EducationCredentialPDF(credentialSubject);
+
+      const fonts = {
+        Courier: {
+          normal: 'Courier',
+          bold: 'Courier-Bold',
+          italics: 'Courier-Oblique',
+          bolditalics: 'Courier-BoldOblique',
+        },
+        Helvetica: {
+          normal: 'Helvetica',
+          bold: 'Helvetica-Bold',
+          italics: 'Helvetica-Oblique',
+          bolditalics: 'Helvetica-BoldOblique',
+        },
+        Times: {
+          normal: 'Times-Roman',
+          bold: 'Times-Bold',
+          italics: 'Times-Italic',
+          bolditalics: 'Times-BoldItalic',
+        },
+        Symbol: {
+          normal: 'Symbol',
+        },
+        ZapfDingbats: {
+          normal: 'ZapfDingbats',
+        },
+      };
+
+      const printer = new PdfPrinter(fonts);
+
+      // Create PDF Buffer that we send as attachment
+      const pdfBuffer = await new Promise<Buffer>((resolve) => {
+        const pdfDoc = printer.createPdfKitDocument(docDefinition);
+        const buffs: unknown[] = [];
+        pdfDoc.on('data', (d) => {
+          buffs.push(d as readonly Uint8Array[]);
+        });
+        pdfDoc.on('end', () => {
+          resolve(Buffer.concat(buffs as readonly Uint8Array[]));
+        });
+        pdfDoc.end();
+      });
+
+      emailOptions.html = "<p>Here's your PDF!</p>";
+      emailOptions.attachments = [
+        {
+          filename: 'credential.pdf',
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        },
+      ];
+
+      sendMessageInfo = await transporter.sendMail(emailOptions);
+
+      if (sendMessageInfo.rejected.length > 0) {
+        throw new Error('Failed to send PDF email');
+      }
     }
 
     return NextResponse.json({
