@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
     // Send PDF email (only for education credentials)
     if (
       Array.isArray(data.credential_type) &&
-      data.credential_type.contains('EducationCredential')
+      data.credential_type.includes('EducationCredential')
     ) {
       const credentialSubject =
         data.credential_subject as EducationCredentialType;
