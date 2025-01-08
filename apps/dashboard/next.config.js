@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['pdfmake'],
+  },
   env: {
     NEXT_PUBLIC_ISSUER_ENDPOINT:
       process.env.NEXT_PUBLIC_ISSUER_ENDPOINT ||
