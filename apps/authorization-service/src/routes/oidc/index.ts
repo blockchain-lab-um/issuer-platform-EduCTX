@@ -146,6 +146,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             request_uri: {
               type: 'string',
             },
+            request_object: {
+              type: 'string',
+              enum: ['reference', 'value'],
+            },
           },
           required: ['scope', 'redirect_uri', 'response_type'], // Note: We removed required `client_id`
         },
@@ -164,9 +168,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           status: 'Pending',
         });
       }
-
-      // TODO: QR Code is to large, can we do this by reference?
-      // Probably needs to be first implemented in `Masca`
 
       return reply.redirect(redirectLocation);
     },
@@ -195,6 +196,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const authRequest = await fastify.auth.getRequestById(
         request.params.requestId,
       );
+
+      console.log(authRequest);
 
       return reply.code(200).send(authRequest);
     },

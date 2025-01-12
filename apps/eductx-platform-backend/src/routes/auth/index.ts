@@ -40,6 +40,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         client_id: 'eductx-platform-backend',
         redirect_uri: 'openid://',
         state,
+        request_object: 'reference',
       }).toString();
 
       const response = await fetch(
@@ -52,8 +53,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           redirect: 'manual',
         },
       );
-
-      console.log(response.headers.get('location'));
 
       fastify.authRequestCache.set(state, request.params.id);
 
