@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Input } from '@nextui-org/react';
-import type { SchemaNode } from '.';
+import type { SchemaNode } from '../schemaTypes';
 
 interface CredentialFormNodeProps {
   path: string;

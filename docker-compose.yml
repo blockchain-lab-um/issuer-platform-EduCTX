@@ -1,6 +1,7 @@
 volumes:
   eductx-issuer-service:
   eductx-authorization-service:
+  eductx-platform-backend:
 
 networks:
   default:
@@ -67,3 +68,15 @@ services:
     restart: unless-stopped
     volumes:
       - eductx-authorization-service:/app/db
+
+  eductx-platform-backend:
+    image: blockchain-lab-um/eductx-platform-backend:latest
+    container_name: eductx-platform-backend
+    ports:
+      - '34570:3001'
+    environment:
+      VERSION: ${VERSION}
+      VERIFIER_SERVER_URL: 'http://authorization-service:3001'
+    restart: unless-stopped
+    volumes:
+      - eductx-platform-backend:/app/db
