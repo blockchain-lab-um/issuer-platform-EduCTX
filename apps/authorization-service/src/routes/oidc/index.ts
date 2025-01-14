@@ -101,12 +101,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           properties: {
             scope: {
               type: 'string',
-              enum: [
-                'openid',
-                'openid ver_test:id_token',
-                'openid ver_test:vp_token',
-                'openid coupon:demo',
-              ],
             },
             client_id: {
               type: 'string',
