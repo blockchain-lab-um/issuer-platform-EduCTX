@@ -47,16 +47,16 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             description: {
               type: 'string',
             },
-            // TODO: Replace scope with presentation definition
-            // Use the presentation definition to create a new scope (API call to the auth server)
-            // Use the UUID (scope) from the auth server response, the same way as the one in this request body
-            scope: {
-              type: 'string',
-
-              enum: ['openid coupon:demo'], // Currenty this is mapped 1:1 to the verifier types (could be different)
+            presentationDefinition: {
+              type: 'object',
             },
           },
-          required: ['scope', 'coupons', 'name', 'description'],
+          required: [
+            'presentationDefinition',
+            'coupons',
+            'name',
+            'description',
+          ],
         },
       },
       config: {
@@ -65,9 +65,30 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
+      // Create presentation definition on the auth server
+      const response = await fetch(
+        `${fastify.config.VERIFIER_SERVER_URL}/presentation-definitions`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            presentationDefinition: request.body.presentationDefinition,
+          }),
+        },
+      );
+
+      if (response.status !== 201) {
+        return reply.code(500).send();
+      }
+
+      const { id: presentationDefinitionId } = await response.json();
+      const scope = `openid coupon:${presentationDefinitionId}`;
+
       const id = randomUUID();
 
-      const { name, description, coupons, scope } = request.body;
+      const { name, description, coupons } = request.body;
 
       fastify.couponCache.set(id, {
         name,

@@ -358,6 +358,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
+  // TODO: API Key authentication
   // Custom endpoints
   fastify.get(
     '/status/:authRequestId',

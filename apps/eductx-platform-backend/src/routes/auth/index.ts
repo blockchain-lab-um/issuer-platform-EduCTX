@@ -120,8 +120,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           decodeJwt(credential),
         );
 
-        // TODO - Extra business rule checks (do we need this if everything is handled by the presentation definition?)
-
         // Stable stringify of `credentials` to get consistent hash
         const stringifiedCredentials = stringify({ credentials });
 

@@ -8,6 +8,7 @@ import path from 'node:path';
 declare module 'fastify' {
   export interface FastifyInstance {
     cache: any;
+    presentationDefinitionCache: FlatCache;
   }
 }
 
@@ -29,4 +30,15 @@ export default fp(async (fastify, _) => {
   const cache = createCache({ stores: [keyv, flatCacheKeyv] });
 
   fastify.decorate('cache', cache);
+
+  // Create a persistent store for presentation definitions
+  const presentationDefinitionCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/presentation-definition-cache'),
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  presentationDefinitionCache.load();
+  fastify.decorate('presentationDefinitionCache', presentationDefinitionCache);
 });

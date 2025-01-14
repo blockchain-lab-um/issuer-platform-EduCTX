@@ -246,6 +246,21 @@ index a705aaff3a43eec239630358032631961a60ff38..31afe822ea938d0d41c1fd9ba5794e5c
 +    return preAuthorizedCodeToken(serverUrl, serverKid, privateKey, query, credentialTypesSupported, timeout, options);
  }
  //# sourceMappingURL=utils.js.map
+diff --git a/dist/validators/create-authentication-request.validator.js b/dist/validators/create-authentication-request.validator.js
+index 0e12cdc354af4bcdd5afeed947d6939ecbe0cbcd..9ca52ffa47ee27091a12988db47660a959f94e94 100644
+--- a/dist/validators/create-authentication-request.validator.js
++++ b/dist/validators/create-authentication-request.validator.js
+@@ -4,9 +4,7 @@ import { serviceWalletClientMetadataSchema } from "./service-wallet-client-metad
+ export const createAuthenticationRequestSchema = (validScopes, credentialTypesSupported) => z.object({
+     iss: z.string(),
+     aud: z.string(),
+-    scope: z.string().refine((scope) => validScopes.includes(scope), {
+-        message: `Invalid scope. The valid scopes are: ${validScopes.join(", ")}`,
+-    }),
++    scope: z.string(),
+     response_type: z.literal("code"),
+     client_id: z.string().url(),
+     redirect_uri: z.string(),
 diff --git a/src/AuthServer.ts b/src/AuthServer.ts
 index 905ca29de966698d75bdf83cc1f29c522e94560c..a7898d472c55a79a7b728170e3b31bbdbbb802eb 100644
 --- a/src/AuthServer.ts

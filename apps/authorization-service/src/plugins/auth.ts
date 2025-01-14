@@ -126,23 +126,23 @@ export default fp(async (fastify, _) => {
     issuerMockPublicKeyJwk: issuerPublicJwk,
     presentationDefinitionSelector: (
       scope: string,
-      requestedTypes: string[],
+      _requestedTypes: string[],
     ) => {
       {
         let presentationDefinition: PresentationDefinitionV2 | null = null;
-        switch (scope) {
-          case 'openid ver_test:vp_token': {
-            presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
-            break;
+
+        if (scope === 'openid ver_test:vp_token') {
+          presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+        } else if (scope.startsWith('openid custom:')) {
+          const cacheKey = scope.replace('openid custom:', '');
+          const cachedPresentationDefinition =
+            fastify.presentationDefinitionCache.get(
+              cacheKey,
+            ) as PresentationDefinitionV2;
+
+          if (cachedPresentationDefinition) {
+            presentationDefinition = cachedPresentationDefinition;
           }
-          // TODO: Change to `openid custom:<UUID>` and read presentation definition from cache
-          // TODO: We also need to add a route to create/store the presentation definitions
-          case 'openid coupon:demo': {
-            presentationDefinition = COUPON_DEMO_PRESENTATION_DEFINITION;
-            break;
-          }
-          default:
-            break;
         }
 
         return presentationDefinition;
