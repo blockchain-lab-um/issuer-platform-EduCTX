@@ -86,7 +86,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       const { id: presentationDefinitionId } = await response.json();
-      const scope = `openid coupon:${presentationDefinitionId}`;
+      const scope = `openid custom:${presentationDefinitionId}`;
 
       const id = randomUUID();
 

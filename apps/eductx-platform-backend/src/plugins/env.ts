@@ -4,6 +4,8 @@ import fp from 'fastify-plugin';
 export interface Env {
   VERSION: string;
   VERIFIER_SERVER_URL: string;
+  VERIFIER_API_KEY: string;
+  API_KEY: string;
 }
 
 declare module 'fastify' {
@@ -20,12 +22,18 @@ declare module 'fastify' {
 export default fp(async (fastify, _) => {
   const schema: JSONSchemaType<Env> = {
     type: 'object',
-    required: ['VERSION', 'VERIFIER_SERVER_URL'],
+    required: ['VERSION', 'VERIFIER_SERVER_URL', 'VERIFIER_API_KEY', 'API_KEY'],
     properties: {
       VERSION: {
         type: 'string',
       },
       VERIFIER_SERVER_URL: {
+        type: 'string',
+      },
+      VERIFIER_API_KEY: {
+        type: 'string',
+      },
+      API_KEY: {
         type: 'string',
       },
     },

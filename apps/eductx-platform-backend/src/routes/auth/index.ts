@@ -85,6 +85,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     async (request, reply) => {
       const response = await fetch(
         `${fastify.config.VERIFIER_SERVER_URL}/oidc/status/${request.params.authRequestId}`,
+        {
+          headers: {
+            'x-api-key': fastify.config.VERIFIER_API_KEY,
+          },
+        },
       );
 
       if (response.status === 404) {

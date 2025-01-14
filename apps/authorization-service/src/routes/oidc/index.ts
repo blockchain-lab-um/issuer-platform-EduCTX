@@ -4,6 +4,7 @@ import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import { importJWK, jwtVerify } from 'jose';
 import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -55,8 +56,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       try {
         const location = await fastify.auth.directPost(body);
+
         // Note: Check if auth status exists
         const authRequest = await fastify.cache.get(body.state);
+
         if (authRequest && body.state) {
           fastify.cache.set(body.state, {
             status: 'Success',
@@ -190,8 +193,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const authRequest = await fastify.auth.getRequestById(
         request.params.requestId,
       );
-
-      console.log(authRequest);
 
       return reply.code(200).send(authRequest);
     },
@@ -352,7 +353,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
-  // TODO: API Key authentication
   // Custom endpoints
   fastify.get(
     '/status/:authRequestId',
@@ -371,9 +371,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       config: {
         description: '',
       },
+      preValidation: apiKeyAuth,
     },
     async (request, reply) => {
       const authRequest = await fastify.cache.get(request.params.authRequestId);
+
+      console.log(authRequest);
 
       if (!authRequest) {
         return reply.code(404).send();
