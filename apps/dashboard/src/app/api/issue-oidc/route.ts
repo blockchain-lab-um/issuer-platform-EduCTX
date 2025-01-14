@@ -101,30 +101,7 @@ export async function POST(req: NextRequest) {
       qrCodeUrl: uploadResponse.data.url,
     });
 
-    const emailOptions: Mail.Options = {
-      from: process.env.EMAIL_USERNAME,
-      to: email,
-      subject: 'Blockchain Lab:UM (EduCTX)',
-      html: basicEmailHtml,
-    };
-
-    // Send email with credential offer request
-    let sendMessageInfo = await transporter.sendMail(emailOptions);
-
-    if (sendMessageInfo.rejected.length > 0) {
-      throw new Error('Failed to send first email');
-    }
-
-    // Send PIN in separate email
-    const pinEmailHtml = await renderPinEmail({ pin });
-
-    emailOptions.html = pinEmailHtml;
-
-    sendMessageInfo = await transporter.sendMail(emailOptions);
-
-    if (sendMessageInfo.rejected.length > 0) {
-      throw new Error('Failed to send second email');
-    }
+    let attachments: Mail.Attachment[] = [];
 
     // Send PDF email (only for education credentials)
     if (
@@ -178,20 +155,40 @@ export async function POST(req: NextRequest) {
         pdfDoc.end();
       });
 
-      emailOptions.html = "<p>Here's your PDF!</p>";
-      emailOptions.attachments = [
+      attachments = [
         {
           filename: 'credential.pdf',
           content: pdfBuffer,
           contentType: 'application/pdf',
         },
       ];
+    }
 
-      sendMessageInfo = await transporter.sendMail(emailOptions);
+    const emailOptions: Mail.Options = {
+      from: process.env.EMAIL_USERNAME,
+      to: email,
+      subject: 'Blockchain Lab:UM (EduCTX)',
+      html: basicEmailHtml,
+      attachments: attachments,
+    };
 
-      if (sendMessageInfo.rejected.length > 0) {
-        throw new Error('Failed to send PDF email');
-      }
+    // Send email with credential offer request
+    let sendMessageInfo = await transporter.sendMail(emailOptions);
+
+    if (sendMessageInfo.rejected.length > 0) {
+      throw new Error('Failed to send first email');
+    }
+
+    // Send PIN in separate email
+    const pinEmailHtml = await renderPinEmail({ pin });
+
+    emailOptions.html = pinEmailHtml;
+    emailOptions.attachments = [];
+
+    sendMessageInfo = await transporter.sendMail(emailOptions);
+
+    if (sendMessageInfo.rejected.length > 0) {
+      throw new Error('Failed to send second email');
     }
 
     return NextResponse.json({
