@@ -24,6 +24,8 @@ services:
       EMAIL_HOST: mail.um.si
       EMAIL_USERNAME: blockchain-lab@um.si
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      UPLOADTHING_TOKEN: ${UPLOADTHING_TOKEN}
+      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
     restart: unless-stopped
 
   issuer-service:
