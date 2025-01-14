@@ -1,5 +1,4 @@
 import {
-  type CredentialOfferPayload,
   validatePostCredential,
   type CredentialIssuerMetadata,
 } from '@cef-ebsi/credential-issuer';

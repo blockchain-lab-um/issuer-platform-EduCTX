@@ -1,5 +1,6 @@
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { randomUUID } from 'node:crypto';
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -40,6 +41,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       config: {
         description: 'Create a new presentation definition',
       },
+      preValidation: apiKeyAuth,
     },
     async (request, reply) => {
       const id = randomUUID();
@@ -69,6 +71,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           required: ['id'],
         },
       },
+      preValidation: apiKeyAuth,
     },
     async (request, reply) => {
       if (!fastify.presentationDefinitionCache.get(request.params.id)) {

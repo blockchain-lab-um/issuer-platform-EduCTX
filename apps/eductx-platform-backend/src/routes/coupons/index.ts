@@ -1,7 +1,7 @@
 import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { randomUUID } from 'node:crypto';
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 
-// TODO: Protect with api key
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
 ): Promise<void> => {
@@ -63,6 +63,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         description: '',
         response: {},
       },
+      preValidation: apiKeyAuth,
     },
     async (request, reply) => {
       // Create presentation definition on the auth server
@@ -72,6 +73,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': process.env.VERIFIER_API_KEY!,
           },
           body: JSON.stringify({
             presentationDefinition: request.body.presentationDefinition,

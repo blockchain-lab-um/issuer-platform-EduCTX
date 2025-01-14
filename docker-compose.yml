@@ -65,6 +65,7 @@ services:
       ISSUER_SERVER_PUBLIC_KEY: ${ISSUER_SERVER_PUBLIC_KEY}
       ISSUER_SERVER_KEY_ALG: ${ISSUER_SERVER_KEY_ALG}
       CONFORMANCE_TEST_ENABLED: ${CONFORMANCE_TEST_ENABLED}
+      API_KEY: ${API_KEY}
     restart: unless-stopped
     volumes:
       - eductx-authorization-service:/app/db
@@ -77,6 +78,8 @@ services:
     environment:
       VERSION: ${VERSION}
       VERIFIER_SERVER_URL: 'http://authorization-service:3001'
+      VERIFIER_API_KEY: ${VERIFIER_API_KEY}
+      API_KEY: ${API_KEY}
     restart: unless-stopped
     volumes:
       - eductx-platform-backend:/app/db
