@@ -114,29 +114,11 @@ export async function POST(req: NextRequest) {
       const docDefinition = EducationCredentialPDF(credentialSubject);
 
       const fonts = {
-        Courier: {
-          normal: 'Courier',
-          bold: 'Courier-Bold',
-          italics: 'Courier-Oblique',
-          bolditalics: 'Courier-BoldOblique',
-        },
-        Helvetica: {
-          normal: 'Helvetica',
-          bold: 'Helvetica-Bold',
-          italics: 'Helvetica-Oblique',
-          bolditalics: 'Helvetica-BoldOblique',
-        },
-        Times: {
-          normal: 'Times-Roman',
-          bold: 'Times-Bold',
-          italics: 'Times-Italic',
-          bolditalics: 'Times-BoldItalic',
-        },
-        Symbol: {
-          normal: 'Symbol',
-        },
-        ZapfDingbats: {
-          normal: 'ZapfDingbats',
+        Inter: {
+          normal: 'public/fonts/Inter_18pt-Regular.ttf',
+          bold: 'public/fonts/Inter_18pt-Bold.ttf',
+          italics: 'public/fonts/Inter_18pt-Italic.ttf',
+          bolditalics: 'public/fonts/Inter_18pt-BoldItalic.ttf',
         },
       };
 
@@ -157,7 +139,7 @@ export async function POST(req: NextRequest) {
 
       attachments = [
         {
-          filename: 'credential.pdf',
+          filename: 'potrdilo.pdf',
           content: pdfBuffer,
           contentType: 'application/pdf',
         },

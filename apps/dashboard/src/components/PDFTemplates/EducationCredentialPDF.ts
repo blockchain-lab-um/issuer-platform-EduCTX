@@ -1,114 +1,248 @@
 import type { EducationCredentialType } from '@/lib/credentialSubjectTypes';
 import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { otherGray } from './images/otherGray';
+import { bclabum } from './images/bclabum';
+import { eductx } from './images/eductx';
+import { masca } from './images/masca';
 
 export const EducationCredentialPDF = ({
-  currentFamilyName,
-  currentGivenName,
   achieved: {
     title: achievementTitle,
-    wasAwardedBy: { awardingBody },
+    specifiedBy: { title: specifiedTitle, eCTSCreditPoints },
+    wasAwardedBy: { awardingBodyDescription, awardingDate, awardingLocation },
+    wasDerivedFrom: { grade, title: derivedTitle },
   },
+  currentFamilyName,
+  currentGivenName,
 }: EducationCredentialType) => {
+  const issuedTo = `${currentFamilyName} ${currentGivenName}`;
+  const issuedDate = `${awardingDate} ${awardingLocation}`;
+  const obseg = `${eCTSCreditPoints} ECTS`;
+
   const docDefinition: TDocumentDefinitions = {
     pageSize: 'A4',
-    pageOrientation: 'landscape',
-    background: [
-      {
-        svg: '<svg width="900" height="*"><rect width="100%" height="100%" style="fill:rgb(248,248,248)"/></svg>',
-      },
-    ],
-
+    pageOrientation: 'portrait',
     content: [
+      {
+        table: {
+          widths: ['auto', '*', 'auto'],
+          body: [
+            [
+              {
+                canvas: [
+                  {
+                    type: 'rect',
+                    x: 0,
+                    y: 12,
+                    w: 57,
+                    h: 30,
+                    color: '#F4D280',
+                  },
+                ],
+              },
+              {
+                text: 'Potrdilo',
+                fontSize: 16,
+                bold: true,
+                color: '#1A1502',
+                margin: [10, 19, 0, 0],
+                alignment: 'left',
+              },
+              {
+                image: eductx,
+                width: 54,
+                alignment: 'right',
+              },
+            ],
+          ],
+        },
+        layout: {
+          hLineWidth: () => 0,
+          vLineWidth: () => 0,
+          paddingLeft: () => 0,
+          paddingRight: () => 0,
+          paddingTop: () => 0,
+          paddingBottom: () => 0,
+        },
+        margin: [0, 0, 0, 0],
+      },
+      {
+        text: achievementTitle,
+        fontSize: 13,
+        color: '#5F6060',
+        alignment: 'left',
+        margin: [0, 44, 0, 0],
+      },
+      {
+        text: specifiedTitle,
+        fontSize: 32,
+        bold: true,
+        color: '#1A1502',
+        alignment: 'left',
+        margin: [0, 6, 0, 0],
+      },
+      {
+        text: derivedTitle,
+        fontSize: 14,
+        bold: false,
+        color: '#156166',
+        alignment: 'left',
+        margin: [0, 6, 0, 0],
+      },
+      {
+        table: {
+          widths: ['*'],
+          body: [
+            [
+              {
+                table: {
+                  widths: ['*'],
+                  body: [
+                    [
+                      {
+                        text: 'Potrdilo prejme:',
+                        fontSize: 13,
+                        color: '#1A1502',
+                        alignment: 'left',
+                        margin: [0, 0, 0, 10],
+                      },
+                    ],
+                    [
+                      {
+                        stack: [
+                          {
+                            canvas: [
+                              {
+                                type: 'rect',
+                                x: -80,
+                                y: 0,
+                                w: 545,
+                                h: 32,
+                                color: '#F4D280',
+                              },
+                            ],
+                            margin: [0, 5, 0, 0],
+                          },
+                          {
+                            text: issuedTo,
+                            fontSize: 18,
+                            bold: true,
+                            alignment: 'left',
+                            color: '#1A1502',
+                            margin: [0, -27, 0, 2],
+                          },
+                        ],
+                      },
+                    ],
+                    [
+                      {
+                        columns: [
+                          {
+                            width: '67%',
+                            stack: [
+                              {
+                                text: 'OBSEG',
+                                fontSize: 14,
+                                color: '#BDBDBD',
+                                margin: [0, 0, 0, 0],
+                              },
+                              {
+                                text: obseg,
+                                fontSize: 28,
+                                color: '#333333',
+                                margin: [0, 4, 0, 0],
+                              },
+                              {
+                                text: 'POTRDILO IZDAJA',
+                                fontSize: 14,
+                                color: '#BDBDBD',
+                                margin: [0, 24, 0, 0],
+                              },
+                              {
+                                text: awardingBodyDescription,
+                                fontSize: 15,
+                                color: '#000000',
+                                margin: [0, 5, 20, 0],
+                              },
+                            ],
+                          },
+                          {
+                            width: '33%',
+                            stack: [
+                              {
+                                text: 'OCENA',
+                                fontSize: 14,
+                                color: '#BDBDBD',
+                                margin: [0, 0, 0, 2],
+                              },
+                              {
+                                text: grade,
+                                fontSize: 16,
+                                color: '#333333',
+                                margin: [0, 9, 0, 0],
+                              },
+                              {
+                                text: 'DATUM IN KRAJ',
+                                fontSize: 14,
+                                color: '#BDBDBD',
+                                margin: [0, 31, 0, 0],
+                              },
+                              {
+                                text: issuedDate,
+                                fontSize: 14,
+                                color: '#000000',
+                                margin: [0, 5, 0, 0],
+                              },
+                            ],
+                            alignment: 'left',
+                          },
+                        ],
+                        margin: [0, 18, 0, 0],
+                      },
+                    ],
+                  ],
+                },
+                layout: 'noBorders',
+                margin: [28, 27, 0, 24],
+              },
+            ],
+          ],
+        },
+        layout: 'noBorders',
+        margin: [0, 26, 0, 10],
+        fillColor: '#F8F8F8',
+      },
       {
         columns: [
           {
-            margin: [0, 12],
-            alignment: 'center',
-            stack: [
-              {
-                alignment: 'center',
-                margin: [0, 128, 0, 0],
-                columns: [
-                  {
-                    alignment: 'right',
-                    margin: [0, 9, 0, 0],
-                    svg: '<svg height="1" width="10"><line x1="0" y1="0" x2="10" y2="0" stroke="#1A1502" stroke-width="0.8"/></svg>',
-                  },
-                  {
-                    width: 'auto',
-                    text: 'Achievement',
-                    margin: [6, 0, 6, 0],
-                    fontSize: 16,
-                  },
-                  {
-                    alignment: 'left',
-                    margin: [0, 9, 0, 0],
-                    svg: '<svg height="1" width="10"><line x1="0" y1="0" x2="10" y2="0" stroke="#1A1502" stroke-width="0.8"/></svg>',
-                  },
-                ],
-              },
-              {
-                text: achievementTitle,
-                margin: [30, 16, 30, 0],
-                fontSize: 40,
-                bold: true,
-              },
-              {
-                text: 'ISSUED TO',
-                margin: [30, 12, 30, 0],
-                fontSize: 14,
-                color: '#BDBDBD',
-              },
-              {
-                text: `${currentFamilyName} ${currentGivenName}`,
-                margin: [30, 12, 30, 0],
-                fontSize: 24,
-                bold: true,
-              },
-              {
-                text: 'ISSUED BY',
-                margin: [30, 12, 30, 0],
-                fontSize: 14,
-                color: '#BDBDBD',
-              },
-              {
-                text: awardingBody,
-                margin: [30, 12, 30, 0],
-                fontSize: 24,
-                bold: true,
-              },
-              {
-                margin: [0, 128, 0, 0],
-                columns: [
-                  {
-                    stack: [
-                      {
-                        text: 'CERTIFICATE ISSUED',
-                        fontSize: 14,
-                        bold: true,
-                        color: '#BDBDBD',
-                        alignment: 'center',
-                      },
-                      {
-                        text: new Date().toLocaleString(),
-                        fontSize: 14,
-                        alignment: 'center',
-                        margin: [0, 2, 0, 0],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
+            image: bclabum,
+            width: 113,
+            alignment: 'left',
+            margin: [0, 10, 0, 0],
+          },
+          {
+            width: 16,
+            text: '',
+          },
+          {
+            image: masca,
+            width: 43,
+            alignment: 'right',
+            margin: [0, 10, 0, 10],
           },
         ],
+        margin: [0, 40, 0, 0],
+      },
+      {
+        image: otherGray,
+        width: 495,
+        alignment: 'center',
+        margin: [0, 25, 0, 10],
       },
     ],
-
-    pageMargins: [0, 30, 0, 30],
-
+    pageMargins: [50, 40, 52, 40],
     defaultStyle: {
-      font: 'Helvetica',
+      font: 'Inter',
     },
   };
 
