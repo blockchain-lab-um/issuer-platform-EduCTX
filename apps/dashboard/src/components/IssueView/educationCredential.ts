@@ -48,7 +48,7 @@ export const EducationCredential = {
                   type: 'number',
                 },
               },
-              required: ['title'],
+              required: ['title', 'eCTSCreditPoints'],
             },
             wasAwardedBy: {
               type: 'object',
@@ -69,7 +69,12 @@ export const EducationCredential = {
                   type: 'string',
                 },
               },
-              required: ['awardingBody', 'awardingBodyDescription'],
+              required: [
+                'awardingBody',
+                'awardingBodyDescription',
+                'awardingDate',
+                'awardingLocation',
+              ],
             },
             wasDerivedFrom: {
               type: 'object',
