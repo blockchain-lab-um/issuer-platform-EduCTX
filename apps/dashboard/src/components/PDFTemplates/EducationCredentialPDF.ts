@@ -4,6 +4,10 @@ import { otherGray } from './images/otherGray';
 import { bclabum } from './images/bclabum';
 import { eductx } from './images/eductx';
 import { masca } from './images/masca';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 export const EducationCredentialPDF = ({
   achieved: {
@@ -16,7 +20,8 @@ export const EducationCredentialPDF = ({
   currentGivenName,
 }: EducationCredentialType) => {
   const issuedTo = `${currentFamilyName} ${currentGivenName}`;
-  const issuedDate = `${awardingDate} ${awardingLocation}`;
+  const date = dayjs(awardingDate, 'YYYY-MM-DD').format('DD. MM. YYYY');
+  const issuedDate = `${date}, ${awardingLocation}`;
   const obseg = `${eCTSCreditPoints} ECTS`;
 
   const docDefinition: TDocumentDefinitions = {
@@ -71,7 +76,7 @@ export const EducationCredentialPDF = ({
         fontSize: 13,
         color: '#5F6060',
         alignment: 'left',
-        margin: [0, 44, 0, 0],
+        margin: [0, 36, 0, 0],
       },
       {
         text: specifiedTitle,
