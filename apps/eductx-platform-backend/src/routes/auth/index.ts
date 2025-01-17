@@ -2,6 +2,9 @@ import type { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-js
 import { decodeJwt } from 'jose';
 import { createHash, randomUUID } from 'node:crypto';
 import stringify from 'json-stable-stringify';
+import { PEXv2 } from '@sphereon/pex';
+
+const pex: PEXv2 = new PEXv2();
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -115,18 +118,38 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // Decode the vpToken
         const decodedVpToken = decodeJwt(vpToken) as any;
-        let credentials: any = Array.isArray(
+        const credentials: any = Array.isArray(
           decodedVpToken.vp.verifiableCredential,
         )
           ? decodedVpToken.vp.verifiableCredential
           : [decodedVpToken.vp.verifiableCredential];
 
-        credentials = credentials.map((credential: any) =>
-          decodeJwt(credential),
+        const selectResultMatches = pex.selectFrom(
+          couponData.presentationDefinition,
+          credentials,
         );
 
+        if (selectResultMatches.areRequiredCredentialsPresent === 'error') {
+          return reply.code(200).send({
+            status: 'Failed',
+            error: 'Not all required credentials are present',
+          });
+        }
+
+        // NOTE: We always select only the first match
+        const selectedCredentials = selectResultMatches.matches?.[0];
+
+        if (!selectedCredentials) {
+          return reply.code(200).send({
+            status: 'Failed',
+            error: 'Internal Server Error',
+          });
+        }
+
         // Stable stringify of `credentials` to get consistent hash
-        const stringifiedCredentials = stringify({ credentials });
+        const stringifiedCredentials = stringify({
+          credentials: selectedCredentials,
+        });
 
         if (!stringifiedCredentials) {
           return reply.code(200).send({

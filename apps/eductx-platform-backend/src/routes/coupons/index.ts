@@ -97,6 +97,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         description,
         coupons,
         scope,
+        presentationDefinition: request.body.presentationDefinition,
       });
 
       return reply.code(201).send({
