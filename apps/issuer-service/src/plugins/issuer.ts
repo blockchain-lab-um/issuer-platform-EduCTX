@@ -57,6 +57,7 @@ const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
   ['VerifiableCredential', 'EventTicketCredential'],
   ['VerifiableCredential', 'CouponCredential'],
+  ['VerifiableCredential', 'CRLPlain2023Credential'],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -72,6 +73,8 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
     '["VerifiableCredential", "CouponCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/coupon-credential-schema.json',
   ],
+  // TODO: Add CRLPlain2023 schema
+  ['["VerifiableCredential","CRLPlain2023Credential"]', ''],
 ]);
 
 export default fp(async (fastify, _) => {

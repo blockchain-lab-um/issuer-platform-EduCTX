@@ -14,9 +14,9 @@ patchedDependencies:
   '@cef-ebsi/credential-issuer':
     hash: ap36rwavsvku27t6c455fqbep4
     path: patches/@cef-ebsi__credential-issuer.patch
-  '@cef-ebsi/verifiable-credential@6.1.0':
-    hash: raocmf7ienkptihhpaikww5gjy
-    path: patches/@cef-ebsi__verifiable-credential@6.1.0.patch
+  '@cef-ebsi/verifiable-credential':
+    hash: kggfgu76of3szlbez3cp7nm37a
+    path: patches/@cef-ebsi__verifiable-credential.patch
 
 importers:
 
@@ -136,6 +136,9 @@ importers:
       level:
         specifier: 8.0.1
         version: 8.0.1
+      query-string:
+        specifier: 9.1.1
+        version: 9.1.1
     devDependencies:
       '@types/node':
         specifier: ^20.14.9
@@ -348,7 +351,7 @@ importers:
         version: 2.0.4
       '@cef-ebsi/verifiable-credential':
         specifier: 6.1.0
-        version: 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
+        version: 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
         version: 7.1.0(ajv@8.17.1)
@@ -3634,6 +3637,10 @@ packages:
     resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
     engines: {node: '>=0.10.0'}
 
+  decode-uri-component@0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+    engines: {node: '>=14.16'}
+
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
@@ -4012,6 +4019,10 @@ packages:
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
     engines: {node: '>=8'}
+
+  filter-obj@5.1.0:
+    resolution: {integrity: sha512-qWeTREPoT7I0bifpPUXtxkZJ1XJzxWtfoWWkdVGqa+eCr3SHW/Ocp89o8vLvbUuQnadybJpjOKu4V+RwO6sGng==}
+    engines: {node: '>=14.16'}
 
   find-my-way-ts@0.1.5:
     resolution: {integrity: sha512-4GOTMrpGQVzsCH2ruUn2vmwzV/02zF4q+ybhCIrw/Rkt3L8KWcycdC6aJMctJzwN4fXD4SD5F/4B9Sksh5rE0A==}
@@ -5334,6 +5345,10 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
+  query-string@9.1.1:
+    resolution: {integrity: sha512-MWkCOVIcJP9QSKU52Ngow6bsAWAPlPK2MludXvcrS2bGZSl+T1qX9MZvRIkqUIkGLJquMJHWfsT6eRqUpp4aWg==}
+    engines: {node: '>=18'}
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -5678,6 +5693,10 @@ packages:
 
   spawn-command@0.0.2:
     resolution: {integrity: sha512-zC8zGoGkmc8J9ndvml8Xksr1Amk9qBujgbF0JAIWO7kXr43w0h/0GJNM/Vustixu+YE8N/MTrQ7N31FvHUACxQ==}
+
+  split-on-first@3.0.0:
+    resolution: {integrity: sha512-qxQJTx2ryR0Dw0ITYyekNQWpz6f8dGd7vffGNflQQ3Iqj9NJ6qiZ7ELpZsJ/QBhIVAiDfXdag3+Gp8RvWa62AA==}
+    engines: {node: '>=12'}
 
   split2@3.2.2:
     resolution: {integrity: sha512-9NThjpgZnifTkJpzTZ7Eue85S49QwpNhZTq6GRJwObb6jnLFNGB7Qm73V5HewTROPyxD0C29xqmaI68bQtV+hg==}
@@ -6444,7 +6463,7 @@ snapshots:
 
   '@cef-ebsi/credential-issuer@1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)':
     dependencies:
-      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
       axios: 1.7.7
       did-jwt: 8.0.4
       did-resolver: 4.1.0
@@ -6486,7 +6505,7 @@ snapshots:
     dependencies:
       '@cef-ebsi/vcdm1.1-attestation-schema': 1.3.0
 
-  '@cef-ebsi/verifiable-credential@6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)':
+  '@cef-ebsi/verifiable-credential@6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/ebsi-uri': 0.1.0
@@ -6518,7 +6537,7 @@ snapshots:
       '@cef-ebsi/ebsi-uri': 0.1.0
       '@cef-ebsi/key-did-resolver': 2.0.4
       '@cef-ebsi/vcdm1.1-presentation-schema': 1.0.3
-      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=raocmf7ienkptihhpaikww5gjy)
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
       '@segment/ajv-human-errors': 2.14.0(ajv@8.17.1)
       did-jwt: 8.0.4
       did-resolver: 4.1.0
@@ -10572,6 +10591,8 @@ snapshots:
 
   decamelize@1.2.0: {}
 
+  decode-uri-component@0.4.1: {}
+
   deep-is@0.1.4: {}
 
   deepmerge@4.3.1: {}
@@ -11192,6 +11213,8 @@ snapshots:
   fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
+
+  filter-obj@5.1.0: {}
 
   find-my-way-ts@0.1.5: {}
 
@@ -12491,6 +12514,12 @@ snapshots:
       pngjs: 5.0.0
       yargs: 15.4.1
 
+  query-string@9.1.1:
+    dependencies:
+      decode-uri-component: 0.4.1
+      filter-obj: 5.1.0
+      split-on-first: 3.0.0
+
   queue-microtask@1.2.3: {}
 
   quick-format-unescaped@4.0.4: {}
@@ -12891,6 +12920,8 @@ snapshots:
       whatwg-url: 7.1.0
 
   spawn-command@0.0.2: {}
+
+  split-on-first@3.0.0: {}
 
   split2@3.2.2:
     dependencies:

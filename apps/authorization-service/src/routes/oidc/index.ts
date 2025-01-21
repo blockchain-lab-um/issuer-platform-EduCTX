@@ -5,6 +5,7 @@ import * as utils from '@noble/curves/abstract/utils';
 import { importJWK, jwtVerify } from 'jose';
 import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
+import queryString from 'query-string';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -56,6 +57,13 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       try {
         const location = await fastify.auth.directPost(body);
+        const parsed = queryString.parse(location.split('openid://')[1]);
+
+        if (parsed.error) {
+          const errorDescription =
+            (parsed.error_description as string) ?? 'Verification failed';
+          throw new Error(errorDescription);
+        }
 
         // Note: Check if auth status exists
         const authRequest = await fastify.cache.get(body.state);
@@ -73,7 +81,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         if (authRequest && body.state) {
           fastify.cache.set(body.state, {
             status: 'Failed',
-            error: JSON.stringify(error),
+            error: (error as Error).message,
           });
         }
         return reply.code(400).send();

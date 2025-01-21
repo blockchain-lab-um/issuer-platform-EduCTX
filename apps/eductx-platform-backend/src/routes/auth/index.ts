@@ -118,6 +118,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // Decode the vpToken
         const decodedVpToken = decodeJwt(vpToken) as any;
+
         const credentials: any = Array.isArray(
           decodedVpToken.vp.verifiableCredential,
         )
@@ -137,7 +138,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         }
 
         // NOTE: We always select only the first match
-        const selectedCredentials = selectResultMatches.matches?.[0];
+        const selectedCredentials =
+          selectResultMatches.verifiableCredential?.[0];
 
         if (!selectedCredentials) {
           return reply.code(200).send({

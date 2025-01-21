@@ -133,10 +133,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
       }
 
+      const vcId = `urn:uuid:${randomUUID()}`;
       const vcPayload = {
         // TODO: Do we need to add contexts based on requested credential types ?
         '@context': ['https://www.w3.org/2018/credentials/v1'],
-        id: `urn:uuid:${randomUUID()}`,
+        id: vcId,
         type: credentialRequest.types,
         issuer: issuer.did,
         issuanceDate: issuedAt,
@@ -150,10 +151,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           id: schema,
           type: 'FullJsonSchemaValidator2021',
         },
-        // termsOfUse: {
-        //   id: 'https://api-pilot.ebsi.eu/trusted-issuers-registry/v5/issuers/did:ebsi:zxaYaUtb8pvoAtYNWbKcveg/attributes/b40fd9b404418a44d2d9911377a03130dde450eb546c755b5b80acd782902e6d',
-        //   type: 'IssuanceCertificate',
-        // },
+        credentialStatus: {
+          id: vcId,
+          type: 'CRLPlain2023Entry',
+          purpose: 'revocation',
+          credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
+        },
       } satisfies EbsiVerifiableAttestation;
 
       const options = {
@@ -170,6 +173,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         issuer,
         options,
       );
+
+      // Store the VC in the cache
+      fastify.credentialCache.set(vcId, vcJwt);
 
       // TODO: Should we maybe issue in the deffered endpoint ?
       const deferredCredentials = [
@@ -593,6 +599,37 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       return reply.code(200).send({
         keys: [publicKeyJwk],
       });
+    },
+  );
+
+  fastify.get(
+    '/credential_status/:id',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+            },
+          },
+          required: ['id'],
+        },
+      },
+      config: {
+        description: 'Endpoint for checking the status of a issued credential',
+      },
+    },
+    async (request, reply) => {
+      const CRLPlain2023Entry = await fastify.revocationCache.get(
+        request.params.id,
+      );
+
+      if (!CRLPlain2023Entry) {
+        return reply.code(404).send();
+      }
+
+      return reply.code(200).send(CRLPlain2023Entry);
     },
   );
 };

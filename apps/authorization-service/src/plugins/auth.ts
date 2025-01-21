@@ -60,6 +60,7 @@ export default fp(async (fastify, _) => {
     hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
     skipSignatureValidation: true,
     validateAccreditationWithoutTermsOfUse: false,
+    skipStatusValidation: false,
   };
 
   const didRegistryApiUrl = `https://api-${fastify.config.NETWORK}.ebsi.eu/did-registry/v5`;
