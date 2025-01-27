@@ -8,7 +8,10 @@ import {
 import { util as didKeyUtil } from '@cef-ebsi/key-did-resolver';
 import { util as didEbsiUtil } from '@cef-ebsi/ebsi-did-resolver';
 import type { PresentationDefinitionV2 } from '@sphereon/pex-models';
-import { VERIFIER_TEST_PRESENTATION_DEFINITION } from '../utils/presentationDefinitions.js';
+import {
+  COUPON_DEMO_PRESENTATION_DEFINITION,
+  VERIFIER_TEST_PRESENTATION_DEFINITION,
+} from '../utils/presentationDefinitions.js';
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -44,6 +47,7 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
   ['VerifiableCredential', 'EventTicketCredential'],
+  ['VerifiableCredential', 'CouponCredential'],
 ];
 
 export default fp(async (fastify, _) => {
@@ -56,6 +60,7 @@ export default fp(async (fastify, _) => {
     hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
     skipSignatureValidation: true,
     validateAccreditationWithoutTermsOfUse: false,
+    skipStatusValidation: false,
   };
 
   const didRegistryApiUrl = `https://api-${fastify.config.NETWORK}.ebsi.eu/did-registry/v5`;
@@ -122,13 +127,25 @@ export default fp(async (fastify, _) => {
     issuerMockPublicKeyJwk: issuerPublicJwk,
     presentationDefinitionSelector: (
       scope: string,
-      requestedTypes: string[],
+      _requestedTypes: string[],
     ) => {
       {
         let presentationDefinition: PresentationDefinitionV2 | null = null;
+
         if (scope === 'openid ver_test:vp_token') {
           presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+        } else if (scope.startsWith('openid custom:')) {
+          const cacheKey = scope.replace('openid custom:', '');
+          const cachedPresentationDefinition =
+            fastify.presentationDefinitionCache.get(
+              cacheKey,
+            ) as PresentationDefinitionV2;
+
+          if (cachedPresentationDefinition) {
+            presentationDefinition = cachedPresentationDefinition;
+          }
         }
+
         return presentationDefinition;
       }
     },

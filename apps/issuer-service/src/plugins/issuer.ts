@@ -56,6 +56,8 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'EducationCredential'],
   ['VerifiableCredential', 'EventTicketCredential'],
+  ['VerifiableCredential', 'CouponCredential'],
+  ['VerifiableCredential', 'CRLPlain2023Credential'],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -67,6 +69,12 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
     '["VerifiableCredential","EventTicketCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/event-ticket-credential-schema.json',
   ],
+  [
+    '["VerifiableCredential", "CouponCredential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/coupon-credential-schema.json',
+  ],
+  // TODO: Add CRLPlain2023 schema
+  ['["VerifiableCredential","CRLPlain2023Credential"]', ''],
 ]);
 
 export default fp(async (fastify, _) => {
@@ -103,7 +111,6 @@ export default fp(async (fastify, _) => {
         })
       : didEbsiUtil.createDid(ebsiSubjectId!);
 
-  // TODO: Verify this works and is correct for `did:ebsi`
   const kid = `${did}#${
     fastify.config.DID_METHOD === 'key' ? did.split(':')[2] : publicKeyJwk.kid
   }`;

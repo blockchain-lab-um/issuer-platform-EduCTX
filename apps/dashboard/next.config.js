@@ -9,6 +9,9 @@ const nextConfig = {
       'NEXT_PUBLIC_ISSUER_ENDPOINT_PLACEHOLDER',
     NEXT_PUBLIC_APP_URL:
       process.env.NEXT_PUBLIC_APP_URL || 'NEXT_PUBLIC_APP_URL_PLACEHOLDER',
+    NEXT_PUBLIC_BACKEND_API_URL:
+      process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+      'NEXT_PUBLIC_BACKEND_API_URL_PLACEHOLDER',
   },
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
   output: 'standalone',

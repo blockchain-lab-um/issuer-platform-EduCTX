@@ -31,11 +31,139 @@ index 92c3c5e9da30648d1507d22332b7954fda1cabdd..8340137ca0141b4f9067a666dd7659d0
  }
  //# sourceMappingURL=AuthServer.js.map
 \ No newline at end of file
+diff --git a/dist/dto/get-authorize-generic.dto.js b/dist/dto/get-authorize-generic.dto.js
+index 9630ce78a15435a3eeec20e14da7c021629e5910..447011010795cef8c4e3d1bee138db1c10b166b0 100644
+--- a/dist/dto/get-authorize-generic.dto.js
++++ b/dist/dto/get-authorize-generic.dto.js
+@@ -17,7 +17,7 @@ export class GetAuthorizeGenericDto extends GetAuthorizeDto {
+     }
+ }
+ __decorate([
+-    IsIn(["openid", "openid ver_test:id_token", "openid ver_test:vp_token"]),
++   IsString(), // Note: This was chaged, as we will add more scopes than were supported in the library.
+     __metadata("design:type", String)
+ ], GetAuthorizeGenericDto.prototype, "scope", void 0);
+ __decorate([
+@@ -25,7 +25,8 @@ __decorate([
+     __metadata("design:type", String)
+ ], GetAuthorizeGenericDto.prototype, "response_type", void 0);
+ __decorate([
+-    IsDidOrUrl(),
++    IsOptional(), // Note: We make this optional
++    IsString(), // Note: Set to String to make it easier to change the code
+     __metadata("design:type", String)
+ ], GetAuthorizeGenericDto.prototype, "client_id", void 0);
+ __decorate([
 diff --git a/dist/utils.js b/dist/utils.js
-index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5096543d2 100644
+index a705aaff3a43eec239630358032631961a60ff38..31afe822ea938d0d41c1fd9ba5794e5c141df3a7 100644
 --- a/dist/utils.js
 +++ b/dist/utils.js
-@@ -1170,7 +1170,7 @@ async function authorizationCodeToken(db, serverDid, serverUrl, serverKid, priva
+@@ -362,6 +362,15 @@ export async function authorizeServiceWallet(db, addKeyToCacheManager, serverDid
+             ...vpTokenRequest,
+             request: requestJwt,
+         }).toString()}`;
++        if (query.request_object === "reference" || location.length > 500) {
++          const requestNonce = randomUUID();
++          const dbKey2 = { did: serverDid, requestNonce };
++          await db.put(dbKey2, { requestJwt });
++          addKeyToCacheManager(dbKey2);
++          return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
++              request_uri: `${serverUrl}/request_uri/${requestNonce}`,
++          }).toString()}`;
++        }
+         return location;
+     }
+     const idTokenRequest = {
+@@ -395,7 +404,6 @@ export async function authorizeServiceWallet(db, addKeyToCacheManager, serverDid
+         await db.put(dbKey2, { requestJwt });
+         addKeyToCacheManager(dbKey2);
+         return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
+-            ...idTokenRequest,
+             request_uri: `${serverUrl}/request_uri/${requestNonce}`,
+         }).toString()}`;
+     }
+@@ -524,20 +532,21 @@ export async function authorizeHolderWallet(db, addKeyToCacheManager, serverDid,
+             }
+         }
+     }
+-    if (query.client_id.startsWith("did:key:") &&
++    if (query.client_id &&
++        query.client_id.startsWith("did:key:") &&
+         (!query.code_challenge || !query.code_challenge_method) &&
+         query.scope === "openid") {
+         return invalidRequest("code_challenge_method and code_challenge are required for this request");
+     }
+-    const state = randomUUID();
++    const state = query.state ?? randomUUID(); // Note: We want to define our own state
+     const nonce = randomUUID();
+     const storedValue = {
+         requestPayload: {
+             redirect_uri: query.redirect_uri,
+             state: query.state,
+             authorization_details: authorizationDetails,
+-            client_id: query.client_id,
+             scope: query.scope,
++            ...(query.client_id ? {client_id: query.client_id}: {})
+         },
+         nonce,
+         codeChallenge: query.code_challenge,
+@@ -566,9 +575,9 @@ export async function authorizeHolderWallet(db, addKeyToCacheManager, serverDid,
+             ...vpTokenRequest,
+             presentation_definition: presentationDefinition,
+             iss: serverUrl,
+-            aud: query.client_id,
+             iat: now,
+             exp: now + 3600,
++            ...(query.client_id ? {aud: query.client_id}: {})
+         }, {
+             issuer: serverUrl,
+             signer: getSigner(privateKey, "ES256"),
+@@ -581,6 +590,15 @@ export async function authorizeHolderWallet(db, addKeyToCacheManager, serverDid,
+             ...vpTokenRequest,
+             request: requestJwt,
+         }).toString()}`;
++        if (query.request_object === "reference" || location.length > 500) {
++          const requestNonce = randomUUID();
++          const dbKey2 = { did: serverDid, requestNonce };
++          await db.put(dbKey2, { requestJwt });
++          addKeyToCacheManager(dbKey2);
++          return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
++              request_uri: `${serverUrl}/request_uri/${requestNonce}`,
++          }).toString()}`;
++        }
+         return location;
+     }
+     const idTokenRequest = {
+@@ -592,7 +610,7 @@ export async function authorizeHolderWallet(db, addKeyToCacheManager, serverDid,
+         scope: "openid",
+         nonce,
+     };
+-    const requestJwt = await createJWT({ ...idTokenRequest, iss: serverUrl, aud: query.client_id }, {
++    const requestJwt = await createJWT({ ...idTokenRequest, iss: serverUrl, ...(query.client_id ? {aud: query.client_id}: {})}, {
+         issuer: serverUrl,
+         signer: getSigner(privateKey, "ES256"),
+     }, {
+@@ -610,7 +628,6 @@ export async function authorizeHolderWallet(db, addKeyToCacheManager, serverDid,
+         await db.put(dbKey2, { requestJwt });
+         addKeyToCacheManager(dbKey2);
+         return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
+-            ...idTokenRequest,
+             request_uri: `${serverUrl}/request_uri/${requestNonce}`,
+         }).toString()}`;
+     }
+@@ -647,7 +664,10 @@ export async function authorize(db, addKeyToCacheManager, serverDid, serverUrl,
+     }
+     if ("client_id" in query &&
+         typeof query.client_id === "string" &&
+-        query.client_id.startsWith("did:key:")) {
++       (query.client_id.startsWith("did:key:") || query.client_id === "eductx-platform-backend")) {
++        if (query.client_id === "eductx-platform-backend"){
++          query.clientId = undefined;
++        }
+         return authorizeHolderWallet(db, addKeyToCacheManager, serverDid, serverUrl, serverKid, privateKey, query, issuerMockPublicKeyJwk, presentationDefinitionSelector, credentialTypesSupported, holderWalletCredentialTypes, expectedIssuerState, queryState);
+     }
+     return authorizeServiceWallet(db, addKeyToCacheManager, serverDid, serverUrl, serverKid, privateKey, query, presentationDefinitionSelector, validScopes, credentialTypesSupported, queryState);
+@@ -1170,7 +1190,7 @@ async function authorizationCodeToken(db, serverDid, serverUrl, serverKid, priva
          c_nonce_expires_in: C_NONCE_EXP,
      };
  }
@@ -44,7 +172,7 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
      const parsedQuery = parseDto(unsafeQuery, PostTokenPreAuthorizedCodeDto);
      if (!parsedQuery.success) {
          throw new OAuth2TokenError("invalid_request", {
-@@ -1180,11 +1180,11 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1180,11 +1200,11 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
      const query = parsedQuery.data;
      const { "pre-authorized_code": preAuthorizedCode, user_pin: userPin } = query;
      const preAuthorizedCodePayload = decodeJwt(preAuthorizedCode);
@@ -61,16 +189,15 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
      if (typeof preAuthorizedCodePayload.iss !== "string") {
          throw new OAuth2TokenError("invalid_request", {
              errorDescription: "invalid pre-authorised code: iss is missing",
-@@ -1236,12 +1236,13 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1236,12 +1256,13 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
              errorDescription: `error while verifying the signature of pre-authorized_code: ${e instanceof Error ? e.message : "invalid signature"}`,
          });
      }
 -    const clientId = preAuthorizedCodePayload["client_id"];
 -    if (userPin !== getUserPin(clientId)) {
--        throw new OAuth2TokenError("invalid_request", {
 +
 +    if(!options.pin || options.pin !== userPin) {
-+              throw new OAuth2TokenError("invalid_request", {
+         throw new OAuth2TokenError("invalid_request", {
              errorDescription: "Invalid PIN",
          });
      }
@@ -78,7 +205,7 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
      const authorizationDetails = parsedAuthorizationDetails.data;
      const cNonce = randomUUID();
      const now = Math.floor(Date.now() / 1000);
-@@ -1251,10 +1252,10 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1251,10 +1272,10 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
              authorization_details: authorizationDetails,
              c_nonce: cNonce,
              c_nonce_expires_in: C_NONCE_EXP,
@@ -91,7 +218,7 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
          aud: authorizationDetails[0].locations ?? serverUrl,
          iat: now,
          exp: now + ACCESS_TOKEN_EXP,
-@@ -1269,8 +1270,8 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1269,8 +1290,8 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
      const idToken = await createJWT({
          nonce: randomUUID(),
          iss: serverUrl,
@@ -102,7 +229,7 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
          iat: now,
          exp: now + ID_TOKEN_EXP,
      }, {
-@@ -1290,7 +1291,7 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
+@@ -1290,7 +1311,7 @@ async function preAuthorizedCodeToken(serverUrl, serverKid, privateKey, unsafeQu
          c_nonce_expires_in: C_NONCE_EXP,
      };
  }
@@ -111,7 +238,7 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
      const parsedQuery = parseDto(unsafeQuery, PostTokenDto);
      if (!parsedQuery.success) {
          throw new OAuth2TokenError("invalid_request", {
-@@ -1301,6 +1302,6 @@ export async function token(db, serverDid, serverUrl, serverKid, privateKey, uns
+@@ -1301,6 +1322,6 @@ export async function token(db, serverDid, serverUrl, serverKid, privateKey, uns
      if (query.grant_type === "authorization_code") {
          return authorizationCodeToken(db, serverDid, serverUrl, serverKid, privateKey, query);
      }
@@ -119,6 +246,21 @@ index a705aaff3a43eec239630358032631961a60ff38..0d1abcf1ab227890f531cb1b500788f5
 +    return preAuthorizedCodeToken(serverUrl, serverKid, privateKey, query, credentialTypesSupported, timeout, options);
  }
  //# sourceMappingURL=utils.js.map
+diff --git a/dist/validators/create-authentication-request.validator.js b/dist/validators/create-authentication-request.validator.js
+index 0e12cdc354af4bcdd5afeed947d6939ecbe0cbcd..9ca52ffa47ee27091a12988db47660a959f94e94 100644
+--- a/dist/validators/create-authentication-request.validator.js
++++ b/dist/validators/create-authentication-request.validator.js
+@@ -4,9 +4,7 @@ import { serviceWalletClientMetadataSchema } from "./service-wallet-client-metad
+ export const createAuthenticationRequestSchema = (validScopes, credentialTypesSupported) => z.object({
+     iss: z.string(),
+     aud: z.string(),
+-    scope: z.string().refine((scope) => validScopes.includes(scope), {
+-        message: `Invalid scope. The valid scopes are: ${validScopes.join(", ")}`,
+-    }),
++    scope: z.string(),
+     response_type: z.literal("code"),
+     client_id: z.string().url(),
+     redirect_uri: z.string(),
 diff --git a/src/AuthServer.ts b/src/AuthServer.ts
 index 905ca29de966698d75bdf83cc1f29c522e94560c..a7898d472c55a79a7b728170e3b31bbdbbb802eb 100644
 --- a/src/AuthServer.ts

@@ -11,3 +11,6 @@ docker build  -t blockchain-lab-um/eductx-platform-authorization-service apps/au
 
 # Build dashboard
 docker build -t blockchain-lab-um/eductx-platform-dashboard apps/dashboard
+
+# Build platform backend
+docker build -t blockchain-lab-um/eductx-platform-backend apps/eductx-platform-backend

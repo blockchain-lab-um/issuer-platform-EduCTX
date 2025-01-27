@@ -1,3 +1,5 @@
+import type { Schema, SchemaNode, SchemaObject } from './schemaTypes';
+
 export const EducationCredential = {
   $id: '#educationCredential',
   type: 'object',
@@ -109,28 +111,6 @@ export const EducationCredentialBatch = {
   type: 'array',
   items: { $ref: '#educationCredential' },
 };
-
-interface SchemaNode {
-  title: string;
-  type: 'string' | 'number';
-  isCredentialSubject?: boolean;
-  required?: boolean;
-  propertyName: string;
-}
-
-interface SchemaObject {
-  title: string;
-  type: 'object';
-  fields: SchemaNode[] | SchemaObject[];
-  required?: boolean;
-  propertyName: string;
-}
-
-interface Schema {
-  title: string;
-  type?: string;
-  fields: SchemaNode[] | SchemaObject[];
-}
 
 export const EducationalCredentialSchema = {
   title: 'Education Credential',

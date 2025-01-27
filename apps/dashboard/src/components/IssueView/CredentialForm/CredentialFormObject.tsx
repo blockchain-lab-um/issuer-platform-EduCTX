@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { MinusCircleIcon, PlusCircleIcon } from '@heroicons/react/24/outline';
-import type { SchemaObject } from '.';
 import { CredentialFormNode } from './CredentialFormNode';
 import clsx from 'clsx';
+import type { SchemaObject } from '../schemaTypes';
 
 interface CredentialFormObjectProps {
   path: string;

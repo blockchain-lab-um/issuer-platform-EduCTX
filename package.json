@@ -10,7 +10,9 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "workspaces": ["apps/**/*"],
+  "workspaces": [
+    "apps/**/*"
+  ],
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm biome check .",
@@ -39,7 +41,7 @@
       "@blockchain-lab-um/did-provider-ebsi": "patches/@blockchain-lab-um__did-provider-ebsi.patch",
       "@cef-ebsi/auth-server": "patches/@cef-ebsi__auth-server.patch",
       "@cef-ebsi/credential-issuer": "patches/@cef-ebsi__credential-issuer.patch",
-      "@cef-ebsi/verifiable-credential@6.1.0": "patches/@cef-ebsi__verifiable-credential@6.1.0.patch"
+      "@cef-ebsi/verifiable-credential": "patches/@cef-ebsi__verifiable-credential.patch"
     },
     "allowNonAppliedPatches": true
   }

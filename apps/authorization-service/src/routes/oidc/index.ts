@@ -4,6 +4,8 @@ import { createJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import { importJWK, jwtVerify } from 'jose';
 import { getPublicJwk } from '@blockchain-lab-um/eductx-platform-shared';
+import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
+import queryString from 'query-string';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -53,9 +55,37 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     async (request, reply) => {
       const body = request.body;
 
-      const location = await fastify.auth.directPost(body);
+      try {
+        const location = await fastify.auth.directPost(body);
+        const parsed = queryString.parse(location.split('openid://')[1]);
 
-      return reply.redirect(location);
+        if (parsed.error) {
+          const errorDescription =
+            (parsed.error_description as string) ?? 'Verification failed';
+          throw new Error(errorDescription);
+        }
+
+        // Note: Check if auth status exists
+        const authRequest = await fastify.cache.get(body.state);
+
+        if (authRequest && body.state) {
+          fastify.cache.set(body.state, {
+            status: 'Success',
+            data: body.vp_token,
+          });
+        }
+        return reply.redirect(location);
+      } catch (error) {
+        // Note: Check if auth status exists
+        const authRequest = await fastify.cache.get(body.state);
+        if (authRequest && body.state) {
+          fastify.cache.set(body.state, {
+            status: 'Failed',
+            error: (error as Error).message,
+          });
+        }
+        return reply.code(400).send();
+      }
     },
   );
 
@@ -82,11 +112,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           properties: {
             scope: {
               type: 'string',
-              enum: [
-                'openid',
-                'openid ver_test:id_token',
-                'openid ver_test:vp_token',
-              ],
             },
             client_id: {
               type: 'string',
@@ -126,8 +151,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             request_uri: {
               type: 'string',
             },
+            request_object: {
+              type: 'string',
+              enum: ['reference', 'value'],
+            },
           },
-          required: ['scope', 'client_id', 'redirect_uri', 'response_type'],
+          required: ['scope', 'redirect_uri', 'response_type'], // Note: We removed required `client_id`
         },
       },
       config: {
@@ -137,6 +166,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async (request, reply) => {
       const redirectLocation = await fastify.auth.authorize(request.query);
+
+      // Note: We only track the auth status if we pass in the state
+      if (request.query.state) {
+        fastify.cache.set(request.query.state, {
+          status: 'Pending',
+        });
+      }
+
       return reply.redirect(redirectLocation);
     },
   );
@@ -250,15 +287,19 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           },
         );
 
-        await fetch(
-          `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
-          {
-            method: 'POST',
-            headers: {
-              authorization: `Bearer ${jwt}`,
+        try {
+          await fetch(
+            `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
+            {
+              method: 'POST',
+              headers: {
+                authorization: `Bearer ${jwt}`,
+              },
             },
-          },
-        );
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       return reply.code(200).send(response);
@@ -305,8 +346,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           | { preAuthorizedCode?: string; pin?: string }
           | undefined;
 
-        if (!data?.preAuthorizedCode || !data?.pin)
+        if (!data?.preAuthorizedCode || !data?.pin) {
           return reply.code(400).send();
+        }
 
         await fastify.cache.set(data.preAuthorizedCode, data.pin);
       } catch (error) {
@@ -316,6 +358,39 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       return reply.code(200).send();
+    },
+  );
+
+  // Custom endpoints
+  fastify.get(
+    '/status/:authRequestId',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            authRequestId: {
+              type: 'string',
+            },
+          },
+          required: ['authRequestId'],
+        },
+      },
+      config: {
+        description: '',
+      },
+      preValidation: apiKeyAuth,
+    },
+    async (request, reply) => {
+      const authRequest = await fastify.cache.get(request.params.authRequestId);
+
+      console.log(authRequest);
+
+      if (!authRequest) {
+        return reply.code(404).send();
+      }
+
+      return reply.code(200).send(authRequest);
     },
   );
 };

@@ -4,20 +4,16 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@nextui-org/react';
 import { signIn, useSession } from 'next-auth/react';
 
-import { MascaDescription } from './MascaDescription';
-import ConnectButton from './MetaMaskConnectButton';
-import Link from 'next/link';
-
 export const LoginView = () => {
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [userType, setUserType] = useState<number>(0);
 
-  // useEffect(() => {
-  //   if (session) {
-  //     router.push('/issue');
-  //   }
-  // }, [session]);
+  useEffect(() => {
+    if (session) {
+      router.push('/issue');
+    }
+  }, [session]);
 
   return (
     <div className="flex min-h-screen w-screen items-center justify-center bg-gray-50">
@@ -59,19 +55,6 @@ export const LoginView = () => {
                     Verifiable Credentials
                   </div>
                   <div className="mt-4 flex gap-x-4">
-                    {/* <Button
-                      className="font-medium text-white"
-                      color="success"
-                      onClick={() => setUserType(2)}
-                    >
-                      User Login
-                    </Button> */}
-                    {/* <Link
-                      className="flex text-green-500 justify-center items-center hover:underline"
-                      href="/issue"
-                    >
-                      Issue Credentials
-                    </Link> */}
                     <Button
                       className="font-medium"
                       color="success"
@@ -79,6 +62,14 @@ export const LoginView = () => {
                       onClick={() => setUserType(1)}
                     >
                       Administrator Login
+                    </Button>
+                    <Button
+                      className="font-medium"
+                      color="success"
+                      variant="flat"
+                      onClick={() => router.push('/claim')}
+                    >
+                      Claim
                     </Button>
                   </div>
                 </div>
@@ -118,24 +109,6 @@ export const LoginView = () => {
                   >
                     Login
                   </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {userType === 2 && (
-            <div className="h-full w-full p-4">
-              <div className="">
-                <Button size="sm" variant="flat" onClick={() => setUserType(0)}>
-                  Back
-                </Button>
-              </div>
-              <div className="flex items-center justify-evenly max-md:flex-col-reverse">
-                <div className="">
-                  <ConnectButton />
-                </div>
-                <div className="">
-                  <MascaDescription />
                 </div>
               </div>
             </div>

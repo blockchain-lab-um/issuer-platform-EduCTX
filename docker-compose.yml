@@ -1,6 +1,7 @@
 volumes:
   eductx-issuer-service:
   eductx-authorization-service:
+  eductx-platform-backend:
 
 networks:
   default:
@@ -24,6 +25,7 @@ services:
       EMAIL_USERNAME: blockchain-lab@um.si
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
       UPLOADTHING_TOKEN: ${UPLOADTHING_TOKEN}
+      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
     restart: unless-stopped
 
   issuer-service:
@@ -65,6 +67,21 @@ services:
       ISSUER_SERVER_PUBLIC_KEY: ${ISSUER_SERVER_PUBLIC_KEY}
       ISSUER_SERVER_KEY_ALG: ${ISSUER_SERVER_KEY_ALG}
       CONFORMANCE_TEST_ENABLED: ${CONFORMANCE_TEST_ENABLED}
+      API_KEY: ${API_KEY}
     restart: unless-stopped
     volumes:
       - eductx-authorization-service:/app/db
+
+  eductx-platform-backend:
+    image: blockchain-lab-um/eductx-platform-backend:latest
+    container_name: eductx-platform-backend
+    ports:
+      - '34570:3001'
+    environment:
+      VERSION: ${VERSION}
+      VERIFIER_SERVER_URL: 'http://authorization-service:3001'
+      VERIFIER_API_KEY: ${VERIFIER_API_KEY}
+      API_KEY: ${API_KEY}
+    restart: unless-stopped
+    volumes:
+      - eductx-platform-backend:/app/db

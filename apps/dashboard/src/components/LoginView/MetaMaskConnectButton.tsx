@@ -101,7 +101,6 @@ const ConnectButton = () => {
       supportedMethods: ['did:key:jwk_jcs-pub'],
     });
     if (isError(enableResult)) {
-      // FIXME: This error is shown as [Object object]
       throw new Error(enableResult.error);
     }
     const mascaApi = enableResult.data.getMascaApi();

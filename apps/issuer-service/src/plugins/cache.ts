@@ -7,7 +7,9 @@ import path from 'node:path';
 
 declare module 'fastify' {
   export interface FastifyInstance {
-    cache: any; // TODO: Type for this ?
+    cache: any;
+    credentialCache: FlatCache;
+    revocationCache: FlatCache;
   }
 }
 
@@ -30,4 +32,26 @@ export default fp(async (fastify, _) => {
   const cache = createCache({ stores: [keyv, flatCacheKeyv] });
 
   fastify.decorate('cache', cache);
+
+  const credentialCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/credential-cache'),
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  credentialCache.load();
+
+  fastify.decorate('credentialCache', credentialCache);
+
+  const revocationCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/revocation-cache'),
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  revocationCache.load();
+
+  fastify.decorate('revocationCache', revocationCache);
 });

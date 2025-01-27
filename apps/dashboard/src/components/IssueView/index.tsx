@@ -16,31 +16,10 @@ import { Logo } from '@/components/Logo';
 import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
 import { EducationalCredentialSchema } from './educationCredential';
-import Link from 'next/link';
+import { CouponCredentialSchema } from './couponCredential';
+import type { Schema } from './schemaTypes';
 
-interface SchemaNode {
-  title: string;
-  type: 'string' | 'number';
-  isCredentialSubject?: boolean;
-  required?: boolean;
-  propertyName: string;
-}
-
-interface SchemaObject {
-  title: string;
-  type: 'object';
-  fields: SchemaNode[] | SchemaObject[];
-  required?: boolean;
-  propertyName: string;
-}
-
-interface Schema {
-  title: string;
-  type?: string;
-  fields: SchemaNode[] | SchemaObject[];
-}
-
-const SCHEMAS: Schema[] = [EducationalCredentialSchema];
+const SCHEMAS: Schema[] = [EducationalCredentialSchema, CouponCredentialSchema];
 
 export const IssueView = () => {
   const router = useRouter();
@@ -142,7 +121,13 @@ export const IssueView = () => {
       body: JSON.stringify({
         email: email,
         data: {
-          credential_type: ['VerifiableCredential', 'EducationCredential'],
+          credential_type: [
+            'VerifiableCredential',
+            // TODO: Improve handling of this so we can support new types easily (extract to a function)
+            selectedSchema!.type === '#couponCredential'
+              ? 'CouponCredential'
+              : 'EducationCredential',
+          ],
           flow: 'pre-authorized_code',
           format: 'jwt_vc_json',
           credential_subject: inputs.credentialSubject,
@@ -257,13 +242,7 @@ export const IssueView = () => {
                   </button>
                 </nav>
                 <div className="flex justify-center p-4">
-                  <Link
-                    className="flex justify-center items-center hover:underline"
-                    href="/"
-                  >
-                    Logout
-                  </Link>
-                  {/* <Button
+                  <Button
                     size="md"
                     color="danger"
                     onClick={() => {
@@ -275,7 +254,7 @@ export const IssueView = () => {
                     }}
                   >
                     Logout
-                  </Button> */}
+                  </Button>
                 </div>
               </div>
             </div>
@@ -319,13 +298,7 @@ export const IssueView = () => {
             </nav>
           </div>
           <div className="flex justify-center p-4">
-            <Link
-              className="flex justify-center items-center hover:underline"
-              href="/"
-            >
-              Logout
-            </Link>
-            {/* <Button
+            <Button
               size="md"
               color="danger"
               onClick={() => {
@@ -337,7 +310,7 @@ export const IssueView = () => {
               }}
             >
               Logout
-            </Button> */}
+            </Button>
           </div>
         </div>
       </div>
