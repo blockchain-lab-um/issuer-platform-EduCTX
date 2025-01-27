@@ -13,9 +13,6 @@ export const EducationCredential = {
         currentGivenName: {
           type: 'string',
         },
-        did: {
-          type: 'string',
-        },
         dateOfBirth: {
           type: 'string',
         },
@@ -50,7 +47,7 @@ export const EducationCredential = {
                   type: 'number',
                 },
               },
-              required: ['title'],
+              required: ['title', 'eCTSCreditPoints'],
             },
             wasAwardedBy: {
               type: 'object',
@@ -71,7 +68,12 @@ export const EducationCredential = {
                   type: 'string',
                 },
               },
-              required: ['awardingBody', 'awardingBodyDescription'],
+              required: [
+                'awardingBody',
+                'awardingBodyDescription',
+                'awardingDate',
+                'awardingLocation',
+              ],
             },
             wasDerivedFrom: {
               type: 'object',
@@ -98,7 +100,7 @@ export const EducationCredential = {
           required: ['title', 'specifiedBy', 'wasAwardedBy', 'wasDerivedFrom'],
         },
       },
-      required: ['currentFamilyName', 'currentGivenName', 'achieved', 'did'],
+      required: ['currentFamilyName', 'currentGivenName', 'achieved'],
     },
   },
   required: ['credentialSubject'],
@@ -130,13 +132,6 @@ export const EducationalCredentialSchema = {
           propertyName: 'currentGivenName',
           type: 'string',
           required: true,
-        } as SchemaNode,
-        {
-          title: 'DID',
-          propertyName: 'id',
-          type: 'string',
-          isCredentialSubject: true,
-          required: false,
         } as SchemaNode,
         {
           title: 'Date of Birth',
@@ -200,7 +195,7 @@ export const EducationalCredentialSchema = {
                   title: 'ECTS Credit Points',
                   propertyName: 'eCTSCreditPoints',
                   type: 'number',
-                  required: false,
+                  required: true,
                 } as SchemaNode,
               ],
               required: true,
@@ -232,13 +227,13 @@ export const EducationalCredentialSchema = {
                   title: 'Awarding Date',
                   propertyName: 'awardingDate',
                   type: 'string',
-                  required: false,
+                  required: true,
                 } as SchemaNode,
                 {
                   title: 'Awarding Location',
                   propertyName: 'awardingLocation',
                   type: 'string',
-                  required: false,
+                  required: true,
                 } as SchemaNode,
               ],
               required: true,
