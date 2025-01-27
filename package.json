@@ -10,9 +10,7 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "workspaces": [
-    "apps/**/*"
-  ],
+  "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm biome check .",
