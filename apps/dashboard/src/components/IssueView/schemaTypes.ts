@@ -17,5 +17,6 @@ export interface SchemaObject {
 export interface Schema {
   title: string;
   type?: string;
+  format?: string;
   fields: SchemaNode[] | SchemaObject[];
 }

@@ -37,10 +37,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential`,
         deferred_credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential_deffered`,
         credentials_supported:
-          fastify.issuerServerConfig.credentialTypesSupported.map(
+          fastify.issuerServerConfig.credentialsSupported.map(
             (credentialTypes) => ({
-              format: 'jwt_vc_json',
-              types: credentialTypes,
+              format: credentialTypes.format as any,
+              types: credentialTypes.types,
               display: [],
             }),
           ),
@@ -133,6 +133,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
       }
 
+      if ((credentialRequest.format as any) === 'vc+sd-jwt') {
+        // TODO [SD-JWT]: Issue credential
+        throw new Error('SD-JWT format is not supported yet');
+      }
+
       const vcId = `urn:uuid:${randomUUID()}`;
       const vcPayload = {
         // TODO: Do we need to add contexts based on requested credential types ?
@@ -212,7 +217,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       const response = {
-        format: 'jwt_vc_json',
+        format: credentialRequest.format,
         credential: vcJwt,
         c_nonce: accessTokenPayload.claims.c_nonce,
         c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
@@ -275,7 +280,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             },
             format: {
               type: 'string',
-              enum: ['jwt_vc', 'jwt_vc_json'],
+              enum: ['jwt_vc', 'jwt_vc_json', 'vc+sd-jwt'],
             },
             credential_offer_endpoint: {
               type: 'string',
@@ -304,21 +309,23 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const { credential_type } = request.body;
 
-      // Check if we support the credential type
-      const isSupportedCredentialType =
-        fastify.issuerServerConfig.credentialTypesSupported.some(
-          (credentialTypes) => {
+      // Check if we support the credential
+      const isSupportedCredential =
+        fastify.issuerServerConfig.credentialsSupported.some(
+          ({ format: credentialFormat, types: credentialTypes }) => {
             if (credentialTypes.length !== credential_type.length) return false;
 
             for (let i = 0; i < credentialTypes.length; i++) {
               if (credentialTypes[i] !== credential_type[i]) return false;
             }
 
+            if (credentialFormat !== format) return false;
+
             return true;
           },
         );
 
-      if (!isSupportedCredentialType) {
+      if (!isSupportedCredential) {
         return reply.code(400).send('Unsupported credential type');
       }
 
