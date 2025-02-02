@@ -101,8 +101,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
     '["VerifiableCredential", "CouponCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/coupon-credential-schema.json',
   ],
-  // TODO: Add CRLPlain2023 schema
-  ['["VerifiableCredential","CRLPlain2023Credential"]', ''],
+  [
+    '["VerifiableCredential","CRLPlain2023Credential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/revocation/crl-plain-2023-credential-schema.json',
+  ],
 ]);
 
 export default fp(async (fastify, _) => {

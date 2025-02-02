@@ -1,4 +1,4 @@
-import type { Schema, SchemaNode, SchemaObject } from './schemaTypes';
+import type { Schema, SchemaNode } from '../schemaTypes';
 
 export const CouponCredential = {
   $id: '#couponCredential',

@@ -1,7 +1,7 @@
-import type { Schema, SchemaNode, SchemaObject } from './schemaTypes';
+import type { Schema, SchemaNode, SchemaObject } from '../schemaTypes';
 
-export const EducationCredential = {
-  $id: '#educationCredential',
+export const EducationCredentialNOO = {
+  $id: '#educationCredentialNOO',
   type: 'object',
   properties: {
     credentialSubject: {
@@ -106,15 +106,9 @@ export const EducationCredential = {
   required: ['credentialSubject'],
 };
 
-export const EducationCredentialBatch = {
-  $id: '#educationCredentialBatch',
-  type: 'array',
-  items: { $ref: '#educationCredential' },
-};
-
-export const EducationalCredentialSchema = {
-  title: 'Education Credential',
-  type: '#educationCredential',
+export const EducationalCredentialSchemaNOO = {
+  title: 'Education Credential NOO',
+  type: '#educationCredentialNOO',
   fields: [
     {
       title: 'Credential Subject',

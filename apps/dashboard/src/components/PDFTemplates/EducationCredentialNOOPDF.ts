@@ -9,7 +9,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
-export const EducationCredentialPDF = ({
+export const EducationCredentialNOOPDF = ({
   achieved: {
     title: achievementTitle,
     specifiedBy: { title: specifiedTitle, eCTSCreditPoints },
