@@ -15,11 +15,39 @@ import { signOut } from 'next-auth/react';
 import { Logo } from '@/components/Logo';
 import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
-import { EducationalCredentialSchema } from './educationCredential';
-import { CouponCredentialSchema } from './couponCredential';
+import {
+  CouponCredentialSchema,
+  EducationalCredentialSchema,
+  EducationalCredentialSchemaNOO,
+} from './Schemas';
 import type { Schema } from './schemaTypes';
 
-const SCHEMAS: Schema[] = [EducationalCredentialSchema, CouponCredentialSchema];
+const SCHEMAS: Schema[] = [
+  EducationalCredentialSchema,
+  EducationalCredentialSchemaNOO,
+  CouponCredentialSchema,
+];
+
+const getCredentialType = (type: string | undefined) => {
+  switch (type) {
+    case '#educationCredential':
+    case '#educationCredentialNOO':
+      return 'EducationCredential';
+    case '#couponCredential':
+      return 'CouponCredential';
+    default:
+      throw new Error('Invalid credential type');
+  }
+};
+
+const getCredentialPDF = (type: string | undefined) => {
+  switch (type) {
+    case '#educationCredentialNOO':
+      return 'PDF_NOO';
+    default:
+      return '';
+  }
+};
 
 export const IssueView = () => {
   const router = useRouter();
@@ -120,13 +148,11 @@ export const IssueView = () => {
       headers,
       body: JSON.stringify({
         email: email,
+        pdf: getCredentialPDF(selectedSchema!.type),
         data: {
           credential_type: [
             'VerifiableCredential',
-            // TODO: Improve handling of this so we can support new types easily (extract to a function)
-            selectedSchema!.type === '#couponCredential'
-              ? 'CouponCredential'
-              : 'EducationCredential',
+            getCredentialType(selectedSchema!.type),
           ],
           flow: 'pre-authorized_code',
           format: 'jwt_vc_json',

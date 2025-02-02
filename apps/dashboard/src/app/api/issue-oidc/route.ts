@@ -10,7 +10,7 @@ import QRCode from 'qrcode';
 import { randomUUID } from 'node:crypto';
 import type { EducationCredentialType } from '@/lib/credentialSubjectTypes';
 import PdfPrinter from 'pdfmake';
-import { EducationCredentialPDF } from '@/components/PDFTemplates/EducationCredentialPDF';
+import { EducationCredentialNOOPDF } from '@/components/PDFTemplates';
 import type Mail from 'nodemailer/lib/mailer';
 
 const transporter = nodemailer.createTransport({
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
   headers.append('x-api-key', process.env.API_KEY || '');
 
   try {
-    const { data, email } = body;
+    const { data, email, pdf: selectedPdf } = body;
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_ISSUER_ENDPOINT}/oidc/create-credential-offer`,
@@ -104,14 +104,19 @@ export async function POST(req: NextRequest) {
     let attachments: Mail.Attachment[] = [];
 
     // Send PDF email (only for education credentials)
-    if (
-      Array.isArray(data.credential_type) &&
-      data.credential_type.includes('EducationCredential')
-    ) {
+    if (selectedPdf !== '') {
       const credentialSubject =
         data.credential_subject as EducationCredentialType;
 
-      const docDefinition = EducationCredentialPDF(credentialSubject);
+      let docDefinition;
+
+      switch (selectedPdf) {
+        case 'PDF_NOO':
+          docDefinition = EducationCredentialNOOPDF(credentialSubject);
+          break;
+        default:
+          throw new Error('Select PDF type not supported!');
+      }
 
       const fonts = {
         Inter: {
