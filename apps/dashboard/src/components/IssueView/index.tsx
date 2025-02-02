@@ -25,10 +25,9 @@ import type { Schema } from './schemaTypes';
 
 const SCHEMAS: Schema[] = [
   EducationalCredentialSchema,
-  CouponCredentialSchema,
-  CouponCredentialSdJwtSchema,
   EducationalCredentialSchemaNOO,
   CouponCredentialSchema,
+  CouponCredentialSdJwtSchema,
 ];
 
 const getCredentialType = (type: string | undefined) => {
