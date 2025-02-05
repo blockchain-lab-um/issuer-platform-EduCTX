@@ -17,6 +17,7 @@ import { useToastStore } from '@/stores';
 import { CredentialForm } from './CredentialForm';
 import {
   CouponCredentialSchema,
+  CouponCredentialSdJwtSchema,
   EducationalCredentialSchema,
   EducationalCredentialSchemaNOO,
 } from './Schemas';
@@ -26,6 +27,7 @@ const SCHEMAS: Schema[] = [
   EducationalCredentialSchema,
   EducationalCredentialSchemaNOO,
   CouponCredentialSchema,
+  CouponCredentialSdJwtSchema,
 ];
 
 const getCredentialType = (type: string | undefined) => {
@@ -59,7 +61,6 @@ export const IssueView = () => {
   const [next, setNext] = useState(false);
   const [inputs, setInputs] = useState<any>({});
   const [_, setIsFilled] = useState(false);
-  const [credentialIssued, setCredentialIssued] = useState(false);
   const [isIssuing, setIsIssuing] = useState(false);
   const [email, setEmail] = useState('');
 
@@ -102,7 +103,6 @@ export const IssueView = () => {
   };
 
   const goBack = () => {
-    setCredentialIssued(false);
     setNext(false);
   };
 
@@ -118,7 +118,6 @@ export const IssueView = () => {
     });
 
     if (response.ok) {
-      setCredentialIssued(true);
       useToastStore.setState({
         open: true,
         title: 'Credential Issued',
@@ -155,14 +154,13 @@ export const IssueView = () => {
             getCredentialType(selectedSchema!.type),
           ],
           flow: 'pre-authorized_code',
-          format: 'jwt_vc_json',
+          format: selectedSchema!.format,
           credential_subject: inputs.credentialSubject,
         },
       }),
     });
 
     if (response.ok) {
-      setCredentialIssued(true);
       useToastStore.setState({
         open: true,
         title: 'Credential Issued',

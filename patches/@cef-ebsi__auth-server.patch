@@ -261,6 +261,22 @@ index 0e12cdc354af4bcdd5afeed947d6939ecbe0cbcd..9ca52ffa47ee27091a12988db47660a9
      response_type: z.literal("code"),
      client_id: z.string().url(),
      redirect_uri: z.string(),
+diff --git a/dist/validators/create-authorization-details.validator.js b/dist/validators/create-authorization-details.validator.js
+index 24fd3d41167f36d96fd13ad46b187b32f2bd1999..4544fad90e7a29f42848005deeabb0a29ab81028 100644
+--- a/dist/validators/create-authorization-details.validator.js
++++ b/dist/validators/create-authorization-details.validator.js
+@@ -2,9 +2,9 @@ import { z } from "zod";
+ export const createAuthorizationDetailsSchema = (credentialTypesSupported) => z
+     .array(z.object({
+     type: z.literal("openid_credential"),
+-    format: z.union([z.literal("jwt_vc"), z.literal("jwt_vc_json")], {
++    format: z.union([z.literal("jwt_vc"), z.literal("jwt_vc_json"), z.literal("vc+sd-jwt")], {
+         errorMap: () => ({
+-            message: 'Invalid literal value, expected "jwt_vc" or "jwt_vc_json"',
++            message: 'Invalid literal value, expected "jwt_vc", "jwt_vc_json" or "vc+sd-jwt"',
+         }),
+     }),
+     locations: z.array(z.string().url()).nonempty().optional(),
 diff --git a/src/AuthServer.ts b/src/AuthServer.ts
 index 905ca29de966698d75bdf83cc1f29c522e94560c..a7898d472c55a79a7b728170e3b31bbdbbb802eb 100644
 --- a/src/AuthServer.ts

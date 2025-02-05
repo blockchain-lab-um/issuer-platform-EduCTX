@@ -9,10 +9,10 @@ patchedDependencies:
     hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
     path: patches/@blockchain-lab-um__did-provider-ebsi.patch
   '@cef-ebsi/auth-server':
-    hash: dmiironxsrl2rwzozg6bneycaa
+    hash: ee6j3tt32tgb5ew3er7bapnneq
     path: patches/@cef-ebsi__auth-server.patch
   '@cef-ebsi/credential-issuer':
-    hash: ap36rwavsvku27t6c455fqbep4
+    hash: f5t6dewepkuw4pikjp6hqincwm
     path: patches/@cef-ebsi__credential-issuer.patch
   '@cef-ebsi/verifiable-credential':
     hash: kggfgu76of3szlbez3cp7nm37a
@@ -63,7 +63,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=dmiironxsrl2rwzozg6bneycaa)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=ee6j3tt32tgb5ew3er7bapnneq)(ajv@8.17.1)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -348,10 +348,10 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=dmiironxsrl2rwzozg6bneycaa)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=ee6j3tt32tgb5ew3er7bapnneq)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
-        version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
+        version: 1.0.0-alpha.24(patch_hash=f5t6dewepkuw4pikjp6hqincwm)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -6506,7 +6506,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=dmiironxsrl2rwzozg6bneycaa)(ajv@8.17.1)':
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=ee6j3tt32tgb5ew3er7bapnneq)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4
@@ -6532,7 +6532,7 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@cef-ebsi/credential-issuer@1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)':
+  '@cef-ebsi/credential-issuer@1.0.0-alpha.24(patch_hash=f5t6dewepkuw4pikjp6hqincwm)':
     dependencies:
       '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
       axios: 1.7.7

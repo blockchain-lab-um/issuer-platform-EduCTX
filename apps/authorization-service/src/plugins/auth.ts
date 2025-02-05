@@ -8,10 +8,7 @@ import {
 import { util as didKeyUtil } from '@cef-ebsi/key-did-resolver';
 import { util as didEbsiUtil } from '@cef-ebsi/ebsi-did-resolver';
 import type { PresentationDefinitionV2 } from '@sphereon/pex-models';
-import {
-  COUPON_DEMO_PRESENTATION_DEFINITION,
-  VERIFIER_TEST_PRESENTATION_DEFINITION,
-} from '../utils/presentationDefinitions.js';
+import { VERIFIER_TEST_PRESENTATION_DEFINITION } from '../utils/presentationDefinitions.js';
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -21,33 +18,61 @@ declare module 'fastify' {
   }
 }
 
-const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSameAuthorisedInTime',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSameAuthorisedDeferred',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSamePreAuthorisedInTime',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSamePreAuthorisedDeferred',
-  ],
+const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: {
+  format: string;
+  types: string[];
+}[] = [
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSameAuthorisedInTime',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSameAuthorisedDeferred',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSamePreAuthorisedInTime',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSamePreAuthorisedDeferred',
+    ],
+  },
 ];
 
-const SUPPORTED_CREDENTIALS: string[][] = [
-  ['VerifiableCredential', 'EducationCredential'],
-  ['VerifiableCredential', 'EventTicketCredential'],
-  ['VerifiableCredential', 'CouponCredential'],
+const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'EducationCredential'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'EventTicketCredential'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'CouponCredential'],
+  },
+  {
+    format: 'vc+sd-jwt',
+    types: ['VerifiableCredential', 'CouponCredential'],
+  },
 ];
 
 export default fp(async (fastify, _) => {
@@ -149,7 +174,9 @@ export default fp(async (fastify, _) => {
         return presentationDefinition;
       }
     },
-    credentialTypesSupported: credentialTypesSupported,
+    credentialTypesSupported: credentialTypesSupported.map(
+      (credentialTypesSupported) => credentialTypesSupported.types,
+    ),
   });
 
   fastify.decorate('auth', auth);
