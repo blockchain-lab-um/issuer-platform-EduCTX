@@ -9,7 +9,7 @@ patchedDependencies:
     hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
     path: patches/@blockchain-lab-um__did-provider-ebsi.patch
   '@cef-ebsi/auth-server':
-    hash: sckcxyunxiydbcoeatags7yoqq
+    hash: v54e7o66piyinjiifxay6ukdey
     path: patches/@cef-ebsi__auth-server.patch
   '@cef-ebsi/credential-issuer':
     hash: ap36rwavsvku27t6c455fqbep4
@@ -63,7 +63,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=sckcxyunxiydbcoeatags7yoqq)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=v54e7o66piyinjiifxay6ukdey)(ajv@8.17.1)
       '@cef-ebsi/ebsi-did-resolver':
         specifier: 4.0.3
         version: 4.0.3
@@ -348,7 +348,7 @@ importers:
         version: link:../../libs/shared
       '@cef-ebsi/auth-server':
         specifier: 1.0.0-alpha.45
-        version: 1.0.0-alpha.45(patch_hash=sckcxyunxiydbcoeatags7yoqq)(ajv@8.17.1)
+        version: 1.0.0-alpha.45(patch_hash=v54e7o66piyinjiifxay6ukdey)(ajv@8.17.1)
       '@cef-ebsi/credential-issuer':
         specifier: 1.0.0-alpha.24
         version: 1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)
@@ -6506,7 +6506,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=sckcxyunxiydbcoeatags7yoqq)(ajv@8.17.1)':
+  '@cef-ebsi/auth-server@1.0.0-alpha.45(patch_hash=v54e7o66piyinjiifxay6ukdey)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4

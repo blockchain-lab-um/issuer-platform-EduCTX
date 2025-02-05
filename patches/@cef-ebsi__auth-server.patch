@@ -55,21 +55,21 @@ index 9630ce78a15435a3eeec20e14da7c021629e5910..447011010795cef8c4e3d1bee138db1c
  ], GetAuthorizeGenericDto.prototype, "client_id", void 0);
  __decorate([
 diff --git a/dist/utils.js b/dist/utils.js
-index a705aaff3a43eec239630358032631961a60ff38..7ef37bdd0dcaf39540f26510ee87b3e09b547937 100644
+index a705aaff3a43eec239630358032631961a60ff38..f0b0059af8d4c9df83d4acb162bb6bf3f73dcf26 100644
 --- a/dist/utils.js
 +++ b/dist/utils.js
 @@ -362,6 +362,18 @@ export async function authorizeServiceWallet(db, addKeyToCacheManager, serverDid
              ...vpTokenRequest,
              request: requestJwt,
          }).toString()}`;
-+        
++
 +        if (query.request_object === "reference" || location.length > 500) {
 +          const requestNonce = randomUUID();
 +          const dbKey2 = { did: serverDid, requestNonce };
 +          await db.put(dbKey2, { requestJwt });
 +          addKeyToCacheManager(dbKey2);
 +          return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
-+              ...vpTokenRequest,
++              ...(query.scope === 'openid ver_test:vp_token' ? vpTokenRequest: {}),
 +              request_uri: `${serverUrl}/request_uri/${requestNonce}`,
 +          }).toString()}`;
 +        }
@@ -123,11 +123,11 @@ index a705aaff3a43eec239630358032631961a60ff38..7ef37bdd0dcaf39540f26510ee87b3e0
 +          await db.put(dbKey2, { requestJwt });
 +          addKeyToCacheManager(dbKey2);
 +          return `${sanitizedAuthorizationEndpoint}?${new URLSearchParams({
-+              ...vpTokenRequest,
++              ...(query.scope === 'openid ver_test:vp_token' ? vpTokenRequest: {}),
 +              request_uri: `${serverUrl}/request_uri/${requestNonce}`,
 +          }).toString()}`;
 +        }
-+        
++
          return location;
      }
      const idTokenRequest = {
@@ -230,7 +230,6 @@ index a705aaff3a43eec239630358032631961a60ff38..7ef37bdd0dcaf39540f26510ee87b3e0
 +    return preAuthorizedCodeToken(serverUrl, serverKid, privateKey, query, credentialTypesSupported, timeout, options);
  }
  //# sourceMappingURL=utils.js.map
-\ No newline at end of file
 diff --git a/dist/validators/create-authentication-request.validator.js b/dist/validators/create-authentication-request.validator.js
 index 0e12cdc354af4bcdd5afeed947d6939ecbe0cbcd..9ca52ffa47ee27091a12988db47660a959f94e94 100644
 --- a/dist/validators/create-authentication-request.validator.js

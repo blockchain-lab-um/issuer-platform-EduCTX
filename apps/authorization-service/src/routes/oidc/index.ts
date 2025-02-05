@@ -60,6 +60,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         const parsed = queryString.parse(location.split('openid://')[1]);
 
         if (parsed.error) {
+          const authRequest = await fastify.cache.get(body.state);
+          if (authRequest && body.state) {
+            fastify.cache.set(body.state, {
+              status: 'Failed',
+              error:
+                (parsed.error_description as string) ?? 'Verification failed',
+            });
+          }
           return reply.redirect(location);
         }
 
