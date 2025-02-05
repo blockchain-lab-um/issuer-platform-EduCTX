@@ -151,12 +151,17 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           id: schema,
           type: 'FullJsonSchemaValidator2021',
         },
-        credentialStatus: {
-          id: vcId,
-          type: 'CRLPlain2023Entry',
-          purpose: 'revocation',
-          credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
-        },
+        // NOTE: Conformance tests don't support CRLPlain2023Entry
+        ...(fastify.config.CONFORMANCE_TEST_ENABLED
+          ? {}
+          : {
+              credentialStatus: {
+                id: vcId,
+                type: 'CRLPlain2023Entry',
+                purpose: 'revocation',
+                credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
+              },
+            }),
       } satisfies EbsiVerifiableAttestation;
 
       const options = {

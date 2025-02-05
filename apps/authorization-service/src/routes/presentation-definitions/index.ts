@@ -57,6 +57,33 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
+  fastify.get(
+    '/:id',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+            },
+          },
+          required: ['id'],
+        },
+      },
+    },
+    async (request, reply) => {
+      const presentationDefinition =
+        await fastify.presentationDefinitionCache.get(request.params.id);
+
+      if (!presentationDefinition) {
+        return reply.code(404).send();
+      }
+
+      return reply.code(200).send(presentationDefinition);
+    },
+  );
+
   fastify.delete(
     '/:id',
     {

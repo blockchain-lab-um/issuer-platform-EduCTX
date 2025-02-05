@@ -60,9 +60,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         const parsed = queryString.parse(location.split('openid://')[1]);
 
         if (parsed.error) {
-          const errorDescription =
-            (parsed.error_description as string) ?? 'Verification failed';
-          throw new Error(errorDescription);
+          return reply.redirect(location);
         }
 
         // Note: Check if auth status exists
@@ -74,8 +72,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             data: body.vp_token,
           });
         }
+
         return reply.redirect(location);
       } catch (error) {
+        console.log(error);
         // Note: Check if auth status exists
         const authRequest = await fastify.cache.get(body.state);
         if (authRequest && body.state) {
@@ -383,8 +383,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
     async (request, reply) => {
       const authRequest = await fastify.cache.get(request.params.authRequestId);
-
-      console.log(authRequest);
 
       if (!authRequest) {
         return reply.code(404).send();
