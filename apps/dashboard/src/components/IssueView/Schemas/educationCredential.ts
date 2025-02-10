@@ -47,7 +47,7 @@ export const EducationCredential = {
                   type: 'number',
                 },
               },
-              required: ['title', 'eCTSCreditPoints'],
+              required: ['title'],
             },
             wasAwardedBy: {
               type: 'object',
@@ -189,7 +189,7 @@ export const EducationalCredentialSchema = {
                   title: 'ECTS Credit Points',
                   propertyName: 'eCTSCreditPoints',
                   type: 'number',
-                  required: true,
+                  required: false,
                 } as SchemaNode,
               ],
               required: true,
