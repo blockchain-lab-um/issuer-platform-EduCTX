@@ -90,3 +90,55 @@ export const COUPON_DEMO_PRESENTATION_DEFINITION = {
     },
   ],
 } as const satisfies PresentationDefinitionV2;
+
+export const INTEROP_TEST_PRESENTATION_DEFINITION = {
+  id: '666985ab-f548-4c9b-9ecb-ad67281c7a5f',
+  format: { jwt_vp: { alg: ['ES256'] }, jwt_vp_json: { alg: ['ES256'] } },
+  input_descriptors: [
+    {
+      id: 'in-time-request',
+      format: { jwt_vc: { alg: ['ES256'] }, jwt_vc_json: { alg: ['ES256'] } },
+      constraints: {
+        fields: [
+          {
+            path: ['$.vc.type'],
+            filter: {
+              type: 'array',
+              contains: { const: 'InTimeIssuance' },
+            },
+          },
+        ],
+      },
+    },
+    {
+      id: 'deferred-request',
+      format: { jwt_vc: { alg: ['ES256'] }, jwt_vc_json: { alg: ['ES256'] } },
+      constraints: {
+        fields: [
+          {
+            path: ['$.vc.type'],
+            filter: {
+              type: 'array',
+              contains: { const: 'DeferredIssuance' },
+            },
+          },
+        ],
+      },
+    },
+    {
+      id: 'pre-auth-request',
+      format: { jwt_vc: { alg: ['ES256'] }, jwt_vc_json: { alg: ['ES256'] } },
+      constraints: {
+        fields: [
+          {
+            path: ['$.vc.type'],
+            filter: {
+              type: 'array',
+              contains: { const: 'PreAuthIssuance' },
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as const satisfies PresentationDefinitionV2;

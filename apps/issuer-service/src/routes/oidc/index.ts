@@ -186,6 +186,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const deferredCredentials = [
         'CTWalletSameAuthorisedDeferred',
         'CTWalletSamePreAuthorisedDeferred',
+        'DefferedIssuance',
       ];
 
       if (
