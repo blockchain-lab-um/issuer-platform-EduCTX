@@ -119,7 +119,7 @@ export const INTEROP_TEST_PRESENTATION_DEFINITION = {
             path: ['$.vc.type'],
             filter: {
               type: 'array',
-              contains: { const: 'DeferredIssuance' },
+              contains: { const: 'DefferedIssuance' },
             },
           },
         ],

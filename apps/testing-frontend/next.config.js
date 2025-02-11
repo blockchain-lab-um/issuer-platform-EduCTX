@@ -1,14 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ['pdfmake'],
-  },
   env: {
-    NEXT_PUBLIC_ISSUER_ENDPOINT:
-      process.env.NEXT_PUBLIC_ISSUER_ENDPOINT ||
-      'NEXT_PUBLIC_ISSUER_ENDPOINT_PLACEHOLDER',
-    NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL || 'NEXT_PUBLIC_APP_URL_PLACEHOLDER',
     NEXT_PUBLIC_BACKEND_API_URL:
       process.env.NEXT_PUBLIC_BACKEND_API_URL ||
       'NEXT_PUBLIC_BACKEND_API_URL_PLACEHOLDER',

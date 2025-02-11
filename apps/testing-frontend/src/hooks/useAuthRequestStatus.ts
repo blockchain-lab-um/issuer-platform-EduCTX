@@ -21,7 +21,7 @@ export const useAuthRequestStatus = (
     queryFn: async () => {
       // Fetch data from API
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/status/${authRequestId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/interop-test/status/${authRequestId}`,
         {
           method: 'GET',
         },

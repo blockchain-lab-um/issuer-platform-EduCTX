@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -14,13 +14,19 @@ const SUPPORTED_CREDENTIAL_TYPES = [
   'PreAuthIssuance',
 ];
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    // Get the search parameters from the URL
-    const searchParams = request.nextUrl.searchParams;
+    // Read request body
+    const { credentialType, client_id } = await request.json();
 
-    // Extract query parameters
-    const credentialType = searchParams.get('credentialType');
+    if (!client_id) {
+      return new Response('Missing client_id parameter', {
+        status: 400,
+        headers: {
+          ...CORS_HEADERS,
+        },
+      });
+    }
 
     if (!credentialType) {
       return new Response('Missing credentialType parameter', {
@@ -60,6 +66,7 @@ export async function GET(request: NextRequest) {
               : 'authorization_code',
           format: 'jwt_vc_json',
           credential_subject: {},
+          client_id,
         }),
       },
     );

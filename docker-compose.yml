@@ -29,6 +29,17 @@ services:
       NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
     restart: unless-stopped
 
+  testing-frontend:
+    image: blockchain-lab-um/eductx-platform-testing-frontend:latest
+    container_name: eductx-platform-testing-frontend
+    ports:
+      - '34571:3000'
+    environment:
+      API_KEY: ${API_KEY}
+      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
+      ISSUER_ENDPOINT: ${ISSUER_ENDPOINT}
+    restart: unless-stopped
+
   issuer-service:
     image: blockchain-lab-um/eductx-platform-issuer-service:latest
     container_name: eductx-platform-issuer-service

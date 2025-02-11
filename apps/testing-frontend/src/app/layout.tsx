@@ -10,7 +10,7 @@ import { Providers } from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'EduCTX Dashboard',
+  title: 'EduCTX Testing Frontend',
 };
 
 export default function RootLayout({

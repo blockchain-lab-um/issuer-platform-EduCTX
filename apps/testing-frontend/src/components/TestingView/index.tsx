@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useAuthRequestStatus } from '@/hooks';
@@ -18,12 +18,17 @@ export const TestingView = () => {
     verificationRequestId,
     disabled,
   );
+  const [did, setDid] = useState('');
 
   const getCredentialOfferInTime = async () => {
     try {
-      const response = await fetch(
-        '/api/credential-offer?credentialType=InTimeIssuance',
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'InTimeIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);
@@ -42,9 +47,13 @@ export const TestingView = () => {
 
   const getCredentialOfferDeffered = async () => {
     try {
-      const response = await fetch(
-        '/api/credential-offer?credentialType=DefferedIssuance',
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'DefferedIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);
@@ -63,9 +72,13 @@ export const TestingView = () => {
 
   const getCredentialOfferPreAuth = async () => {
     try {
-      const response = await fetch(
-        '/api/credential-offer?credentialType=PreAuthIssuance',
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'PreAuthIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);
@@ -109,13 +122,25 @@ export const TestingView = () => {
 
   return (
     <div className="flex flex-col gap-y-8 w-full justify-center items-center">
+      <div className="w-full mt-4">
+        <label className="font-bold text-lg">DID</label>
+        <Input
+          color="default"
+          variant="bordered"
+          value={did}
+          onChange={(e) => setDid(e.target.value)}
+          fullWidth
+        />
+      </div>
       <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
         <div className="flex flex-col items-center gap-y-2">
           <div className="font-bold text-lg">In Time flow</div>
           <Button
+            className="disabled:cursor-not-allowed"
             color="default"
             variant="bordered"
             onClick={async () => await getCredentialOfferInTime()}
+            disabled={!did}
           >
             {!credentialOfferInTime ? 'Start' : 'Refresh'}
           </Button>
@@ -131,9 +156,11 @@ export const TestingView = () => {
           <div className="font-bold text-lg">Deffered flow</div>
           <div>
             <Button
+              className="disabled:cursor-not-allowed"
               color="default"
               variant="bordered"
               onClick={getCredentialOfferDeffered}
+              disabled={!did}
             >
               {!credentialOfferDeffered ? 'Start' : 'Refresh'}
             </Button>
@@ -150,9 +177,11 @@ export const TestingView = () => {
           <div className="font-bold text-lg">Pre-auth flow</div>
           <div>
             <Button
+              className="disabled:cursor-not-allowed"
               color="default"
               variant="bordered"
               onClick={getCredentialOfferPreAuth}
+              disabled={!did}
             >
               {!credentialOfferPreAuth ? 'Start' : 'Refresh'}
             </Button>
@@ -172,18 +201,23 @@ export const TestingView = () => {
           <div className="font-bold text-lg">Verification flow</div>
           <div>
             <Button
+              className="disabled:cursor-not-allowed"
               color="default"
               variant="bordered"
               onClick={getVerificationRequest}
+              disabled={!did}
             >
               {!verificationRequest ? 'Start' : 'Refresh'}
             </Button>
           </div>
         </div>
-        {!false && (
+        {verificationRequest && disabled && (
+          <Button onClick={() => setIsDisabled(false)}>Check status</Button>
+        )}
+        {!disabled && (
           <div className="flex flex-col justify-center items-center">
-            {isLoading && <div>Loading...</div>}
-            {<div>Success</div>}
+            {authRequestStatus?.status === 'Pending' && <div>Loading...</div>}
+            {authRequestStatus?.status === 'Success' && <div>Success</div>}
             {authRequestStatus?.status === 'Failed' && <div>Failed</div>}
             {authRequestStatus?.status === 'Failed' &&
               authRequestStatus?.error && (

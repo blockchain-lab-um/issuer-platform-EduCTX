@@ -20,7 +20,7 @@ COPY ./apps/dashboard/package.json ./apps/dashboard/
 COPY ./apps/issuer-service/package.json ./apps/issuer-service/
 COPY ./apps/authorization-service/package.json ./apps/authorization-service/
 COPY ./apps/eductx-platform-backend/package.json ./apps/eductx-platform-backend/
-COPY ./apps/eductx-platform-testing-frontend/package.json ./apps/eductx-testing-frontend/
+COPY ./apps/testing-frontend/package.json ./apps/testing-frontend/
 
 ##########
 #  LIBS  #

@@ -293,6 +293,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             credential_subject: {
               type: 'object',
             },
+            client_id: {
+              type: 'string',
+            },
           },
           required: ['credential_type'],
         },
@@ -341,10 +344,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       };
 
       if (flow === 'authorization_code') {
+        if (!request.body.client_id) {
+          return reply.code(400).send('client_id is required');
+        }
         // Authorized code flow
         const issuerState = await createJWT(
           {
             credential_types: credential_type,
+            client_id: request.body.client_id,
             iss: fastify.issuerServerConfig.url,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
@@ -396,6 +403,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
             exp: now + 8035200, // 3 Months
+            ...(request.body.client_id
+              ? {
+                  client_id: request.body.client_id,
+                }
+              : {}),
           },
           {
             issuer: fastify.issuerServerConfig.url,
