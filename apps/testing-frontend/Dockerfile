@@ -16,6 +16,7 @@ RUN chown nextjs:nodejs ./apps/testing-frontend/.next
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/testing-frontend/.next/static ./apps/testing-frontend/.next/static
 COPY --from=builder /app/apps/testing-frontend/public ./apps/testing-frontend/public
+COPY --from=builder /app/apps/testing-frontend/next.config.js ./apps/testing-frontend/next.config.js
 
 # Copy entrypoint script which replaces placeholder `NEXT_PUBLIC_` variables
 COPY --from=builder --chown=nextjs:nodejs /app/apps/testing-frontend/scripts/entrypoint.sh .

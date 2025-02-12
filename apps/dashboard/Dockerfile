@@ -16,6 +16,7 @@ RUN chown nextjs:nodejs ./apps/dashboard/.next
 
 COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
 COPY --from=builder /app/apps/dashboard/public ./apps/dashboard/public
+COPY --from=builder /app/apps/dashboard/next.config.js ./apps/dashboard/next.config.js
 
 # Copy entrypoint script which replaces placeholder `NEXT_PUBLIC_` variables
 COPY --from=builder --chown=nextjs:nodejs /app/apps/dashboard/scripts/entrypoint.sh .
