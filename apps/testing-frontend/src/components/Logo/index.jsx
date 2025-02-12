@@ -4,7 +4,7 @@ import Image from 'next/image';
 export const Logo = () => (
   <div className="flex items-center gap-x-2">
     <Image
-      src="/testing-interop-frontend/images/EDU-Coin.png"
+      src="/interop-testing-frontend/images/EDU-Coin.png"
       alt="Logo"
       width={64}
       height={64}
