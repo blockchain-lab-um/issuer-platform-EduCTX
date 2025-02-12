@@ -51,7 +51,7 @@ export const TestingView = () => {
   const getCredentialOfferDeffered = async () => {
     try {
       const response = await fetch(
-        '/interop-testing-frontendapi/credential-offer',
+        '/interop-testing-frontend/api/credential-offer',
         {
           method: 'POST',
           body: JSON.stringify({
@@ -79,7 +79,7 @@ export const TestingView = () => {
   const getCredentialOfferPreAuth = async () => {
     try {
       const response = await fetch(
-        '/interop-testing-frontendapi/credential-offer',
+        '/interop-testing-frontend/api/credential-offer',
         {
           method: 'POST',
           body: JSON.stringify({
