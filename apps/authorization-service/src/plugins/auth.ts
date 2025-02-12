@@ -10,6 +10,7 @@ import { util as didEbsiUtil } from '@cef-ebsi/ebsi-did-resolver';
 import type { PresentationDefinitionV2 } from '@sphereon/pex-models';
 import {
   COUPON_DEMO_PRESENTATION_DEFINITION,
+  INTEROP_TEST_PRESENTATION_DEFINITION,
   VERIFIER_TEST_PRESENTATION_DEFINITION,
 } from '../utils/presentationDefinitions.js';
 
@@ -42,6 +43,9 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'CTWalletSamePreAuthorisedDeferred',
   ],
+  ['VerifiableCredential', 'VerifiableAttestation', 'InTimeIssuance'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'DefferedIssuance'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'PreAuthIssuance'],
 ];
 
 const SUPPORTED_CREDENTIALS: string[][] = [
@@ -134,6 +138,8 @@ export default fp(async (fastify, _) => {
 
         if (scope === 'openid ver_test:vp_token') {
           presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+        } else if (scope === 'openid interop_test') {
+          presentationDefinition = INTEROP_TEST_PRESENTATION_DEFINITION;
         } else if (scope.startsWith('openid custom:')) {
           const cacheKey = scope.replace('openid custom:', '');
           const cachedPresentationDefinition =
