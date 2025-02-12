@@ -10,7 +10,7 @@ export default function Home() {
             <div className="flex h-min w-full items-center justify-between">
               <div>
                 <Image
-                  src={'/images/EDU-Coin.png'}
+                  src={'/testing-interop-frontend/images/EDU-Coin.png'}
                   alt="Logo"
                   width={64}
                   height={64}
@@ -18,7 +18,7 @@ export default function Home() {
               </div>
               <div>
                 <Image
-                  src={'/images/blockchain-lab.svg'}
+                  src={'/testing-interop-frontend/images/blockchain-lab.svg'}
                   alt="Logo"
                   width={64}
                   height={64}
