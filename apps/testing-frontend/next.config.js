@@ -7,7 +7,6 @@ const nextConfig = {
   },
   basePath: '/testing-interop-frontend',
   output: 'standalone',
-  headers: () => {},
   webpack: (config) => {
     config.externals.push('bufferutil');
     config.externals.push('utf-8-validate');
