@@ -38,6 +38,7 @@ services:
       API_KEY: ${API_KEY}
       NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
       ISSUER_ENDPOINT: ${ISSUER_ENDPOINT}
+      NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH}
     restart: unless-stopped
 
   issuer-service:

@@ -5,7 +5,8 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_BACKEND_API_URL ||
       'NEXT_PUBLIC_BACKEND_API_URL_PLACEHOLDER',
   },
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  basePath:
+    process.env.NEXT_PUBLIC_BASE_PATH || 'NEXT_PUBLIC_BASE_PATH_PLACEHOLDER',
   output: 'standalone',
   headers: () => {
     return [
