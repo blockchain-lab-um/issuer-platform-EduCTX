@@ -9,7 +9,7 @@
     "email": "blockchain-lab@um.si",
     "url": "https://blockchain-lab.um.si"
   },
-  "license": "MIT",
+  "license": "EUPL-1.2",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
