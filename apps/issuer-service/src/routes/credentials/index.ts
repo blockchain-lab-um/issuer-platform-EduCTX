@@ -22,7 +22,12 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // Decode JWTs
       const credentials = credentialJWTs.map((credentialJWT) => {
-        return decodeJWT(credentialJWT).payload;
+        const credential = decodeJWT(credentialJWT).payload;
+
+        return {
+          credential,
+          isRevoked: fastify.revocationCache.get(credential.id) !== undefined,
+        };
       });
 
       return reply.code(200).send(credentials);
