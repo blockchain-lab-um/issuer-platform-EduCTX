@@ -1,0 +1,134 @@
+'use client';
+
+import { useModalStore } from '@/stores/modalStore';
+import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
+import { CredentialModal } from './CredentialModal';
+
+export const CredentialsView = ({
+  credentials,
+}: {
+  credentials: any[];
+}) => {
+  const { refresh } = useRouter();
+
+  const setIsCredentialModalOpen = useModalStore.use.setIsCredentialModalOpen();
+  const setSelectedCredential = useModalStore.use.setSelectedCredential();
+
+  const handleRevoke = async (id: string) => {
+    try {
+      const response = await fetch(`/api/revoke-credential/${id}`, {
+        method: 'POST',
+        headers: {
+          'x-api-key': process.env.API_KEY || '',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+      refresh();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <>
+      <div className="w-full max-w-7xl mx-auto h-full flex flex-col p-8">
+        <div className="bg-green-500 text-white py-4 px-6 rounded-t-lg">
+          <h1 className="text-2xl font-bold text-center">Issued Credentials</h1>
+        </div>
+        <div className="flex-grow overflow-auto bg-white shadow-md rounded-b-lg">
+          <table className="min-w-full">
+            <tbody>
+              {credentials.map(({ credential, isRevoked }, index) => (
+                <tr
+                  key={credential.vc.id}
+                  className={clsx(
+                    'border-b border-gray-100 transition-colors',
+                    credential.revoked
+                      ? 'bg-red-50 hover:bg-red-100'
+                      : index % 2 === 0
+                        ? 'bg-white hover:bg-gray-50'
+                        : 'bg-gray-50 hover:bg-gray-100',
+                  )}
+                >
+                  <td className="py-4 px-6">
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                          <div className="text-xs font-mono truncate max-w-[150px] md:max-w-[250px]">
+                            {credential.vc.id}
+                          </div>
+                          <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
+                            {credential.vc.type.slice(1).join(', ')}
+                          </span>
+                          <span className="text-sm text-gray-600">
+                            {new Date(credential.iat * 1000).toLocaleString()}
+                          </span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {credentialSubject(credential)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 mt-2 md:mt-0">
+                        <button
+                          type="button"
+                          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
+                          onClick={() => {
+                            setSelectedCredential(credential);
+                            setIsCredentialModalOpen(true);
+                          }}
+                        >
+                          View
+                        </button>{' '}
+                        {isRevoked ? (
+                          <span className="px-4 py-2 bg-red-200 text-red-800 rounded-md">
+                            Revoked
+                          </span>
+                        ) : (
+                          <button
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
+                            type="button"
+                            onClick={() => handleRevoke(credential.vc.id)}
+                          >
+                            Revoke
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <CredentialModal />
+    </>
+  );
+};
+
+const credentialSubject = (credential: any) => {
+  const credentialSubject = credential.vc.credentialSubject;
+
+  if (credential.vc.type.includes('EducationCredential')) {
+    return (
+      <div>
+        {credentialSubject.currentFamilyName}{' '}
+        {credentialSubject.currentGivenName}
+      </div>
+    );
+  }
+
+  if (credential.vc.type.includes('CouponCredential')) {
+    return (
+      <div>
+        {credentialSubject.couponId} {credentialSubject.couponName}
+      </div>
+    );
+  }
+
+  return JSON.stringify(credentialSubject);
+};
