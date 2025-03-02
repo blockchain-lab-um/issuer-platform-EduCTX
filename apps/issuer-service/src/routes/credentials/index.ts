@@ -26,7 +26,8 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
 
         return {
           credential,
-          isRevoked: fastify.revocationCache.get(credential.id) !== undefined,
+          isRevoked:
+            fastify.revocationCache.get(credential.vc.id) !== undefined,
         };
       });
 
