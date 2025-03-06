@@ -31,6 +31,14 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
         };
       });
 
+      // Sort by issuance date ascending
+      credentials.sort((a, b) => {
+        return (
+          new Date(a.credential.vc.issued).getTime() -
+          new Date(b.credential.vc.issued).getTime()
+        );
+      });
+
       return reply.code(200).send(credentials);
     },
   );
