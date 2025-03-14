@@ -8,7 +8,10 @@ import {
 import { util as didKeyUtil } from '@cef-ebsi/key-did-resolver';
 import { util as didEbsiUtil } from '@cef-ebsi/ebsi-did-resolver';
 import type { PresentationDefinitionV2 } from '@sphereon/pex-models';
-import { VERIFIER_TEST_PRESENTATION_DEFINITION } from '../utils/presentationDefinitions.js';
+import {
+  INTEROP_TEST_PRESENTATION_DEFINITION,
+  VERIFIER_TEST_PRESENTATION_DEFINITION,
+} from '../utils/presentationDefinitions.js';
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -53,6 +56,22 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: {
       'VerifiableAttestation',
       'CTWalletSamePreAuthorisedDeferred',
     ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'InTimeIssuance'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'DefferedIssuance',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'PreAuthIssuance'],
   },
 ];
 
@@ -159,6 +178,8 @@ export default fp(async (fastify, _) => {
 
         if (scope === 'openid ver_test:vp_token') {
           presentationDefinition = VERIFIER_TEST_PRESENTATION_DEFINITION;
+        } else if (scope === 'openid interop_test') {
+          presentationDefinition = INTEROP_TEST_PRESENTATION_DEFINITION;
         } else if (scope.startsWith('openid custom:')) {
           const cacheKey = scope.replace('openid custom:', '');
           const cachedPresentationDefinition =

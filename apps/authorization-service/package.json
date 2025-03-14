@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "license": "ISC",
+  "license": "EUPL-1.2",
   "author": "",
   "type": "module",
   "main": "dist/server.js",

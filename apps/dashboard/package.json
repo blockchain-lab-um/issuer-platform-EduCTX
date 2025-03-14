@@ -2,7 +2,7 @@
   "name": "@blockchain-lab-um/eductx-platform-dashboard",
   "version": "0.1.0",
   "private": true,
-  "license": "MIT",
+  "license": "EUPL-1.2",
   "type": "commonjs",
   "scripts": {
     "build": "pnpm clean && next build",

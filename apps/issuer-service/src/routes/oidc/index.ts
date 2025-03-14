@@ -156,12 +156,17 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           id: schema,
           type: 'FullJsonSchemaValidator2021',
         },
-        credentialStatus: {
-          id: vcId,
-          type: 'CRLPlain2023Entry',
-          purpose: 'revocation',
-          credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
-        },
+        // NOTE: Conformance tests don't support CRLPlain2023Entry
+        ...(fastify.config.CONFORMANCE_TEST_ENABLED
+          ? {}
+          : {
+              credentialStatus: {
+                id: vcId,
+                type: 'CRLPlain2023Entry',
+                purpose: 'revocation',
+                credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
+              },
+            }),
       } satisfies EbsiVerifiableAttestation;
 
       const options = {
@@ -186,6 +191,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const deferredCredentials = [
         'CTWalletSameAuthorisedDeferred',
         'CTWalletSamePreAuthorisedDeferred',
+        'DefferedIssuance',
       ];
 
       if (
@@ -292,6 +298,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             credential_subject: {
               type: 'object',
             },
+            client_id: {
+              type: 'string',
+            },
           },
           required: ['credential_type'],
         },
@@ -342,10 +351,14 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       };
 
       if (flow === 'authorization_code') {
+        if (!request.body.client_id) {
+          return reply.code(400).send('client_id is required');
+        }
         // Authorized code flow
         const issuerState = await createJWT(
           {
             credential_types: credential_type,
+            client_id: request.body.client_id,
             iss: fastify.issuerServerConfig.url,
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
@@ -397,6 +410,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             aud: fastify.config.AUTHORIZATION_SERVER_URL,
             iat: now,
             exp: now + 8035200, // 3 Months
+            ...(request.body.client_id
+              ? {
+                  client_id: request.body.client_id,
+                }
+              : {}),
           },
           {
             issuer: fastify.issuerServerConfig.url,

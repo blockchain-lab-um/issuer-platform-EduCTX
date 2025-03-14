@@ -36,3 +36,9 @@ Recommended way to run the platform is using docker compose. First create a `doc
 2. For authentication on the Dashboard [Auth.js](https://authjs.dev/) is used. To change the authentication method, you need to just select the right [provider](https://authjs.dev/getting-started/providers/microsoft-entra-id) that fits your needs and setup the correct env variables.
 3. For sending emails [Nodemailer](https://nodemailer.com/) is used. Nodemailer connects to the `smtp.office365.com` servers. Alternatively something like [Resend](https://resend.com/) can be used, with minor code changes.
 4. Currently QR codes are generated on the Dashboard backend (Next.js API routes) and saved to [uploadthing](https://uploadthing.com/).
+
+# License
+
+This project is licensed under EUPL-1.2 terms:
+
+- Apache License, Version 2.0, ([LICENSE](LICENSE) or https://interoperable-europe.ec.europa.eu/licence/european-union-public-licence-version-12-eupl)

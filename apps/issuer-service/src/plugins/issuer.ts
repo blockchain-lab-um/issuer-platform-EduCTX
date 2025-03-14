@@ -67,6 +67,22 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: {
       'CTWalletSamePreAuthorisedDeferred',
     ],
   },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'InTimeIssuance'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'DefferedIssuance',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'PreAuthIssuance'],
+  },
 ];
 
 const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
@@ -104,6 +120,18 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","CRLPlain2023Credential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/revocation/crl-plain-2023-credential-schema.json',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","InTimeIssuance"]',
+    'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/zDpWGUBenmqXzurskry9Nsk6vq2R8thh9VSeoRqguoyMD',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","DefferedIssuance"]',
+    'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/zDpWGUBenmqXzurskry9Nsk6vq2R8thh9VSeoRqguoyMD',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","PreAuthIssuance"]',
+    'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/zDpWGUBenmqXzurskry9Nsk6vq2R8thh9VSeoRqguoyMD',
   ],
 ]);
 

@@ -16,6 +16,7 @@ services:
     environment:
       AZURE_AD_CLIENT_ID: ${AZURE_AD_CLIENT_ID}
       AZURE_AD_CLIENT_SECRET: ${AZURE_AD_CLIENT_SECRET}
+      AZURE_AD_TENANT_ID: ${AZURE_AD_TENANT_ID}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       NEXT_PUBLIC_ISSUER_ENDPOINT: 'https://bclabum.informatika.uni-mb.si/eductx-issuer'
       NEXT_PUBLIC_APP_URL: 'https://platform2.eductx.org'
@@ -26,6 +27,19 @@ services:
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
       UPLOADTHING_TOKEN: ${UPLOADTHING_TOKEN}
       NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
+      AUTHORIZED_ACCOUNTS: ${AUTHORIZED_ACCOUNTS}
+    restart: unless-stopped
+
+  testing-frontend:
+    image: blockchain-lab-um/eductx-platform-testing-frontend:latest
+    container_name: eductx-platform-testing-frontend
+    ports:
+      - '34571:3000'
+    environment:
+      API_KEY: ${API_KEY}
+      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
+      ISSUER_ENDPOINT: ${ISSUER_ENDPOINT}
+      NEXT_PUBLIC_BASE_PATH: ${NEXT_PUBLIC_BASE_PATH}
     restart: unless-stopped
 
   issuer-service:

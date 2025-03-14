@@ -14,3 +14,6 @@ docker build -t blockchain-lab-um/eductx-platform-dashboard apps/dashboard
 
 # Build platform backend
 docker build -t blockchain-lab-um/eductx-platform-backend apps/eductx-platform-backend
+
+# Build platform testing frontend
+docker build -t blockchain-lab-um/eductx-platform-testing-frontend apps/testing-frontend

@@ -115,7 +115,7 @@ export const ClaimView = () => {
             </div>
           )}
           {step === 1 && (
-            <div className="flex flex-col h-full items-center justify-center gap-4">
+            <div className="flex flex-col h-full items-center justify-center gap-4 px-12 ">
               {isLoading ||
                 (authRequestStatus?.status === 'Pending' && (
                   <div className="flex flex-col items-center justify-center gap-4">
@@ -125,7 +125,9 @@ export const ClaimView = () => {
               {authRequestStatus?.status === 'Success' && (
                 <div className="flex flex-col items-center justify-center gap-4">
                   <div className="font-semibold">Authentication successful</div>
-                  <div>{selectedCoupon?.description}</div>
+                  <div className="text-center">
+                    {selectedCoupon?.description}
+                  </div>
                   <div>
                     <span className="p-1 border-2 bg-gray-100 rounded-md">
                       {authRequestStatus?.data.coupon}
