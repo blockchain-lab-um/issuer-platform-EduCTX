@@ -104,7 +104,11 @@ export async function POST(req: NextRequest) {
     let attachments: Mail.Attachment[] = [];
 
     // Send PDF email (only for education credentials)
-    if (selectedPdf !== '') {
+    if (
+      selectedPdf !== '' &&
+      selectedPdf !== null &&
+      selectedPdf !== undefined
+    ) {
       const credentialSubject =
         data.credential_subject as EducationCredentialType;
 
