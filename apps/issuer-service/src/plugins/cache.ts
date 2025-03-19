@@ -14,12 +14,12 @@ declare module 'fastify' {
 }
 
 export default fp(async (fastify, _) => {
-  const store = new KeyvCacheableMemory({ ttl: '93d', lruSize: 5000 });
+  const store = new KeyvCacheableMemory({ ttl: undefined, lruSize: 5000 });
   const keyv = new Keyv({ store });
   const flatCache = new FlatCache({
     cacheDir: path.join(process.cwd(), 'db/persistent-cache'),
-    ttl: 8035200000, // 93 d
-    lruSize: 10000, // 10000 items
+    ttl: undefined,
+    lruSize: 0,
     persistInterval: 1000 * 10, // 5 minutes
   });
 

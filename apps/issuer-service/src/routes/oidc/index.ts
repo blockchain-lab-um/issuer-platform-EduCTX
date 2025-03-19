@@ -594,8 +594,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         if (!cachedData) return reply.code(400).send();
 
-        await fastify.cache.del(data.id);
-
         await fastify.cache.set(data.newId, cachedData);
       } catch (error) {
         return reply.code(401).send({
