@@ -115,7 +115,7 @@ export const ClaimView = () => {
             </div>
           )}
           {step === 1 && (
-            <div className="flex flex-col h-full items-center justify-center gap-4 px-12 ">
+            <div className="flex flex-col h-full items-center justify-center gap-4 px-12 text-lg">
               {isLoading ||
                 (authRequestStatus?.status === 'Pending' && (
                   <div className="flex flex-col items-center justify-center gap-4">
