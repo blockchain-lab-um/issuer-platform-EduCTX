@@ -30,6 +30,11 @@ export default async function Page() {
           },
         },
       );
+
+      if (!result.ok) {
+        throw new Error('Failed to fetch credentials');
+      }
+
       const credentials = await result.json();
       return credentials as any[];
     } catch (error) {

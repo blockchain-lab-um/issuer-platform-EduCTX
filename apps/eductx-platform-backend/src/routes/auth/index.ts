@@ -148,6 +148,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           });
         }
 
+        // Decode jwt credential
+        const decodedCredential: any = decodeJwt(
+          selectedCredentials as unknown as string,
+        );
+
         // Stable stringify of `credentials` to get consistent hash
         const stringifiedCredentials = stringify({
           credentials: selectedCredentials,
@@ -187,6 +192,13 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         fastify.couponCache.set(couponDataId, couponData);
         fastify.claimCache.set(claimId, newCoupon);
+        fastify.claimedCouponInfoCache.set(claimId, {
+          // Notice: This needs to be changed to array if we want to support multiple credentials in a verifiable presentation
+          credentialId: decodedCredential.vc.id,
+          coupon: newCoupon,
+          couponName: couponData.name,
+          claimedAt: new Date().toLocaleString(),
+        });
 
         return reply.code(200).send({
           status: 'Success',

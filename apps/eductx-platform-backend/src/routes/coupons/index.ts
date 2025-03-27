@@ -105,6 +105,24 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       });
     },
   );
+
+  fastify.get(
+    '/claimed-coupons',
+    {
+      config: {
+        description: '',
+        response: {},
+      },
+      preValidation: apiKeyAuth,
+    },
+    async (_, reply) => {
+      const claimedCouponInfo = fastify.claimedCouponInfoCache.all();
+
+      const claimedCouponInfoArray = Object.values(claimedCouponInfo);
+
+      return reply.code(200).send(claimedCouponInfoArray);
+    },
+  );
 };
 
 export default route;

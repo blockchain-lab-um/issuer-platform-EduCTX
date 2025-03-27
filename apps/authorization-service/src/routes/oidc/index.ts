@@ -258,6 +258,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       },
     },
     async (request, reply) => {
+      if (!request.body.code && !request.body['pre-authorized_code']) {
+        return reply.code(400).send({
+          error: 'Invalid request',
+        });
+      }
+
       let pin: null | string = null;
 
       const preAuthorizedCode = request.body['pre-authorized_code'];
@@ -267,47 +273,45 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const response = await fastify.auth.token(request.body, { pin });
 
-      if (preAuthorizedCode) {
-        const now = Math.floor(Date.now() / 1000);
+      const now = Math.floor(Date.now() / 1000);
 
-        const jwt = await createJWT(
+      const jwt = await createJWT(
+        {
+          iss: `${fastify.config.SERVER_URL}/oidc`,
+          aud: fastify.config.ISSUER_SERVER_URL,
+          iat: now,
+          exp: now + 180, // 3 minutes
+          data: {
+            id: preAuthorizedCode ?? request.body.code,
+            newId: response.access_token,
+          },
+        },
+        {
+          issuer: fastify.config.SERVER_URL,
+          signer:
+            fastify.config.KEY_ALG === 'ES256'
+              ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
+              : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
+        },
+        {
+          type: 'JWT',
+          alg: fastify.config.KEY_ALG,
+          kid: fastify.kid,
+        },
+      );
+
+      try {
+        await fetch(
+          `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
           {
-            iss: `${fastify.config.SERVER_URL}/oidc`,
-            aud: fastify.config.ISSUER_SERVER_URL,
-            iat: now,
-            exp: now + 180, // 3 minutes
-            data: {
-              id: preAuthorizedCode,
-              newId: response.access_token,
+            method: 'POST',
+            headers: {
+              authorization: `Bearer ${jwt}`,
             },
-          },
-          {
-            issuer: fastify.config.SERVER_URL,
-            signer:
-              fastify.config.KEY_ALG === 'ES256'
-                ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
-                : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY)),
-          },
-          {
-            type: 'JWT',
-            alg: fastify.config.KEY_ALG,
-            kid: fastify.kid,
           },
         );
-
-        try {
-          await fetch(
-            `${fastify.config.ISSUER_SERVER_URL}/stored-credential-data`,
-            {
-              method: 'POST',
-              headers: {
-                authorization: `Bearer ${jwt}`,
-              },
-            },
-          );
-        } catch (error) {
-          console.error(error);
-        }
+      } catch (error) {
+        console.error(error);
       }
 
       return reply.code(200).send(response);

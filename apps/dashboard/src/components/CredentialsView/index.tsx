@@ -35,44 +35,74 @@ export const CredentialsView = ({
 
   return (
     <>
-      <div className="w-full max-w-7xl mx-auto h-full flex flex-col p-8">
+      <div className="w-full max-w-[1920px] mx-auto h-full flex flex-col p-8">
         <div className="bg-green-500 text-white py-4 px-6 rounded-t-lg">
           <h1 className="text-2xl font-bold text-center">Issued Credentials</h1>
         </div>
         <div className="flex-grow overflow-auto bg-white shadow-md rounded-b-lg">
           <table className="min-w-full">
+            <thead>
+              <tr>
+                <th className="py-4 px-6 text-left">ID</th>
+                <th className="py-4 px-6 text-left">Types</th>
+                <th className="py-4 px-6 text-left">Email</th>
+                <th className="py-4 px-6 text-left">Issued At</th>
+                <th className="py-4 px-6 text-left">Claimed At</th>
+                <th className="py-4 px-6 text-left">Subject</th>
+                <th className="py-4 px-6 text-left">Actions</th>
+              </tr>
+            </thead>
             <tbody>
-              {credentials.map(({ credential, isRevoked }, index) => (
-                <tr
-                  key={credential.vc.id}
-                  className={clsx(
-                    'border-b border-gray-100 transition-colors',
-                    credential.revoked
-                      ? 'bg-red-50 hover:bg-red-100'
-                      : index % 2 === 0
-                        ? 'bg-white hover:bg-gray-50'
-                        : 'bg-gray-50 hover:bg-gray-100',
-                  )}
-                >
-                  <td className="py-4 px-6">
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                          <div className="text-xs font-mono truncate max-w-[150px] md:max-w-[250px]">
-                            {credential.vc.id}
-                          </div>
-                          <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
-                            {credential.vc.type.slice(1).join(', ')}
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            {new Date(credential.iat * 1000).toLocaleString()}
-                          </span>
-                          <span className="text-sm font-medium text-gray-800">
-                            {credentialSubject(credential)}
-                          </span>
-                        </div>
+              {credentials.map(
+                (
+                  { email, types, issuedAt, claimedAt, credential, isRevoked },
+                  index,
+                ) => (
+                  <tr
+                    key={credential.vc.id}
+                    className={clsx(
+                      'border-b border-gray-100 transition-colors',
+                      credential.revoked
+                        ? 'bg-red-50 hover:bg-red-100'
+                        : index % 2 === 0
+                          ? 'bg-white hover:bg-gray-50'
+                          : 'bg-gray-50 hover:bg-gray-100',
+                    )}
+                  >
+                    <td className="py-4 px-6">
+                      <div className="text-xs font-mono truncate max-w-[150px] md:max-w-[250px]">
+                        {credential.vc.id}
                       </div>
-                      <div className="flex-shrink-0 mt-2 md:mt-0">
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md">
+                        {types.slice(1).join(', ')}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-sm text-gray-600">
+                        {email ?? 'No email'}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-sm text-gray-600">
+                        {new Date(issuedAt).toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-sm text-gray-600">
+                        {claimedAt
+                          ? new Date(claimedAt).toLocaleString()
+                          : 'Not claimed'}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="text-sm font-medium text-gray-800">
+                        {credentialSubject(credential)}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex gap-2">
                         <button
                           type="button"
                           className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
@@ -97,10 +127,10 @@ export const CredentialsView = ({
                           </button>
                         )}
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ),
+              )}
             </tbody>
           </table>
         </div>

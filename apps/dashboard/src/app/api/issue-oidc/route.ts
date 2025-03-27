@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       {
         method: 'POST',
         headers,
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, email }),
       },
     );
 
