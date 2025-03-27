@@ -7,6 +7,7 @@ declare module 'fastify' {
     claimCache: FlatCache;
     couponCache: FlatCache;
     authRequestCache: FlatCache;
+    claimedCouponInfoCache: FlatCache;
   }
 }
 
@@ -38,7 +39,17 @@ export default fp(async (fastify, _) => {
 
   authRequestCache.load();
 
+  const claimedCouponInfoCache = new FlatCache({
+    cacheDir: path.join(process.cwd(), 'db/claimed-coupon-info-cache'),
+    ttl: undefined, // Unlimited
+    lruSize: 0, // Unlimited
+    persistInterval: 1000 * 10, // 5 minutes
+  });
+
+  claimedCouponInfoCache.load();
+
   fastify.decorate('couponCache', couponCache);
   fastify.decorate('claimCache', claimCache);
   fastify.decorate('authRequestCache', authRequestCache);
+  fastify.decorate('claimedCouponInfoCache', claimedCouponInfoCache);
 });

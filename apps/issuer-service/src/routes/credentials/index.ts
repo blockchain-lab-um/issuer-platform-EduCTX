@@ -18,25 +18,28 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (_, reply) => {
-      const credentialJWTs = Object.values(fastify.credentialCache.all());
+      const issuedCredentialInfo = Object.values(
+        fastify.issuedCredentialCache.all(),
+      );
 
       // Decode JWTs
-      const credentials = credentialJWTs.map((credentialJWT) => {
-        const credential = decodeJWT(credentialJWT).payload;
+      const credentials = issuedCredentialInfo.map((info) => {
+        const credential = info.credential
+          ? decodeJWT(info.credential).payload
+          : null;
 
         return {
+          ...info,
           credential,
-          isRevoked:
-            fastify.revocationCache.get(credential.vc.id) !== undefined,
+          isRevoked: credential
+            ? fastify.revocationCache.get(credential.vc.id) !== undefined
+            : false,
         };
       });
 
       // Sort by issuance date ascending
       credentials.sort((a, b) => {
-        return (
-          new Date(a.credential.vc.issued).getTime() -
-          new Date(b.credential.vc.issued).getTime()
-        );
+        return new Date(a.issuedAt).getTime() - new Date(b.issuedAt).getTime();
       });
 
       return reply.code(200).send(credentials);
