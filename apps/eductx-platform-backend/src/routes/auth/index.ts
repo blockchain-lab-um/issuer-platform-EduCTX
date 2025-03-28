@@ -197,7 +197,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           credentialId: decodedCredential.vc.id,
           coupon: newCoupon,
           couponName: couponData.name,
-          claimedAt: new Date().toLocaleString(),
+          claimedAt: new Date().toISOString(),
         });
 
         return reply.code(200).send({
