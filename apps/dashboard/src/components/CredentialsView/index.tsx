@@ -59,10 +59,10 @@ export const CredentialsView = ({
                   index,
                 ) => (
                   <tr
-                    key={credential.vc.id}
+                    key={index}
                     className={clsx(
                       'border-b border-gray-100 transition-colors',
-                      credential.revoked
+                      isRevoked
                         ? 'bg-red-50 hover:bg-red-100'
                         : index % 2 === 0
                           ? 'bg-white hover:bg-gray-50'
@@ -71,7 +71,7 @@ export const CredentialsView = ({
                   >
                     <td className="py-4 px-6">
                       <div className="text-xs font-mono truncate max-w-[150px] md:max-w-[250px]">
-                        {credential.vc.id}
+                        {credential ? credential.vc.id : 'No ID'}
                       </div>
                     </td>
                     <td className="py-4 px-6">
@@ -121,6 +121,7 @@ export const CredentialsView = ({
                           <button
                             className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md transition-colors"
                             type="button"
+                            disabled={isRevoked || !credential}
                             onClick={() => handleRevoke(credential.vc.id)}
                           >
                             Revoke
@@ -141,6 +142,10 @@ export const CredentialsView = ({
 };
 
 const credentialSubject = (credential: any) => {
+  if (!credential) {
+    return 'No credential';
+  }
+
   const credentialSubject = credential.vc.credentialSubject;
 
   if (credential.vc.type.includes('EducationCredential')) {
