@@ -36,7 +36,11 @@ export default async function Page() {
       }
 
       const claimedCoupons = await result.json();
-      return claimedCoupons as any[];
+      return (claimedCoupons as any[]).sort((a, b) => {
+        return (
+          new Date(a.claimedAt).getTime() - new Date(b.claimedAt).getTime()
+        );
+      });
     } catch (error) {
       console.error(error);
       return [];
@@ -59,7 +63,9 @@ export default async function Page() {
       }
 
       const credentials = await result.json();
-      return (credentials as any[]).filter((credential) => credential.email);
+      return (credentials as any[]).filter(
+        (credential) => credential.email && credential.credential,
+      );
     } catch (error) {
       console.error(error);
       return [];
@@ -68,6 +74,8 @@ export default async function Page() {
 
   const claimedCoupons = await getClaimedCoupons();
   const credentials = await getCredentials();
+
+  console.log(credentials);
 
   const credentialIdToEmailMap = new Map(
     credentials.map((credential) => [
