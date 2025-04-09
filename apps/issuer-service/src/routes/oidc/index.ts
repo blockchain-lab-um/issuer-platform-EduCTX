@@ -37,12 +37,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential`,
         deferred_credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential_deffered`,
         credentials_supported:
-          fastify.issuerServerConfig.credentialsSupported.map(
-            (credentialTypes) => ({
-              format: credentialTypes.format as any,
-              types: credentialTypes.types,
-              display: [],
-            }),
+          fastify.issuerServerConfig.credentialTypesSupported.map(
+            (credentialTypes) =>
+              ({
+                format: 'jwt_vc_json',
+                types: credentialTypes,
+              }) as any,
           ),
         authorization_server: `${fastify.config.AUTHORIZATION_SERVER_URL}`,
       };
