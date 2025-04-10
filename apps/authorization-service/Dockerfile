@@ -6,7 +6,7 @@ WORKDIR /app
 
 RUN npm i -g pnpm@9.12.2
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 fastify
