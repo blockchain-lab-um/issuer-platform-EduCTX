@@ -5,7 +5,7 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_BACKEND_API_URL ||
       'NEXT_PUBLIC_BACKEND_API_URL_PLACEHOLDER',
   },
-  basePath: '/interop-testing-frontend',
+  basePath: '',
   output: 'standalone',
   webpack: (config) => {
     config.externals.push('bufferutil');
