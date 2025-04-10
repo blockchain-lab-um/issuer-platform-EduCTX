@@ -1,4 +1,4 @@
-FROM blockchain-lab-um/eductx-platform-base:latest as builder
+FROM blockchain-lab-um/eductx-platform-base:latest AS builder
 
 # Production image, copy all the files and run next
 FROM node:20.18.0-alpine AS runner
@@ -30,7 +30,7 @@ RUN chown -R fastify:nodejs ./db
 
 USER fastify
 
-ENV HOST 0.0.0.0
-ENV PORT 3001
+ENV HOST=0.0.0.0
+ENV PORT=3001
 
 CMD ["node", "apps/issuer-service/dist/server.js"]

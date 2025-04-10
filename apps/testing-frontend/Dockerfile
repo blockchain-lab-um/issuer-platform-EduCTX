@@ -1,4 +1,4 @@
-FROM blockchain-lab-um/eductx-platform-base:latest as builder
+FROM blockchain-lab-um/eductx-platform-base:latest AS builder
 
 # Production image, copy all the files and run next
 FROM node:20.18.0-alpine AS runner
@@ -25,9 +25,9 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME=0.0.0.0
 
 ENTRYPOINT [ "./entrypoint.sh" ]
 
