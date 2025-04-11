@@ -167,7 +167,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
         if (request.body.credential_subject) {
-          const credentialSubject = request.body.credential_subject;
+          // Remove empty strings, nulls and undefined values
+          const credentialSubject = JSON.parse(
+            JSON.stringify(request.body.credential_subject, (_, value) =>
+              value == null || value === '' ? undefined : value,
+            ),
+          );
           await fastify.cache.set(issuerState, { credentialSubject });
         }
 
@@ -229,7 +234,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
         if (request.body.credential_subject) {
-          const credentialSubject = request.body.credential_subject;
+          // Remove empty strings, nulls and undefined values
+          const credentialSubject = JSON.parse(
+            JSON.stringify(request.body.credential_subject, (_, value) =>
+              value == null || value === '' ? undefined : value,
+            ),
+          );
           await fastify.cache.set(preAuthorizedCode, { credentialSubject });
         }
 
@@ -419,7 +429,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       const credentialInfoId: string | undefined =
         fastify.idRelationCache.get(accessToken);
 
-      // Update issued credential information
       if (credentialInfoId) {
         const issuedCredentialInfo: any =
           fastify.issuedCredentialCache.get(credentialInfoId);
@@ -447,7 +456,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // If schema is not found, fallback to the EBSI schema
       if (!schema) {
-        schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
+        schema =
+          'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM';
       }
 
       const vcId = `urn:uuid:${randomUUID()}`;
@@ -487,7 +497,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           `api-${fastify.config.NETWORK}.ebsi.eu`,
           'raw.githubusercontent.com',
         ],
-        skipValidation: true,
+        skipValidation: false,
       } satisfies CreateVerifiableCredentialOptions;
 
       const vcJwt = await createVerifiableCredentialJwt(
@@ -498,15 +508,19 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // Update issued credential information
       if (credentialInfoId) {
+        fastify.idRelationCache.set(accessToken, vcId);
+
         const issuedCredentialInfo =
           fastify.issuedCredentialCache.get(credentialInfoId);
 
         if (issuedCredentialInfo) {
-          fastify.issuedCredentialCache.set(credentialInfoId, {
+          fastify.issuedCredentialCache.set(vcId, {
             ...issuedCredentialInfo,
             claimedAt: new Date().toISOString(),
             credential: vcJwt,
           });
+
+          fastify.issuedCredentialCache.delete(credentialInfoId);
         }
       }
 

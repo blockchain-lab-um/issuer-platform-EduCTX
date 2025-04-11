@@ -35,8 +35,6 @@ export const useAuthRequestStatus = (
 
       const data = await response.json();
 
-      console.log(data);
-
       return data as AuthRequestStatus;
     },
     enabled: !!authRequestId && !disabled,

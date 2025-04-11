@@ -87,7 +87,7 @@ export const IssueView = () => {
     setNext(true);
   };
 
-  const handleInputValueChange = (e: string, path: string) => {
+  const handleInputValueChange = (e: string | number, path: string) => {
     const newInputs = { ...inputs };
     const pathArray = path.split('/').filter((p) => p !== '');
     let currentObject = newInputs;
@@ -152,6 +152,7 @@ export const IssueView = () => {
         data: {
           credential_type: [
             'VerifiableCredential',
+            'VerifiableAttestation',
             getCredentialType(selectedSchema!.type),
           ],
           flow: 'pre-authorized_code',

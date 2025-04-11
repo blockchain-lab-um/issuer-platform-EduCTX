@@ -75,8 +75,6 @@ export default async function Page() {
   const claimedCoupons = await getClaimedCoupons();
   const credentials = await getCredentials();
 
-  console.log(credentials);
-
   const credentialIdToEmailMap = new Map(
     credentials.map((credential) => [
       credential.credential.vc.id,

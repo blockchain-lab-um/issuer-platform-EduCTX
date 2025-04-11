@@ -37,7 +37,7 @@ const revocation: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (request, reply) => {
-      const credential = fastify.credentialCache.get(request.params.id);
+      const credential = fastify.issuedCredentialCache.get(request.params.id);
 
       if (!credential) {
         return reply.code(404).send();
@@ -56,7 +56,11 @@ const revocation: FastifyPluginAsyncJsonSchemaToTs = async (
       } satisfies EbsiIssuer;
 
       const vcId = request.params.id;
-      const vcType = ['VerifiableCredential', 'CRLPlain2023Credential'];
+      const vcType = [
+        'VerifiableCredential',
+        'VerifiableAttestation',
+        'CRLPlain2023Credential',
+      ];
       const issuedAt = `${new Date(Date.now()).toISOString().slice(0, -5)}Z`;
       const schema = CREDENTIAL_TYPE_TO_SCHEMA.get(JSON.stringify(vcType))!;
 
