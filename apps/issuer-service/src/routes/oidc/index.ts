@@ -37,12 +37,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential`,
         deferred_credential_endpoint: `${fastify.config.SERVER_URL}/oidc/credential_deffered`,
         credentials_supported:
-          fastify.issuerServerConfig.credentialTypesSupported.map(
-            (credentialTypes) =>
-              ({
-                format: 'jwt_vc_json',
-                types: credentialTypes,
-              }) as any,
+          fastify.issuerServerConfig.credentialsSupported.map(
+            (credentialTypes) => ({
+              format: credentialTypes.format as any,
+              types: credentialTypes.types,
+              display: [],
+            }),
           ),
         authorization_server: `${fastify.config.AUTHORIZATION_SERVER_URL}`,
       };
@@ -185,7 +185,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       );
 
       // Store the VC in the cache
-      fastify.credentialCache.set(vcId, vcJwt);
+      fastify.issuedCredentialCache.set(vcId, vcJwt);
 
       // TODO: Should we maybe issue in the deffered endpoint ?
       const deferredCredentials = [
