@@ -52,188 +52,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
   );
 
   fastify.post(
-    '/credential',
-    {
-      schema: {
-        headers: {
-          type: 'object',
-          properties: {
-            Authorization: {
-              type: 'string',
-              pattern: '^Bearer .+$',
-            },
-          },
-          required: ['Authorization'],
-        },
-      },
-      config: {
-        description: 'Credential endpoint for OpenID credential issuer',
-      },
-    },
-    async (request, reply) => {
-      const {
-        did,
-        url,
-        authorizationServerPublicJwk,
-        resolver,
-        credentialTypesSupported,
-      } = fastify.issuerServerConfig;
-
-      const { accessTokenPayload, credentialRequest } =
-        await validatePostCredential(
-          fastify.dbOidc,
-          did,
-          url,
-          authorizationServerPublicJwk,
-          resolver,
-          resolver,
-          credentialTypesSupported,
-          undefined,
-          request.headers.authorization,
-          request.body,
-        );
-
-      const signer =
-        fastify.config.KEY_ALG === 'ES256'
-          ? ES256Signer(utils.hexToBytes(fastify.config.PRIVATE_KEY))
-          : ES256KSigner(utils.hexToBytes(fastify.config.PRIVATE_KEY));
-
-      const issuer = {
-        did: fastify.issuerServerConfig.did,
-        kid: `${fastify.issuerServerConfig.kid}`,
-        alg: fastify.config.KEY_ALG,
-        signer: signer,
-      } satisfies EbsiIssuer;
-
-      // Store c_nonce to prevent replay attacks
-      const dbKey = {
-        did: fastify.issuerServerConfig.did,
-        nonceAccessToken: accessTokenPayload.claims.c_nonce,
-      };
-
-      await fastify.dbOidc.put(dbKey, {
-        nonce: accessTokenPayload.claims.c_nonce,
-      });
-
-      const issuedAt = `${new Date(Date.now()).toISOString().slice(0, -5)}Z`;
-
-      // Check if any cached data is available
-      const cachedData = await fastify.cache.get(
-        request.headers.authorization.replace('Bearer ', ''),
-      );
-
-      const proofJwt = decodeJwt(credentialRequest.proof.jwt);
-
-      let schema = CREDENTIAL_TYPE_TO_SCHEMA.get(
-        JSON.stringify(credentialRequest.types),
-      );
-
-      // If schema is not found, fallback to the EBSI schema
-      if (!schema) {
-        schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
-      }
-
-      if ((credentialRequest.format as any) === 'vc+sd-jwt') {
-        // TODO [SD-JWT]: Issue credential
-        throw new Error('SD-JWT format is not supported yet');
-      }
-
-      const vcId = `urn:uuid:${randomUUID()}`;
-      const vcPayload = {
-        // TODO: Do we need to add contexts based on requested credential types ?
-        '@context': ['https://www.w3.org/2018/credentials/v1'],
-        id: vcId,
-        type: credentialRequest.types,
-        issuer: issuer.did,
-        issuanceDate: issuedAt,
-        validFrom: issuedAt,
-        issued: issuedAt,
-        credentialSubject: {
-          ...(cachedData?.credentialSubject ?? {}),
-          id: accessTokenPayload.sub ?? proofJwt.iss,
-        },
-        credentialSchema: {
-          id: schema,
-          type: 'FullJsonSchemaValidator2021',
-        },
-        // NOTE: Conformance tests don't support CRLPlain2023Entry
-        ...(fastify.config.CONFORMANCE_TEST_ENABLED
-          ? {}
-          : {
-              credentialStatus: {
-                id: vcId,
-                type: 'CRLPlain2023Entry',
-                purpose: 'revocation',
-                credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
-              },
-            }),
-      } satisfies EbsiVerifiableAttestation;
-
-      const options = {
-        network: fastify.config.NETWORK,
-        hosts: [
-          `api-${fastify.config.NETWORK}.ebsi.eu`,
-          'raw.githubusercontent.com',
-        ],
-        skipValidation: true,
-      } satisfies CreateVerifiableCredentialOptions;
-
-      const vcJwt = await createVerifiableCredentialJwt(
-        vcPayload,
-        issuer,
-        options,
-      );
-
-      // Store the VC in the cache
-      fastify.issuedCredentialCache.set(vcId, vcJwt);
-
-      // TODO: Should we maybe issue in the deffered endpoint ?
-      const deferredCredentials = [
-        'CTWalletSameAuthorisedDeferred',
-        'CTWalletSamePreAuthorisedDeferred',
-        'DefferedIssuance',
-      ];
-
-      if (
-        credentialRequest.types.some((type) =>
-          deferredCredentials.includes(type),
-        )
-      ) {
-        const acceptanceToken = Buffer.from(randomBytes(32)).toString(
-          'base64url',
-        );
-
-        const defferedCredentialId = `deffered-credential-${acceptanceToken}`;
-
-        await fastify.cache.set(
-          defferedCredentialId,
-          {
-            credential: vcJwt,
-            format: credentialRequest.format,
-          },
-          // 7 days
-          604_800_000,
-        );
-
-        return reply.code(200).send({
-          acceptance_token: acceptanceToken,
-          c_nonce: accessTokenPayload.claims.c_nonce,
-          c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
-        });
-      }
-
-      const response = {
-        format: credentialRequest.format,
-        credential: vcJwt,
-        c_nonce: accessTokenPayload.claims.c_nonce,
-        c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
-      };
-
-      return reply.code(200).send(response);
-    },
-  );
-
-  fastify.post(
     '/credential_deffered',
     {
       schema: {
@@ -672,6 +490,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
       }
 
+      if ((credentialRequest.format as any) === 'vc+sd-jwt') {
+        // TODO [SD-JWT]: Issue credential
+        throw new Error('SD-JWT format is not supported yet');
+      }
+
       const vcId = `urn:uuid:${randomUUID()}`;
       const vcPayload = {
         // TODO: Do we need to add contexts based on requested credential types ?
@@ -764,44 +587,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       };
 
       return reply.code(200).send(response);
-    },
-  );
-
-  fastify.post(
-    '/credential_deffered',
-    {
-      schema: {
-        headers: {
-          type: 'object',
-          properties: {
-            authorization: {
-              type: 'string',
-              pattern: '^Bearer .+$',
-            },
-          },
-          required: ['authorization'],
-        },
-      },
-      config: {
-        description: 'Credential endpoint for OpenID credential issuer',
-      },
-    },
-    async (request, reply) => {
-      const accessToken = request.headers.authorization.replace('Bearer ', '');
-      const defferedCredentialId = `deffered-credential-${accessToken}`;
-
-      const deferredCredential = await fastify.cache.get(defferedCredentialId);
-
-      if (!deferredCredential) {
-        return reply.code(404).send();
-      }
-
-      await fastify.cache.del(defferedCredentialId);
-
-      return reply.code(200).send({
-        format: deferredCredential.format,
-        credential: deferredCredential.credential,
-      });
     },
   );
 
