@@ -214,7 +214,7 @@ export const TestingView = () => {
         {verificationRequest && disabled && (
           <Button onClick={() => setIsDisabled(false)}>Check status</Button>
         )}
-        {!false && (
+        {
           <div className="flex flex-col justify-center items-center">
             {authRequestStatus?.status === 'Pending' && <div>Loading...</div>}
             {authRequestStatus?.status === 'Success' && (
@@ -247,7 +247,7 @@ export const TestingView = () => {
                 </div>
               )}
           </div>
-        )}
+        }
         {verificationRequest && disabled && (
           <div className="flex justify-center items-center gap-x-4">
             <QRCodeCanvas value={verificationRequest} size={192} />

@@ -21,14 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <head />
-      <body
-        className={clsx(
-          inter.className,
-          'h-full w-full p-8 bg-gray-50 overflow-auto',
-        )}
-      >
+      <body className={clsx(inter.className, 'h-full w-full bg-gray-50')}>
         <Providers>
-          <div>{children}</div>
+          <main className="flex h-full w-full items-center justify-center">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

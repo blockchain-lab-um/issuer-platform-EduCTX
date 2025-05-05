@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 .animated-transition {
   @apply transition-all duration-1000 ease-in;
 }

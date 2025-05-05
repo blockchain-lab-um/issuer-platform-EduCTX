@@ -7,23 +7,53 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify.get(
     '/',
     {
-      schema: {},
+      schema: {
+        querystring: {
+          type: 'object',
+          properties: {
+            verificationDefinitionId: {
+              type: 'string',
+            },
+          },
+        },
+      },
       config: {
         description: '',
         response: {},
       },
     },
-    async (_, reply) => {
+    async (request, reply) => {
+      const verificationDefinitionId = request.query.verificationDefinitionId;
       const state = randomUUID();
 
-      const queryString = new URLSearchParams({
-        response_type: 'code',
-        scope: 'openid interop_test',
-        client_id: 'eductx-platform-backend',
-        redirect_uri: 'openid://',
-        state,
-        request_object: 'reference',
-      }).toString();
+      let queryString;
+      if (!verificationDefinitionId) {
+        queryString = new URLSearchParams({
+          response_type: 'code',
+          scope: 'openid interop_test',
+          client_id: 'eductx-platform-backend',
+          redirect_uri: 'openid://',
+          state,
+          request_object: 'reference',
+        }).toString();
+      } else {
+        const verificationDefinition = fastify.verificationDemoCache.get(
+          verificationDefinitionId,
+        ) as any;
+
+        if (!verificationDefinition) {
+          return reply.code(404).send();
+        }
+
+        queryString = new URLSearchParams({
+          response_type: 'code',
+          scope: verificationDefinition.scope,
+          client_id: 'eductx-platform-backend',
+          redirect_uri: 'openid://',
+          state,
+          request_object: 'reference',
+        }).toString();
+      }
 
       const response = await fetch(
         `${fastify.config.VERIFIER_SERVER_URL}/oidc/authorize?${queryString}`,
