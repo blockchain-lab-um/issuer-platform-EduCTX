@@ -18,20 +18,6 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (_, reply) => {
-      // TODO: Remove this after first run
-      // Migrate old entries to new cache
-      const oldEntries = Object.entries(fastify.issuedCredentialCache.all());
-      for (const [key, value] of oldEntries) {
-        const credential = value.credential
-          ? decodeJWT(value.credential).payload
-          : null;
-
-        if (credential && !key.startsWith('urn:uuid:')) {
-          fastify.issuedCredentialCache.set(credential.vc.id, value);
-          fastify.issuedCredentialCache.delete(key);
-        }
-      }
-
       const issuedCredentialInfo = Object.values(
         fastify.issuedCredentialCache.all(),
       );
