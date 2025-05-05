@@ -22,16 +22,13 @@ export const TestingView = () => {
 
   const getCredentialOfferInTime = async () => {
     try {
-      const response = await fetch(
-        '/interop-testing-frontend/api/credential-offer',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            credentialType: 'InTimeIssuance',
-            client_id: did,
-          }),
-        },
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'InTimeIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);
@@ -50,16 +47,13 @@ export const TestingView = () => {
 
   const getCredentialOfferDeffered = async () => {
     try {
-      const response = await fetch(
-        '/interop-testing-frontend/api/credential-offer',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            credentialType: 'DefferedIssuance',
-            client_id: did,
-          }),
-        },
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'DefferedIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);
@@ -78,16 +72,13 @@ export const TestingView = () => {
 
   const getCredentialOfferPreAuth = async () => {
     try {
-      const response = await fetch(
-        '/interop-testing-frontend/api/credential-offer',
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            credentialType: 'PreAuthIssuance',
-            client_id: did,
-          }),
-        },
-      );
+      const response = await fetch('/api/credential-offer', {
+        method: 'POST',
+        body: JSON.stringify({
+          credentialType: 'PreAuthIssuance',
+          client_id: did,
+        }),
+      });
 
       if (!response.ok) {
         console.error(`Error fetching credential offer: ${response.status}`);

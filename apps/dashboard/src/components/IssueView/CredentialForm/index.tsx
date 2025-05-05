@@ -8,7 +8,7 @@ import type { Schema } from '../schemaTypes';
 
 interface CredentialFormProps {
   schema: Schema;
-  handleInputValueChange: (e: string, path: string) => void;
+  handleInputValueChange: (e: string | number, path: string) => void;
   submitForm: () => void;
   submitFormByEmail: () => void;
   goBack: () => void;

@@ -15,7 +15,7 @@ patchedDependencies:
     hash: ap36rwavsvku27t6c455fqbep4
     path: patches/@cef-ebsi__credential-issuer.patch
   '@cef-ebsi/verifiable-credential':
-    hash: kggfgu76of3szlbez3cp7nm37a
+    hash: 7uyqs3l7tdbzhpc5zlzepekzpm
     path: patches/@cef-ebsi__verifiable-credential.patch
 
 importers:
@@ -360,7 +360,7 @@ importers:
         version: 2.0.4
       '@cef-ebsi/verifiable-credential':
         specifier: 6.1.0
-        version: 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
+        version: 6.1.0(patch_hash=7uyqs3l7tdbzhpc5zlzepekzpm)
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
         version: 7.1.0(ajv@8.17.1)
@@ -6673,7 +6673,7 @@ snapshots:
 
   '@cef-ebsi/credential-issuer@1.0.0-alpha.24(patch_hash=ap36rwavsvku27t6c455fqbep4)':
     dependencies:
-      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=7uyqs3l7tdbzhpc5zlzepekzpm)
       axios: 1.7.7
       did-jwt: 8.0.4
       did-resolver: 4.1.0
@@ -6715,7 +6715,7 @@ snapshots:
     dependencies:
       '@cef-ebsi/vcdm1.1-attestation-schema': 1.3.0
 
-  '@cef-ebsi/verifiable-credential@6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)':
+  '@cef-ebsi/verifiable-credential@6.1.0(patch_hash=7uyqs3l7tdbzhpc5zlzepekzpm)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/ebsi-uri': 0.1.0
@@ -6747,7 +6747,7 @@ snapshots:
       '@cef-ebsi/ebsi-uri': 0.1.0
       '@cef-ebsi/key-did-resolver': 2.0.4
       '@cef-ebsi/vcdm1.1-presentation-schema': 1.0.3
-      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=kggfgu76of3szlbez3cp7nm37a)
+      '@cef-ebsi/verifiable-credential': 6.1.0(patch_hash=7uyqs3l7tdbzhpc5zlzepekzpm)
       '@segment/ajv-human-errors': 2.14.0(ajv@8.17.1)
       did-jwt: 8.0.4
       did-resolver: 4.1.0

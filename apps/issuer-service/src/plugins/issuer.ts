@@ -57,27 +57,32 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 ];
 
 const SUPPORTED_CREDENTIALS: string[][] = [
-  ['VerifiableCredential', 'EducationCredential'],
-  ['VerifiableCredential', 'EventTicketCredential'],
-  ['VerifiableCredential', 'CouponCredential'],
-  ['VerifiableCredential', 'CRLPlain2023Credential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'EducationCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'EventTicketCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'CouponCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'CRLPlain2023Credential'],
+  [
+    'VerifiableCredential',
+    'VerifiableAttestation',
+    'EuropeanDigitalCredential',
+  ],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
-    '["VerifiableCredential","EducationCredential"]',
+    '["VerifiableCredential","VerifiableAttestation","EducationCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/education/education-credential-schema.json',
   ],
   [
-    '["VerifiableCredential","EventTicketCredential"]',
+    '["VerifiableCredential","VerifiableAttestation","EventTicketCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/event-ticket-credential-schema.json',
   ],
   [
-    '["VerifiableCredential", "CouponCredential"]',
+    '["VerifiableCredential","VerifiableAttestation","CouponCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/coupon-credential-schema.json',
   ],
   [
-    '["VerifiableCredential","CRLPlain2023Credential"]',
+    '["VerifiableCredential","VerifiableAttestation","CRLPlain2023Credential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/revocation/crl-plain-2023-credential-schema.json',
   ],
   [
@@ -91,6 +96,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","VerifiableAttestation","PreAuthIssuance"]',
     'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/zDpWGUBenmqXzurskry9Nsk6vq2R8thh9VSeoRqguoyMD',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","EuropeanDigitalCredential"]',
+    'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z5P8ebAhZjuvypiSXSHoba6vstbhTwnLhVuULWKenuiNJ',
   ],
 ]);
 

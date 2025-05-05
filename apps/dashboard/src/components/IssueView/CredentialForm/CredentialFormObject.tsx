@@ -7,7 +7,7 @@ import type { SchemaObject } from '../schemaTypes';
 interface CredentialFormObjectProps {
   path: string;
   schema: SchemaObject;
-  handleInputValue: (e: string, path: string) => void;
+  handleInputValue: (e: string | number, path: string) => void;
   setDateValidity: (dateValidity: any) => void;
 }
 

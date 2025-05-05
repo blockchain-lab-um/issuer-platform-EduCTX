@@ -49,9 +49,14 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
 ];
 
 const SUPPORTED_CREDENTIALS: string[][] = [
-  ['VerifiableCredential', 'EducationCredential'],
-  ['VerifiableCredential', 'EventTicketCredential'],
-  ['VerifiableCredential', 'CouponCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'EducationCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'EventTicketCredential'],
+  ['VerifiableCredential', 'VerifiableAttestation', 'CouponCredential'],
+  [
+    'VerifiableCredential',
+    'VerifiableAttestation',
+    'EuropeanDigitalCredential',
+  ],
 ];
 
 export default fp(async (fastify, _) => {
