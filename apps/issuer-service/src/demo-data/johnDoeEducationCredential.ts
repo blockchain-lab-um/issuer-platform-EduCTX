@@ -11,7 +11,7 @@ export const johnDoeEuropeanDigitalCredential = {
     fullName: {
       en: ['John Doe'],
     },
-    dateOfBirth: '1999-01-01T00:00:00',
+    dateOfBirth: '1999-01-01T00:00:00Z',
     hasClaim: [
       {
         id: 'urn:epass:entitlement:1',
