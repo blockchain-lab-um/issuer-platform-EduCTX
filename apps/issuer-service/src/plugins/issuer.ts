@@ -66,6 +66,7 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'EuropeanDigitalCredential',
   ],
+  ['VerifiableCredential', 'VerifiableAttestation', 'DiplomaCredential'],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -100,6 +101,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","VerifiableAttestation","EuropeanDigitalCredential"]',
     'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z5P8ebAhZjuvypiSXSHoba6vstbhTwnLhVuULWKenuiNJ',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","DiplomaCredential"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/education/diploma-schema.json',
   ],
 ]);
 

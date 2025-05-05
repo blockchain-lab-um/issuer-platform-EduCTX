@@ -57,6 +57,7 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'EuropeanDigitalCredential',
   ],
+  ['VerifiableCredential', 'VerifiableAttestation', 'DiplomaCredential'],
 ];
 
 export default fp(async (fastify, _) => {
