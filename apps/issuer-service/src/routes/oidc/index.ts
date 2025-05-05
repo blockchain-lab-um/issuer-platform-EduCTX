@@ -19,6 +19,7 @@ import {
 } from '@blockchain-lab-um/eductx-platform-shared';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
+import { johnDoeEuropeanDigitalCredential } from '../../demo-data/johnDoeEducationCredential.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -462,8 +463,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const vcId = `urn:uuid:${randomUUID()}`;
       const vcPayload = {
-        // TODO: Do we need to add contexts based on requested credential types ?
-        '@context': ['https://www.w3.org/2018/credentials/v1'],
+        '@context': [
+          'https://www.w3.org/2018/credentials/v1',
+          ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+            ? ['http://data.europa.eu/snb/model/context/edc-ap']
+            : []),
+        ],
         id: vcId,
         type: credentialRequest.types,
         issuer: issuer.did,
@@ -472,14 +477,21 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         issued: issuedAt,
         credentialSubject: {
           ...(cachedData?.credentialSubject ?? {}),
+          ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+            ? johnDoeEuropeanDigitalCredential.credentialSubject
+            : {}),
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },
-        credentialSchema: {
-          id: schema,
-          type: 'FullJsonSchemaValidator2021',
-        },
+        credentialSchema: [
+          {
+            id: schema,
+            type: 'JsonSchema' as any,
+          },
+        ],
         // NOTE: Conformance tests don't support CRLPlain2023Entry
-        ...(fastify.config.CONFORMANCE_TEST_ENABLED
+        // NOTE: Disabling CRLPlain2023Entry for EuropeanDigitalCredential for demo purposes
+        ...(fastify.config.CONFORMANCE_TEST_ENABLED ||
+        credentialRequest.types.includes('EuropeanDigitalCredential')
           ? {}
           : {
               credentialStatus: {
@@ -489,6 +501,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
                 credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
               },
             }),
+        ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+          ? johnDoeEuropeanDigitalCredential.extraFields
+          : {}),
       } satisfies EbsiVerifiableAttestation;
 
       const options = {
@@ -556,44 +571,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       };
 
       return reply.code(200).send(response);
-    },
-  );
-
-  fastify.post(
-    '/credential_deffered',
-    {
-      schema: {
-        headers: {
-          type: 'object',
-          properties: {
-            authorization: {
-              type: 'string',
-              pattern: '^Bearer .+$',
-            },
-          },
-          required: ['authorization'],
-        },
-      },
-      config: {
-        description: 'Credential endpoint for OpenID credential issuer',
-      },
-    },
-    async (request, reply) => {
-      const accessToken = request.headers.authorization.replace('Bearer ', '');
-      const defferedCredentialId = `deffered-credential-${accessToken}`;
-
-      const deferredCredential = await fastify.cache.get(defferedCredentialId);
-
-      if (!deferredCredential) {
-        return reply.code(404).send();
-      }
-
-      await fastify.cache.del(defferedCredentialId);
-
-      return reply.code(200).send({
-        format: deferredCredential.format,
-        credential: deferredCredential.credential,
-      });
     },
   );
 

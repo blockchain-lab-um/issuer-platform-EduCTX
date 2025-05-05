@@ -19,6 +19,7 @@ import {
   CouponCredentialSchema,
   EducationalCredentialSchema,
   EducationalCredentialSchemaNOO,
+  EuropeanDigitalCredentialSchema,
 } from './Schemas';
 import type { Schema } from './schemaTypes';
 
@@ -26,6 +27,7 @@ const SCHEMAS: Schema[] = [
   EducationalCredentialSchema,
   EducationalCredentialSchemaNOO,
   CouponCredentialSchema,
+  EuropeanDigitalCredentialSchema,
 ];
 
 const getCredentialType = (type: string | undefined) => {
@@ -33,6 +35,8 @@ const getCredentialType = (type: string | undefined) => {
     case '#educationCredential':
     case '#educationCredentialNOO':
       return 'EducationCredential';
+    case '#europeanDigitalCredential':
+      return 'EuropeanDigitalCredential';
     case '#couponCredential':
       return 'CouponCredential';
     default:

@@ -61,6 +61,11 @@ const SUPPORTED_CREDENTIALS: string[][] = [
   ['VerifiableCredential', 'VerifiableAttestation', 'EventTicketCredential'],
   ['VerifiableCredential', 'VerifiableAttestation', 'CouponCredential'],
   ['VerifiableCredential', 'VerifiableAttestation', 'CRLPlain2023Credential'],
+  [
+    'VerifiableCredential',
+    'VerifiableAttestation',
+    'EuropeanDigitalCredential',
+  ],
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -91,6 +96,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","VerifiableAttestation","PreAuthIssuance"]',
     'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/zDpWGUBenmqXzurskry9Nsk6vq2R8thh9VSeoRqguoyMD',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","EuropeanDigitalCredential"]',
+    'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z5P8ebAhZjuvypiSXSHoba6vstbhTwnLhVuULWKenuiNJ',
   ],
 ]);
 
