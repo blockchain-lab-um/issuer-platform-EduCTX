@@ -9,7 +9,7 @@ export default function Page() {
           <div className="flex h-min w-full items-center justify-between">
             <div>
               <Image
-                src={'/images/EDU-Coin.png'}
+                src={'/interop-testing-frontend/images/EDU-Coin.png'}
                 alt="Logo"
                 width={64}
                 height={64}
@@ -17,7 +17,7 @@ export default function Page() {
             </div>
             <div>
               <Image
-                src={'/images/blockchain-lab.svg'}
+                src={'/interop-testing-frontend/images/blockchain-lab.svg'}
                 alt="Logo"
                 width={64}
                 height={64}
