@@ -42,35 +42,42 @@ export const DiplomaCredentialSchema = {
   type: '#diplomaCredential',
   fields: [
     {
-      title: 'Student Name',
-      propertyName: 'studentName',
-      type: 'string',
-      required: true,
-    } as SchemaNode,
-    {
-      title: 'Birth Date',
-      propertyName: 'birthDate',
-      type: 'string',
-      required: true,
-    } as SchemaNode,
-    {
-      title: 'University',
-      propertyName: 'university',
-      type: 'string',
-      required: true,
-    } as SchemaNode,
-    {
-      title: 'Degree',
-      propertyName: 'degree',
-      type: 'string',
-      required: true,
-    } as SchemaNode,
-    {
-      title: 'Issue Date',
-      propertyName: 'issueDate',
-      type: 'string',
-      required: true,
-    } as SchemaNode,
+      title: 'Credential Subject',
+      type: 'object',
+      propertyName: 'credentialSubject',
+      fields: [
+        {
+          title: 'Student Name',
+          propertyName: 'studentName',
+          type: 'string',
+          required: true,
+        } as SchemaNode,
+        {
+          title: 'Birth Date',
+          propertyName: 'birthDate',
+          type: 'string',
+          required: true,
+        } as SchemaNode,
+        {
+          title: 'University',
+          propertyName: 'university',
+          type: 'string',
+          required: true,
+        } as SchemaNode,
+        {
+          title: 'Degree',
+          propertyName: 'degree',
+          type: 'string',
+          required: true,
+        } as SchemaNode,
+        {
+          title: 'Issue Date',
+          propertyName: 'issueDate',
+          type: 'string',
+          required: true,
+        } as SchemaNode,
+      ],
+    },
   ],
   required: true,
 } as Schema;
