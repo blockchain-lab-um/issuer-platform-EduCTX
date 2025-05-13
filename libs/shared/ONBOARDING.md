@@ -189,7 +189,7 @@ At this point, your DID is registered to the EBSI TIR (Trusted Issuer Registry) 
 
 ### Verify the registration
 
-Visit the URL https://api-pilot.ebsi.eu/trusted-issuers-registry/v5/issuers/<your-did>
+Visit the URL https://api-pilot.ebsi.eu/trusted-issuers-registry/v5/issuers/\<your-did\>
 
 For example, visiting https://api-pilot.ebsi.eu/trusted-issuers-registry/v5/issuers/did:ebsi:z25euAwW3mXPQAKUTqKqogsj, we get:
 
