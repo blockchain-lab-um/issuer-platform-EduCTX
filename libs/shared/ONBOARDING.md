@@ -128,7 +128,7 @@ In our case, this would print:
 did:ebsi:zdTEBXuQfgzD3SvYYacKapb
 ```
 
-> Request a credential to onboard. [Contact the Trusted Issuer](https://ec.europa.eu/digital-building-blocks/tracker/plugins/servlet/desk/portal/11/create/127) related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID (in our example did:ebsi:zdTEBXuQfgzD3SvYYacKapb).
+> Request a credential to onboard. [Contact the Trusted Issuer](https://ec.europa.eu/digital-building-blocks/tracker/plugins/servlet/desk/portal/11/create/127) (we recommend selecting subject "Onboard to EBSI") related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID (in our example `did:ebsi:zdTEBXuQfgzD3SvYYacKapb` ).
 
 ### Use the script when you receive the `VerifiableAuthorizationToOnboard`
 
@@ -142,7 +142,7 @@ Your DID is now onboarded. Congrats!
 
 ## Registering a DID to EBSI TIR (Trusted Issuer Registry)
 
-Using [the same form](https://ec.europa.eu/digital-building-blocks/tracker/plugins/servlet/desk/portal/11/create/127) as mentioned before, you can request the registration to the EBSI TIR (Trusted Issuer Registry). The support team will guide you through this process as well. The fields <JWT> and <number> will be provided by them, probably along with exact commands to run for registering as a trusted issuer.
+> Using [the same form](https://ec.europa.eu/digital-building-blocks/tracker/plugins/servlet/desk/portal/11/create/127) (we recommend selecting subject "Register a DID") as mentioned before, you can request the registration to the EBSI TIR (Trusted Issuer Registry). The support team will guide you through this process as well. The fields <JWT> and <number> will be provided by them, probably along with exact commands to run for registering as a trusted issuer.
 
 ### Start the EBSI CLI
 
