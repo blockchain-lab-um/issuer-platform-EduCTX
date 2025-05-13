@@ -14,7 +14,7 @@ npx @cef-ebsi/cli
 
 It will prompt you with `==>` indicating it's ready to start accepting commands.
 
-### Create new DID with 2 key pairs
+### Create new DID with 2 key pairs (see next step if you already have the keys)
 
 ```bash
 ==> using user ES256
@@ -97,10 +97,18 @@ The commands above output something like this:
 
 Make sure to store those keys someplace **SAFE**.
 
+### If you already have the keys and the DID
+
+```bash
+==> using user ES256K did1 xxxprivate_key_ES256Kxxx did:ebsi:xxxxxx
+==> using user ES256 did1 xxxprivate_key_jwk_ES256xxx did:ebsi:xxxxx
+```
+
 ### Connect to the pilot environment
 
 ```bash
 ==> env pilot
+==> set domain https://api-pilot.ebsi.eu
 ```
 
 ### Get your generated DID
@@ -111,11 +119,13 @@ It looks something like `did:ebsi:zqXpq4nsfsyfcRdRrFyd52n` .
 ==> view user.did
 ```
 
-> Request a credential to onboard. Contact the Trusted Issuer related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
+> Request a credential to onboard. [Contact the Trusted Issuer](https://ec.europa.eu/digital-building-blocks/tracker/plugins/servlet/desk/portal/11/create/127) related to your use case and request a `VerifiableAuthorizationToOnboard` and provide them your DID you printed in the previous step.
 
 ### Use the script OR go step-by-step
 
 #### Use the script
+
+The customer support will guide you through the process from this point on.
 
 ```bash
 ==> run registerDidDocument_ES256K_ES256 <VC_TO_ONBOARD>
