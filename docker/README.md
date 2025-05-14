@@ -100,3 +100,19 @@ UPLOADTHING_TOKEN=
 - <ebsi_subject_id>
 ``` 
 
+
+## Build the images and start the services
+
+### Build the images
+```bash
+# Run the following command in the root directory to build the images
+./scripts/docker-build.sh
+```
+
+### Start the services
+
+```bash
+# Start the services using your `docker-compose.yml` file which contains the correct env variables
+docker compose up -d
+```
+
