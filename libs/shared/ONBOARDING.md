@@ -7,31 +7,6 @@ More info can be found [here](https://hub.ebsi.eu/tools/cli/onboard).
 * [Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs).
 * [pnpm](https://pnpm.io/installation).
 
-## Generate the keys, identifier and DID
-
-```bash
-cd libs/shared
-pnpm keygen
-```
-
-This will output something like:
-
-```
-==================================== DID ===================================
-  Subject Identifier: 27327406d87b07bbe6a0c3106a4d844c
-  DID: did:ebsi:zdTEBXuQfgzD3SvYYacKapb
-
-  ============================== ES256K Keypair ==============================
-  Private key: a2377f15cc7999336e5059901495a6b24243b719ecdaa1d652ab2375b3d81854
-  Public key: 03ae67c98d07adede939067b308e4994bb63f15e0b22a7d9e09632239e6244fedf
-
-  ============================== ES256 Keypair ===============================
-  Private key: 2f27de710b00df8088b64aa68bc8cf2650a67cf6a18ca851adb52b0bc569ecfd
-  Public key: 02ed782a8e244d8f1d1a65c822569f111b84123ede025a35a02e74babd9c3e5cf8
-
-```
-
-⚠️ **Make sure to store PRIVATE KEYS, DID and SUBJECT IDENTIFIER someplace SAFE**.
 
 ## Start the onboarding process
 

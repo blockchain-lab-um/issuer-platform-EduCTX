@@ -6,25 +6,33 @@ import { util } from '@cef-ebsi/ebsi-did-resolver';
 const main = async () => {
   // Generate random private key
   const k1PrivateKey = secp256k1.utils.randomPrivateKey();
-  const p256PrivateKey = p256.utils.randomPrivateKey();
+  let p256PrivateKey = p256.utils.randomPrivateKey();
 
   // Generate random ebsi identifier
   const subjectIdentifierBytes = randomBytes(16);
   const did = util.createDid(subjectIdentifierBytes);
   console.log(`
-  ==================================== DID ===================================
+  ==================================== ISSUER DID ===================================
   Subject Identifier: ${Buffer.from(subjectIdentifierBytes).toString('hex')}
   DID: ${did}`);
 
   // Generate public key from private key
   const k1PublicKey = secp256k1.getPublicKey(k1PrivateKey);
-  const p256PublicKey = p256.getPublicKey(p256PrivateKey);
+  let p256PublicKey = p256.getPublicKey(p256PrivateKey);
   console.log(`
-  ============================== ES256K Keypair ==============================
+  ============================== ISSUER ES256K Keypair ==============================
   Private key: ${Buffer.from(k1PrivateKey).toString('hex')}
   Public key: ${Buffer.from(k1PublicKey).toString('hex')}
 
-  ============================== ES256 Keypair ===============================
+  ============================== ISSUER ES256 Keypair ===============================
+  Private key: ${Buffer.from(p256PrivateKey).toString('hex')}
+  Public key: ${Buffer.from(p256PublicKey).toString('hex')}`);
+
+  p256PrivateKey = p256.utils.randomPrivateKey();
+  p256PublicKey = p256.getPublicKey(p256PrivateKey);
+
+  console.log(`
+  ============================== VERIFIER ES256 Keypair ===============================
   Private key: ${Buffer.from(p256PrivateKey).toString('hex')}
   Public key: ${Buffer.from(p256PublicKey).toString('hex')}`);
 
