@@ -20,6 +20,7 @@ import {
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
 import { johnDoeEuropeanDigitalCredential } from '../../demo-data/johnDoeEducationCredential.js';
+import { johnDoeEHIC } from '../../demo-data/johnDoeEHIC.js';
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -468,6 +469,11 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           ...(credentialRequest.types.includes('EuropeanDigitalCredential')
             ? ['http://data.europa.eu/snb/model/context/edc-ap']
             : []),
+          ...(credentialRequest.types.includes('EHIC')
+            ? [
+                'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0xbe77a21356835dc09d3d8149ea832ae0a4bae0ae9c869d18219ef8f4a74b4644',
+              ]
+            : []),
         ],
         id: vcId,
         type: credentialRequest.types,
@@ -479,6 +485,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           ...(cachedData?.credentialSubject ?? {}),
           ...(credentialRequest.types.includes('EuropeanDigitalCredential')
             ? johnDoeEuropeanDigitalCredential.credentialSubject
+            : {}),
+          ...(credentialRequest.types.includes('EHIC')
+            ? johnDoeEHIC.credentialSubject
             : {}),
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },

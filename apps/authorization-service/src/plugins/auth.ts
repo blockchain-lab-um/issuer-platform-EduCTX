@@ -57,6 +57,7 @@ const SUPPORTED_CREDENTIALS: string[][] = [
     'VerifiableAttestation',
     'EuropeanDigitalCredential',
   ],
+  ['VerifiableCredential', 'VerifiableAttestation', 'EHIC'],
   ['VerifiableCredential', 'VerifiableAttestation', 'DiplomaCredential'],
 ];
 
