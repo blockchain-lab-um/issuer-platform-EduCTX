@@ -19,8 +19,8 @@ export const authOptions: NextAuthOptions = {
         };
 
         if (
-          req.body?.username === 'etf-unsa' &&
-          req.body?.password === 'Test123123!'
+          req.body?.username === process.env.USERNAME &&
+          req.body?.password === process.env.PASSWORD
         ) {
           return user;
         }
