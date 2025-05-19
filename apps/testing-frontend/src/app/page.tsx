@@ -11,14 +11,14 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Link
             href="/interop-testing"
-            className="flex items-center justify-center p-4 rounded-lg bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-200 shadow-sm text-center transform hover:-translate-y-1"
+            className="flex items-center justify-center p-4 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm text-center transform hover:-translate-y-1"
           >
             Interop Testing
           </Link>
 
           <Link
             href="/verifier-demo"
-            className="flex items-center justify-center p-4 rounded-lg bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-200 shadow-sm text-center transform hover:-translate-y-1"
+            className="flex items-center justify-center p-4 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-all duration-200 shadow-sm text-center transform hover:-translate-y-1"
           >
             Verifier Demo
           </Link>

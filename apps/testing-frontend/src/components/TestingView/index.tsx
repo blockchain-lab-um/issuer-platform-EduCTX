@@ -132,7 +132,7 @@ export const TestingView = () => {
           fullWidth
         />
       </div>
-      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
+      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-blue-50 p-4 rounded-xl w-full min-h-64">
         <div className="flex flex-col items-center gap-y-2">
           <div className="font-bold text-lg">In Time flow</div>
           <Button
@@ -151,7 +151,7 @@ export const TestingView = () => {
           )}
         </div>
       </div>
-      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
+      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-blue-50 p-4 rounded-xl w-full min-h-64">
         <div className="flex flex-col items-center gap-y-2">
           <div className="font-bold text-lg">Deffered flow</div>
           <div>
@@ -172,7 +172,7 @@ export const TestingView = () => {
           )}
         </div>
       </div>
-      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
+      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-blue-50 p-4 rounded-xl w-full min-h-64">
         <div className="flex flex-col items-center gap-y-2">
           <div className="font-bold text-lg">Pre-auth flow</div>
           <div>
@@ -196,7 +196,7 @@ export const TestingView = () => {
           )}
         </div>
       </div>
-      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
+      <div className="flex justify-between items-center bg-gradient-to-tr from-blue-50 to-blue-50 p-4 rounded-xl w-full min-h-64">
         <div className="flex flex-col items-center gap-y-2">
           <div className="font-bold text-lg">Verification flow</div>
           <div>
@@ -218,7 +218,7 @@ export const TestingView = () => {
           <div className="flex flex-col justify-center items-center">
             {authRequestStatus?.status === 'Pending' && <div>Loading...</div>}
             {authRequestStatus?.status === 'Success' && (
-              <div className="flex flex-col justify-center items-center text-green-600">
+              <div className="flex flex-col justify-center items-center text-blue-600">
                 <div>Successfully presented credentials.</div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

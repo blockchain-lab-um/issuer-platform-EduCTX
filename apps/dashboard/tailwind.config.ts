@@ -11,8 +11,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'green-100': '#ECF8F3',
-        'green-500': '#38B87F',
         'red-100': '#ffd4de',
         'red-500': '#ad3753',
       },

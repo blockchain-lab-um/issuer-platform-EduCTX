@@ -252,12 +252,6 @@ export const IssueView = () => {
                 <Logo />
               </div>
               <div className="mt-5 h-0 flex-1 overflow-y-auto">
-                <div>
-                  <span className="text-md block text-center font-medium text-gray-600">
-                    Welcome
-                  </span>
-                </div>
-
                 <nav className="mt-8 space-y-1 px-2">
                   <button
                     type="button"
@@ -266,13 +260,13 @@ export const IssueView = () => {
                       setSidebarOpen(false);
                     }}
                     className={clsx(
-                      'bg-green-50 text-green-500 hover:bg-green-50/80 hover:text-green-600',
+                      'bg-blue-50 text-blue-500 hover:bg-blue-50/80 hover:text-blue-600',
                       'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                     )}
                   >
                     <DocumentPlusIcon
                       className={clsx(
-                        'text-green-500 hover:text-green-600',
+                        'text-blue-500 hover:text-blue-600',
                         'mr-3 h-6 w-6 flex-shrink-0',
                       )}
                       aria-hidden="true"
@@ -308,12 +302,6 @@ export const IssueView = () => {
             <Logo />
           </div>
           <div className="mt-5 flex flex-grow flex-col">
-            <div>
-              <span className="text-md block text-center font-medium text-gray-600">
-                Welcome
-              </span>
-            </div>
-
             <nav className="mt-8 flex-1 space-y-1 px-2 pb-4">
               <button
                 type="button"
@@ -321,13 +309,13 @@ export const IssueView = () => {
                   setIsIssuing(true);
                 }}
                 className={clsx(
-                  'bg-green-50 text-green-500 hover:bg-green-50/80 hover:text-green-600',
+                  'bg-blue-50 text-blue-500 hover:bg-blue-50/80 hover:text-blue-600',
                   'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                 )}
               >
                 <DocumentPlusIcon
                   className={clsx(
-                    'text-green-500 hover:text-green-600',
+                    'text-blue-500 hover:text-blue-600',
                     'mr-3 h-6 w-6 flex-shrink-0',
                   )}
                   aria-hidden="true"
@@ -397,7 +385,7 @@ export const IssueView = () => {
                                 <Button
                                   color="primary"
                                   variant="flat"
-                                  className="text-md bg-green-100 font-medium text-green-500 hover:bg-green-50/80"
+                                  className="text-md bg-blue-100 font-medium text-blue-500 hover:bg-blue-50/80"
                                   onClick={() => {
                                     handleNext();
                                   }}
@@ -413,7 +401,7 @@ export const IssueView = () => {
                         <div className="px-4">
                           <div className="flex items-center gap-x-4">
                             <div className="flex flex-col">
-                              <span className="text-xs text-green-600">
+                              <span className="text-xs text-blue-600">
                                 Selected Schema
                               </span>
                               <span className="font-semibold">
@@ -480,13 +468,13 @@ export const IssueView = () => {
                               setIsIssuing(true);
                             }}
                             className={clsx(
-                              'bg-green-100 text-green-600 hover:bg-green-50 ',
+                              'bg-blue-100 text-blue-600 hover:bg-blue-50 ',
                               'group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium',
                             )}
                           >
                             <DocumentPlusIcon
                               className={clsx(
-                                ' text-green-600',
+                                ' text-blue-600',
                                 'mr-3 h-6 w-6 flex-shrink-0',
                               )}
                               aria-hidden="true"

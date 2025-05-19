@@ -87,7 +87,7 @@ export const VerificationView = () => {
   }, [authRequestStatus]);
 
   return (
-    <div className="h-full flex flex-col gap-y-8 items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
+    <div className="h-full flex flex-col gap-y-8 items-center bg-gradient-to-tr from-blue-50 to-blue-50 p-4 rounded-xl w-full min-h-64">
       <div className=" w-full flex flex-col items-center gap-x-4">
         <div className="w-full flex items-center justify-center gap-x-4">
           <Button
@@ -127,7 +127,7 @@ export const VerificationView = () => {
       <div className="flex flex-col justify-center items-center">
         {authRequestStatus?.status === 'Pending' && <div>Loading...</div>}
         {authRequestStatus?.status === 'Success' && (
-          <div className="flex flex-col justify-center items-center text-green-600">
+          <div className="flex flex-col justify-center items-center text-blue-600">
             <div>Successfully presented credentials.</div>
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -85,7 +85,7 @@ export default async function Page() {
   return (
     <>
       <div className="w-full max-w-[1920px] mx-auto h-full flex flex-col p-8">
-        <div className="bg-green-500 text-white py-4 px-6 rounded-t-lg">
+        <div className="bg-blue-500 text-white py-4 px-6 rounded-t-lg">
           <h1 className="text-2xl font-bold text-center">Claimed Coupons</h1>
         </div>
         <div className="flex-grow overflow-auto bg-white shadow-md rounded-b-lg">

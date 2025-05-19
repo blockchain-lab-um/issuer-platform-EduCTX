@@ -21,10 +21,10 @@ export const LoginView = () => {
         <div className="min-h-3/5 mx-auto flex w-8/12 max-w-7xl overflow-hidden rounded-xl border-2 border-gray-300 bg-white shadow-lg">
           {userType === 0 && (
             <div className="w-full">
-              <div className="flex h-min w-full items-center justify-between p-2">
+              <div className="flex h-min w-full items-center justify-between p-4">
                 <div>
                   <Image
-                    src={'/images/EDU-Coin.png'}
+                    src={'/images/etf-unsa-logo.png'}
                     alt="Logo"
                     width={64}
                     height={64}
@@ -45,7 +45,7 @@ export const LoginView = () => {
                     <span className="text-xl font-bold text-gray-700 md:text-5xl">
                       EduCTX
                     </span>
-                    <span className="text-md font-bold text-green-500 md:text-3xl">
+                    <span className="text-md font-bold text-blue-500 md:text-3xl">
                       2.0
                     </span>
                   </div>
@@ -57,7 +57,7 @@ export const LoginView = () => {
                   <div className="mt-4 flex gap-x-4">
                     <Button
                       className="font-medium"
-                      color="success"
+                      color="primary"
                       variant="bordered"
                       onClick={() => setUserType(1)}
                     >
@@ -65,7 +65,7 @@ export const LoginView = () => {
                     </Button>
                     <Button
                       className="font-medium"
-                      color="success"
+                      color="primary"
                       variant="flat"
                       onClick={() => router.push('/claim')}
                     >
@@ -85,7 +85,7 @@ export const LoginView = () => {
             </div>
           )}
           {userType === 1 && (
-            <div className="flex h-full w-full items-center justify-center py-16">
+            <div className="flex h-full w-full items-center justify-center text-center py-16">
               <div>
                 For the purpose of login we will redirect you to your Corporate
                 Digital Identity Provider
@@ -99,7 +99,7 @@ export const LoginView = () => {
                   </Button>
                   <Button
                     size="md"
-                    color="success"
+                    color="primary"
                     variant="flat"
                     onClick={() =>
                       signIn(undefined, {

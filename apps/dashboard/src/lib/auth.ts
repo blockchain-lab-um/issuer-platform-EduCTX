@@ -1,14 +1,32 @@
 import type { NextAuthOptions } from 'next-auth';
-import AzureADProvider from 'next-auth/providers/azure-ad';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 
   providers: [
-    AzureADProvider({
-      clientId: process.env.AZURE_AD_CLIENT_ID!,
-      clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-      tenantId: process.env.AZURE_AD_TENANT_ID!,
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(_, req) {
+        const user = {
+          id: '1',
+          name: 'ETF UNSA',
+          email: 'etf-unsa@example.com',
+        };
+
+        if (
+          req.body?.username === 'etf-unsa' &&
+          req.body?.password === 'Test123123!'
+        ) {
+          return user;
+        }
+
+        return null;
+      },
     }),
   ],
 };

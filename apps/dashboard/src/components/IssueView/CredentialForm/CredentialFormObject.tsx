@@ -28,17 +28,17 @@ export const CredentialFormObject = ({
       {path === '' ? (
         <div className="font-medium text-gray-800">{schema.title}</div>
       ) : (
-        <div className="flex items-center gap-x-2 text-green-600">
+        <div className="flex items-center gap-x-2 text-blue-600">
           {isOpen ? (
             <div
-              className="cursor-pointer text-green-600"
+              className="cursor-pointer text-blue-600"
               onClick={() => setIsOpen(false)}
             >
               <MinusCircleIcon className="h-6 w-6" />
             </div>
           ) : (
             <div
-              className="cursor-pointer text-green-600"
+              className="cursor-pointer text-blue-600"
               onClick={() => setIsOpen(true)}
             >
               <PlusCircleIcon className="h-6 w-6" />

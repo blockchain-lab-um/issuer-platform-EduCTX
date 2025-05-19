@@ -19,12 +19,12 @@ const ToastWrapper = () => {
   }));
 
   const toastTypeText: Record<string, string> = {
-    success: 'text-green-500',
+    success: 'text-blue-500',
     error: 'text-red-500',
   };
 
   const toastTypeBg: Record<string, string> = {
-    success: 'bg-green-100',
+    success: 'bg-blue-100',
     error: 'bg-red-100',
   };
 
