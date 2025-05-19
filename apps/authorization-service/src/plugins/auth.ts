@@ -72,6 +72,7 @@ export default fp(async (fastify, _) => {
     skipSignatureValidation: true,
     validateAccreditationWithoutTermsOfUse: true,
     skipStatusValidation: false,
+    skipAccreditationsValidation: true,
   };
 
   const didRegistryApiUrl = `https://api-${fastify.config.NETWORK}.ebsi.eu/did-registry/v5`;
