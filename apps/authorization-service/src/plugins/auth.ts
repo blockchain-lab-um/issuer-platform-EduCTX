@@ -70,7 +70,7 @@ export default fp(async (fastify, _) => {
     network: fastify.config.NETWORK,
     hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
     skipSignatureValidation: true,
-    validateAccreditationWithoutTermsOfUse: false,
+    validateAccreditationWithoutTermsOfUse: true,
     skipStatusValidation: false,
   };
 
