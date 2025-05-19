@@ -107,7 +107,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       }
 
       const data = await response.json();
-
+      console.log(data);
       if (data.status === 'Success') {
         return reply.code(200).send({
           status: 'Success',
