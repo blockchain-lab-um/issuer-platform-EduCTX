@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 type AuthRequestStatus =
   | {
       status: 'Success';
+      data: string;
     }
   | {
       status: 'Failed';

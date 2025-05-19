@@ -1,12 +1,20 @@
 'use client';
 
 import { Button, Input, Select, SelectItem } from '@nextui-org/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import { useAuthRequestStatus } from '@/hooks';
 import { useGetVerificationDefinitions } from '@/hooks/useGetVerificationDefinitions';
-
+import { decodeJwt } from 'jose';
+import { useModalStore } from '@/stores';
+import { JsonModal } from './JsonModal';
 export const VerificationView = () => {
+  const isCredentialModalOpen = useModalStore.use.isCredentialModalOpen();
+  const setIsCredentialModalOpen = useModalStore.use.setIsCredentialModalOpen();
+  const isPresentationModalOpen = useModalStore.use.isPresentationModalOpen();
+  const setIsPresentationModalOpen =
+    useModalStore.use.setIsPresentationModalOpen();
+
   const [verificationRequest, setVerificationRequest] = useState('');
   const [verificationRequestId, setVerificationRequestId] = useState('');
   const [disabled, setIsDisabled] = useState(true);
@@ -14,6 +22,10 @@ export const VerificationView = () => {
     selectedVerificationDefinitionId,
     setSelectedVerificationDefinitionId,
   ] = useState('');
+
+  const [verifiablePresentation, setVerifiablePresentation] =
+    useState<any>(null);
+  const [verifiableCredentials, setVerifiableCredentials] = useState<any[]>([]);
 
   const {
     data: verificationDefinitions,
@@ -48,6 +60,31 @@ export const VerificationView = () => {
       return;
     }
   };
+
+  useEffect(() => {
+    if (authRequestStatus?.status === 'Success') {
+      try {
+        console.log(authRequestStatus.data);
+        const decodedVp = decodeJwt(authRequestStatus.data) as any;
+        console.log(decodedVp);
+        setVerifiablePresentation(decodedVp);
+
+        const vcs = Array.isArray(decodedVp.vp.verifiableCredential)
+          ? decodedVp.vp.verifiableCredential
+          : [decodedVp.vp.verifiableCredential];
+
+        const decodedVcs = vcs.map((vc: any) => decodeJwt(vc));
+
+        for (const vc of decodedVcs) {
+          console.log(vc);
+        }
+
+        setVerifiableCredentials(decodedVcs);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [authRequestStatus]);
 
   return (
     <div className="h-full flex flex-col gap-y-8 items-center bg-gradient-to-tr from-blue-50 to-green-50 p-4 rounded-xl w-full min-h-64">
@@ -107,6 +144,14 @@ export const VerificationView = () => {
                 d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
               />
             </svg>
+            <div className="flex flex-row gap-x-4 mt-4">
+              <Button onClick={() => setIsPresentationModalOpen(true)}>
+                View Presentation
+              </Button>
+              <Button onClick={() => setIsCredentialModalOpen(true)}>
+                View Credentials
+              </Button>
+            </div>
           </div>
         )}
         {authRequestStatus?.status === 'Failed' && (
@@ -123,6 +168,18 @@ export const VerificationView = () => {
           <QRCodeCanvas value={verificationRequest} size={192} />
         </div>
       )}
+      <JsonModal
+        isOpen={isPresentationModalOpen}
+        setIsOpen={setIsPresentationModalOpen}
+        title="Verifiable Presentation"
+        data={verifiablePresentation}
+      />
+      <JsonModal
+        isOpen={isCredentialModalOpen}
+        setIsOpen={setIsCredentialModalOpen}
+        title="Verifiable Credentials"
+        data={verifiableCredentials}
+      />
     </div>
   );
 };

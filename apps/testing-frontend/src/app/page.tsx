@@ -17,7 +17,7 @@ export default function Home() {
           </Link>
 
           <Link
-            href="/vector-demo"
+            href="/verifier-demo"
             className="flex items-center justify-center p-4 rounded-lg bg-green-500 text-white font-medium hover:bg-green-600 transition-all duration-200 shadow-sm text-center transform hover:-translate-y-1"
           >
             Verifier Demo
