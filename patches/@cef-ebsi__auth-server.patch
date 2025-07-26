@@ -254,10 +254,10 @@ index 24fd3d41167f36d96fd13ad46b187b32f2bd1999..4544fad90e7a29f42848005deeabb0a2
      .array(z.object({
      type: z.literal("openid_credential"),
 -    format: z.union([z.literal("jwt_vc"), z.literal("jwt_vc_json")], {
-+    format: z.union([z.literal("jwt_vc"), z.literal("jwt_vc_json"), z.literal("vc+sd-jwt")], {
++    format: z.union([z.literal("jwt_vc"), z.literal("jwt_vc_json"), z.literal("sd-jwt")], {
          errorMap: () => ({
 -            message: 'Invalid literal value, expected "jwt_vc" or "jwt_vc_json"',
-+            message: 'Invalid literal value, expected "jwt_vc", "jwt_vc_json" or "vc+sd-jwt"',
++            message: 'Invalid literal value, expected "jwt_vc", "jwt_vc_json" or "sd-jwt"',
          }),
      }),
      locations: z.array(z.string().url()).nonempty().optional(),

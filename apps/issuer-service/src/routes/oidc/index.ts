@@ -104,7 +104,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             },
             format: {
               type: 'string',
-              enum: ['jwt_vc', 'jwt_vc_json', 'vc+sd-jwt'],
+              enum: ['jwt_vc', 'jwt_vc_json', 'sd-jwt'],
             },
             credential_offer_endpoint: {
               type: 'string',
@@ -490,7 +490,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
       }
 
-      if ((credentialRequest.format as any) === 'vc+sd-jwt') {
+      if ((credentialRequest.format as any) === 'sd-jwt') {
         // TODO [SD-JWT]: Issue credential
         throw new Error('SD-JWT format is not supported yet');
       }

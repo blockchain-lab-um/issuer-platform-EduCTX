@@ -99,7 +99,7 @@ const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
     types: ['VerifiableCredential', 'CouponCredential'],
   },
   {
-    format: 'vc+sd-jwt',
+    format: 'sd-jwt',
     types: ['VerifiableCredential', 'CouponCredential'],
   },
 ];

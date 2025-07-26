@@ -56,7 +56,7 @@ export const CouponCredentialSchema = {
 export const CouponCredentialSdJwtSchema = {
   title: 'Coupon Credential (SD-JWT)',
   type: '#couponCredential',
-  format: 'vc+sd-jwt',
+  format: 'sd-jwt',
   fields: [
     {
       title: 'Credential Subject',
