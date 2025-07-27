@@ -19,6 +19,40 @@ import {
 } from '@blockchain-lab-um/eductx-platform-shared';
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
+import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc';
+import type { DisclosureFrame } from '@sd-jwt/types';
+import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
+
+// SD-JWT compatible signer that uses the existing did-jwt signers
+const createSDJwtSigner = (keyAlg: string, privateKey: string) => {
+  return async (data: string): Promise<string> => {
+    const signer =
+      keyAlg === 'ES256'
+        ? ES256Signer(utils.hexToBytes(privateKey))
+        : ES256KSigner(utils.hexToBytes(privateKey));
+
+    const signature = await signer(data);
+    return typeof signature === 'string' ? signature : signature.toString();
+  };
+};
+
+// SD-JWT compatible verifier that uses the existing key infrastructure
+const createSDJwtVerifier = (keyAlg: string, publicKeyJwk: any) => {
+  return async (
+    data: string | ArrayBuffer,
+    signature: string,
+  ): Promise<boolean> => {
+    try {
+      const publicKey = await importJWK(publicKeyJwk, keyAlg);
+
+      await jwtVerify(signature, publicKey);
+      return true;
+    } catch (error) {
+      console.error('SD-JWT verification failed:', error);
+      return false;
+    }
+  };
+};
 
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
@@ -465,8 +499,15 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           fastify.issuedCredentialCache.get(credentialInfoId);
 
         if (issuedCredentialInfo?.credential) {
+          // Determine the format based on the credential content or request format
+          const cachedFormat =
+            issuedCredentialInfo.format ||
+            ((credentialRequest.format as any) === 'sd-jwt'
+              ? 'sd-jwt'
+              : 'jwt_vc_json');
+
           const response = {
-            format: 'jwt_vc_json',
+            format: cachedFormat,
             credential: issuedCredentialInfo.credential as string,
             c_nonce: accessTokenPayload.claims.c_nonce,
             c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
@@ -488,11 +529,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       // If schema is not found, fallback to the EBSI schema
       if (!schema) {
         schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
-      }
-
-      if ((credentialRequest.format as any) === 'sd-jwt') {
-        // TODO [SD-JWT]: Issue credential
-        throw new Error('SD-JWT format is not supported yet');
       }
 
       const vcId = `urn:uuid:${randomUUID()}`;
@@ -525,6 +561,101 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               },
             }),
       } satisfies EbsiVerifiableAttestation;
+
+      if ((credentialRequest.format as any) === 'sd-jwt') {
+        const { publicKeyJwk } = await getKeyPair(
+          fastify.config.PRIVATE_KEY,
+          fastify.config.KEY_ALG,
+        );
+
+        const sdjwt = new SDJwtVcInstance({
+          signer: createSDJwtSigner(
+            fastify.config.KEY_ALG,
+            fastify.config.PRIVATE_KEY,
+          ),
+          verifier: createSDJwtVerifier(fastify.config.KEY_ALG, publicKeyJwk),
+          signAlg: fastify.config.KEY_ALG,
+          hasher: digest,
+          hashAlg: 'sha-256',
+          saltGenerator: generateSalt,
+        });
+
+        const claims = {
+          '@context': vcPayload['@context'],
+          id: randomBytes(16).toString('hex'),
+          vct: Array.isArray(credentialRequest.types)
+            ? credentialRequest.types.join(',')
+            : credentialRequest.types || '',
+          iss: `${issuer.did}#${publicKeyJwk.kid}`,
+          iat: Math.floor(Date.now() / 1000),
+          sub: accessTokenPayload.sub ?? proofJwt.iss,
+          credentialSubject: {
+            ...vcPayload.credentialSubject,
+          },
+          credentialSchema: {
+            ...vcPayload.credentialSchema,
+          },
+        };
+
+        const credentialSubjectKeys = Object.keys(vcPayload.credentialSubject);
+        const disclosureFrame: DisclosureFrame<typeof claims> = {
+          credentialSubject: {
+            _sd: credentialSubjectKeys,
+          },
+        };
+
+        const sdJwtCredential = await (sdjwt as any).issue(
+          claims,
+          disclosureFrame,
+        );
+
+        // Update issued credential information
+        if (credentialInfoId) {
+          const issuedCredentialInfo =
+            fastify.issuedCredentialCache.get(credentialInfoId);
+
+          if (issuedCredentialInfo) {
+            fastify.issuedCredentialCache.set(credentialInfoId, {
+              ...issuedCredentialInfo,
+              claimedAt: new Date().toISOString(),
+              credential: sdJwtCredential,
+            });
+          }
+        }
+
+        if (isDeferredFlow) {
+          const acceptanceToken = Buffer.from(randomBytes(32)).toString(
+            'base64url',
+          );
+
+          const defferedCredentialId = `deffered-credential-${acceptanceToken}`;
+
+          await fastify.cache.set(
+            defferedCredentialId,
+            {
+              credential: sdJwtCredential,
+              format: 'sd-jwt',
+            },
+            // 7 days
+            604_800_000,
+          );
+
+          return reply.code(200).send({
+            acceptance_token: acceptanceToken,
+            c_nonce: accessTokenPayload.claims.c_nonce,
+            c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
+          });
+        }
+
+        const response = {
+          format: 'sd-jwt',
+          credential: sdJwtCredential,
+          c_nonce: accessTokenPayload.claims.c_nonce,
+          c_nonce_expires_in: accessTokenPayload.claims.c_nonce_expires_in,
+        };
+
+        return reply.code(200).send(response);
+      }
 
       const options = {
         network: fastify.config.NETWORK,
