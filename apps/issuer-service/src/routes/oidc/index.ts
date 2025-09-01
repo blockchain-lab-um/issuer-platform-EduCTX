@@ -315,7 +315,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               value == null || value === '' ? undefined : value,
             ),
           );
-          await fastify.cache.set(preAuthorizedCode, credentialSubject);
+          await fastify.cache.set(preAuthorizedCode, { credentialSubject });
         }
 
         // Create a relation between the pre-authorized code and `issued credential` information
@@ -616,15 +616,13 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           vct: Array.isArray(credentialRequest.types)
             ? credentialRequest.types.join(',')
             : credentialRequest.types || '',
-          iss: `${issuer.did}#${publicKeyJwk.kid}`,
+          iss: issuer.did,
           iat: Math.floor(Date.parse(issuedAt) / 1000),
           sub: accessTokenPayload.sub ?? proofJwt.iss,
           credentialSubject: {
             ...vcPayload.credentialSubject,
           },
-          credentialSchema: {
-            ...vcPayload.credentialSchema,
-          },
+          credentialSchema: vcPayload.credentialSchema,
         };
 
         const credentialSubjectKeys = Object.keys(vcPayload.credentialSubject);
