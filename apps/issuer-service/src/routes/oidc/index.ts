@@ -499,12 +499,8 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           fastify.issuedCredentialCache.get(credentialInfoId);
 
         if (issuedCredentialInfo?.credential) {
-          // Determine the format based on the credential content or request format
-          const cachedFormat =
-            issuedCredentialInfo.format ||
-            ((credentialRequest.format as any) === 'sd-jwt'
-              ? 'sd-jwt'
-              : 'jwt_vc_json');
+          // If no format is found in cache, fallback to jwt_vc_json
+          const cachedFormat = issuedCredentialInfo.format || 'jwt_vc_json';
 
           const response = {
             format: cachedFormat,
@@ -582,12 +578,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         const claims = {
           '@context': vcPayload['@context'],
-          id: randomBytes(16).toString('hex'),
+          id: vcId,
           vct: Array.isArray(credentialRequest.types)
             ? credentialRequest.types.join(',')
             : credentialRequest.types || '',
           iss: `${issuer.did}#${publicKeyJwk.kid}`,
-          iat: Math.floor(Date.now() / 1000),
+          iat: Math.floor(Date.parse(issuedAt) / 1000),
           sub: accessTokenPayload.sub ?? proofJwt.iss,
           credentialSubject: {
             ...vcPayload.credentialSubject,
@@ -619,6 +615,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
               ...issuedCredentialInfo,
               claimedAt: new Date().toISOString(),
               credential: sdJwtCredential,
+              format: 'sd-jwt',
             });
           }
         }
@@ -682,6 +679,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             ...issuedCredentialInfo,
             claimedAt: new Date().toISOString(),
             credential: vcJwt,
+            format: 'jwt_vc_json',
           });
         }
       }
