@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 type AuthRequestStatus =
   | {
       status: 'Success';
+      data: string;
     }
   | {
       status: 'Failed';
@@ -34,8 +35,6 @@ export const useAuthRequestStatus = (
       }
 
       const data = await response.json();
-
-      console.log(data);
 
       return data as AuthRequestStatus;
     },

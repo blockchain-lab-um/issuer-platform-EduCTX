@@ -78,19 +78,55 @@ const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: {
 const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
   {
     format: 'jwt_vc_json',
-    types: ['VerifiableCredential', 'EducationCredential'],
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EducationCredential',
+    ],
   },
   {
     format: 'jwt_vc_json',
-    types: ['VerifiableCredential', 'EventTicketCredential'],
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EventTicketCredential',
+    ],
   },
   {
     format: 'jwt_vc_json',
-    types: ['VerifiableCredential', 'CouponCredential'],
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CouponCredential',
+    ],
   },
   {
     format: 'sd-jwt',
-    types: ['VerifiableCredential', 'CouponCredential'],
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CouponCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EuropeanDigitalCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'EHIC'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'DiplomaCredential',
+    ],
   },
 ];
 
@@ -103,8 +139,9 @@ export default fp(async (fastify, _) => {
     network: fastify.config.NETWORK,
     hosts: [`api-${fastify.config.NETWORK}.ebsi.eu`],
     skipSignatureValidation: true,
-    validateAccreditationWithoutTermsOfUse: false,
+    validateAccreditationWithoutTermsOfUse: true,
     skipStatusValidation: false,
+    skipAccreditationsValidation: true,
   };
 
   const didRegistryApiUrl = `https://api-${fastify.config.NETWORK}.ebsi.eu/did-registry/v5`;

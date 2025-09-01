@@ -5,7 +5,7 @@ import type { SchemaNode } from '../schemaTypes';
 interface CredentialFormNodeProps {
   path: string;
   schema: SchemaNode;
-  handleInputValue: (e: string, path: string) => void;
+  handleInputValue: (e: string | number, path: string) => void;
   setDateValidity: (dateValidity: any) => void;
   date?: boolean;
 }
@@ -85,7 +85,20 @@ export const CredentialFormNode = ({
         type={schema.type}
         isClearable={true}
         onChange={(e) => {
-          handleInputValue(e.target.value, `${path}/${schema.propertyName}`);
+          const value = e.target.value;
+          if (schema.type === 'number') {
+            handleInputValue(
+              Number.parseFloat(value),
+              `${path}/${schema.propertyName}`,
+            );
+          } else if (schema.type === 'integer') {
+            handleInputValue(
+              Number.parseInt(value),
+              `${path}/${schema.propertyName}`,
+            );
+          } else {
+            handleInputValue(value, `${path}/${schema.propertyName}`);
+          }
         }}
       />
     </div>

@@ -1,6 +1,6 @@
 export interface SchemaNode {
   title: string;
-  type: 'string' | 'number';
+  type: 'string' | 'number' | 'integer';
   isCredentialSubject?: boolean;
   required?: boolean;
   propertyName: string;

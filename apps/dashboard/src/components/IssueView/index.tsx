@@ -20,6 +20,9 @@ import {
   CouponCredentialSdJwtSchema,
   EducationalCredentialSchema,
   EducationalCredentialSchemaNOO,
+  EuropeanDigitalCredentialSchema,
+  EHICCredentialSchema,
+  DiplomaCredentialSchema,
 } from './Schemas';
 import type { Schema } from './schemaTypes';
 
@@ -28,6 +31,9 @@ const SCHEMAS: Schema[] = [
   EducationalCredentialSchemaNOO,
   CouponCredentialSchema,
   CouponCredentialSdJwtSchema,
+  EuropeanDigitalCredentialSchema,
+  DiplomaCredentialSchema,
+  EHICCredentialSchema,
 ];
 
 const getCredentialType = (type: string | undefined) => {
@@ -35,8 +41,14 @@ const getCredentialType = (type: string | undefined) => {
     case '#educationCredential':
     case '#educationCredentialNOO':
       return 'EducationCredential';
+    case '#europeanDigitalCredential':
+      return 'EuropeanDigitalCredential';
+    case '#diplomaCredential':
+      return 'DiplomaCredential';
     case '#couponCredential':
       return 'CouponCredential';
+    case '#ehicCredential':
+      return 'EHIC';
     default:
       throw new Error('Invalid credential type');
   }
@@ -88,7 +100,7 @@ export const IssueView = () => {
     setNext(true);
   };
 
-  const handleInputValueChange = (e: string, path: string) => {
+  const handleInputValueChange = (e: string | number, path: string) => {
     const newInputs = { ...inputs };
     const pathArray = path.split('/').filter((p) => p !== '');
     let currentObject = newInputs;
@@ -151,6 +163,7 @@ export const IssueView = () => {
         data: {
           credential_type: [
             'VerifiableCredential',
+            'VerifiableAttestation',
             getCredentialType(selectedSchema!.type),
           ],
           flow: 'pre-authorized_code',

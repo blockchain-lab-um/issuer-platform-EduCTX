@@ -20,8 +20,9 @@ import {
 import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
 import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc';
-import type { DisclosureFrame } from '@sd-jwt/types';
 import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
+import { johnDoeEuropeanDigitalCredential } from '../../demo-data/johnDoeEducationCredential.js';
+import { johnDoeEHIC } from '../../demo-data/johnDoeEHIC.js';
 
 // SD-JWT compatible signer that uses the existing did-jwt signers
 const createSDJwtSigner = (keyAlg: string, privateKey: string) => {
@@ -241,7 +242,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
         if (request.body.credential_subject) {
-          const credentialSubject = request.body.credential_subject;
+          // Remove empty strings, nulls and undefined values
+          const credentialSubject = JSON.parse(
+            JSON.stringify(request.body.credential_subject, (_, value) =>
+              value == null || value === '' ? undefined : value,
+            ),
+          );
           await fastify.cache.set(issuerState, { credentialSubject });
         }
 
@@ -303,8 +309,13 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
         // If credential_data is provided, we need to add store it so we can retrieve it later
         if (request.body.credential_subject) {
-          const credentialSubject = request.body.credential_subject;
-          await fastify.cache.set(preAuthorizedCode, { credentialSubject });
+          // Remove empty strings, nulls and undefined values
+          const credentialSubject = JSON.parse(
+            JSON.stringify(request.body.credential_subject, (_, value) =>
+              value == null || value === '' ? undefined : value,
+            ),
+          );
+          await fastify.cache.set(preAuthorizedCode, credentialSubject);
         }
 
         // Create a relation between the pre-authorized code and `issued credential` information
@@ -524,13 +535,23 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // If schema is not found, fallback to the EBSI schema
       if (!schema) {
-        schema = `https://api-${fastify.config.NETWORK}.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM`;
+        schema =
+          'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/z3MgUFUkb722uq4x3dv5yAJmnNmzDFeK5UC8x83QoeLJM';
       }
 
       const vcId = `urn:uuid:${randomUUID()}`;
       const vcPayload = {
-        // TODO: Do we need to add contexts based on requested credential types ?
-        '@context': ['https://www.w3.org/2018/credentials/v1'],
+        '@context': [
+          'https://www.w3.org/2018/credentials/v1',
+          ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+            ? ['http://data.europa.eu/snb/model/context/edc-ap']
+            : []),
+          ...(credentialRequest.types.includes('EHIC')
+            ? [
+                'https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0xbe77a21356835dc09d3d8149ea832ae0a4bae0ae9c869d18219ef8f4a74b4644',
+              ]
+            : []),
+        ],
         id: vcId,
         type: credentialRequest.types,
         issuer: issuer.did,
@@ -539,14 +560,24 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         issued: issuedAt,
         credentialSubject: {
           ...(cachedData?.credentialSubject ?? {}),
+          ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+            ? johnDoeEuropeanDigitalCredential.credentialSubject
+            : {}),
+          ...(credentialRequest.types.includes('EHIC')
+            ? johnDoeEHIC.credentialSubject
+            : {}),
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },
-        credentialSchema: {
-          id: schema,
-          type: 'FullJsonSchemaValidator2021',
-        },
+        credentialSchema: [
+          {
+            id: schema,
+            type: 'JsonSchema' as any,
+          },
+        ],
         // NOTE: Conformance tests don't support CRLPlain2023Entry
-        ...(fastify.config.CONFORMANCE_TEST_ENABLED
+        // NOTE: Disabling CRLPlain2023Entry for EuropeanDigitalCredential for demo purposes
+        ...(fastify.config.CONFORMANCE_TEST_ENABLED ||
+        credentialRequest.types.includes('EuropeanDigitalCredential')
           ? {}
           : {
               credentialStatus: {
@@ -556,6 +587,9 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
                 credential: `${fastify.config.SERVER_URL}/oidc/credential_status/${vcId}`,
               },
             }),
+        ...(credentialRequest.types.includes('EuropeanDigitalCredential')
+          ? johnDoeEuropeanDigitalCredential.extraFields
+          : {}),
       } satisfies EbsiVerifiableAttestation;
 
       if ((credentialRequest.format as any) === 'sd-jwt') {
@@ -594,7 +628,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         };
 
         const credentialSubjectKeys = Object.keys(vcPayload.credentialSubject);
-        const disclosureFrame: DisclosureFrame<typeof claims> = {
+        const disclosureFrame: any = {
           credentialSubject: {
             _sd: credentialSubjectKeys,
           },
@@ -660,7 +694,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           `api-${fastify.config.NETWORK}.ebsi.eu`,
           'raw.githubusercontent.com',
         ],
-        skipValidation: true,
+        skipValidation: false,
       } satisfies CreateVerifiableCredentialOptions;
 
       const vcJwt = await createVerifiableCredentialJwt(
@@ -671,16 +705,20 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // Update issued credential information
       if (credentialInfoId) {
+        fastify.idRelationCache.set(accessToken, vcId);
+
         const issuedCredentialInfo =
           fastify.issuedCredentialCache.get(credentialInfoId);
 
         if (issuedCredentialInfo) {
-          fastify.issuedCredentialCache.set(credentialInfoId, {
+          fastify.issuedCredentialCache.set(vcId, {
             ...issuedCredentialInfo,
             claimedAt: new Date().toISOString(),
             credential: vcJwt,
             format: 'jwt_vc_json',
           });
+
+          fastify.issuedCredentialCache.delete(credentialInfoId);
         }
       }
 
