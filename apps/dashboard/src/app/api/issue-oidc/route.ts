@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     }
 
     const basicEmailHtml = await renderBasicEmail({
-      qrCodeUrl: uploadResponse.data.url,
+      qrCodeUrl: uploadResponse.data.ufsUrl,
     });
 
     let attachments: Mail.Attachment[] = [];

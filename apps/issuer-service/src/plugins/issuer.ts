@@ -20,6 +20,7 @@ type IssuerServerConfig = {
   url: string;
   authorizationServerPublicJwk: JWKWithKid;
   resolver: Resolver;
+  credentialsSupported: { format: string; types: string[] }[];
   credentialTypesSupported: string[][];
 };
 
@@ -30,44 +31,113 @@ declare module 'fastify' {
   }
 }
 
-const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: string[][] = [
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSameAuthorisedInTime',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSameAuthorisedDeferred',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSamePreAuthorisedInTime',
-  ],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'CTWalletSamePreAuthorisedDeferred',
-  ],
-  ['VerifiableCredential', 'VerifiableAttestation', 'InTimeIssuance'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'DefferedIssuance'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'PreAuthIssuance'],
+const CONFORMANCE_TEST_SUPPORTED_CREDENTIALS: {
+  format: string;
+  types: string[];
+}[] = [
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSameAuthorisedInTime',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSameAuthorisedDeferred',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSamePreAuthorisedInTime',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CTWalletSamePreAuthorisedDeferred',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'InTimeIssuance'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'DefferedIssuance',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'PreAuthIssuance'],
+  },
 ];
 
-const SUPPORTED_CREDENTIALS: string[][] = [
-  ['VerifiableCredential', 'VerifiableAttestation', 'EducationCredential'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'EventTicketCredential'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'CouponCredential'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'CRLPlain2023Credential'],
-  [
-    'VerifiableCredential',
-    'VerifiableAttestation',
-    'EuropeanDigitalCredential',
-  ],
-  ['VerifiableCredential', 'VerifiableAttestation', 'EHIC'],
-  ['VerifiableCredential', 'VerifiableAttestation', 'DiplomaCredential'],
+const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EducationCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EventTicketCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CouponCredential',
+    ],
+  },
+  {
+    format: 'sd-jwt',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CouponCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'EuropeanDigitalCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: ['VerifiableCredential', 'VerifiableAttestation', 'EHIC'],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'DiplomaCredential',
+    ],
+  },
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -166,7 +236,7 @@ export default fp(async (fastify, _) => {
     ...didEbsiResolver,
   });
 
-  const credentialTypesSupported = [
+  const credentialsSupported = [
     ...SUPPORTED_CREDENTIALS,
     ...(fastify.config.CONFORMANCE_TEST_ENABLED
       ? CONFORMANCE_TEST_SUPPORTED_CREDENTIALS
@@ -180,7 +250,10 @@ export default fp(async (fastify, _) => {
     url: `${fastify.config.SERVER_URL}/oidc`,
     authorizationServerPublicJwk: authorizationServerPublicJwk,
     resolver: didResolver,
-    credentialTypesSupported: credentialTypesSupported,
+    credentialsSupported: credentialsSupported,
+    credentialTypesSupported: credentialsSupported.map(
+      (credentialTypesSupported) => credentialTypesSupported.types,
+    ),
     timeout: undefined,
   };
 
