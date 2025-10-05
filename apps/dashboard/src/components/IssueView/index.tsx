@@ -23,6 +23,7 @@ import {
   EuropeanDigitalCredentialSchema,
   EHICCredentialSchema,
   DiplomaCredentialSchema,
+  HealthInsuranceCardCredentialSchema,
 } from './Schemas';
 import type { Schema } from './schemaTypes';
 
@@ -34,6 +35,7 @@ const SCHEMAS: Schema[] = [
   EuropeanDigitalCredentialSchema,
   DiplomaCredentialSchema,
   EHICCredentialSchema,
+  HealthInsuranceCardCredentialSchema,
 ];
 
 const getCredentialType = (type: string | undefined) => {
@@ -49,6 +51,8 @@ const getCredentialType = (type: string | undefined) => {
       return 'CouponCredential';
     case '#ehicCredential':
       return 'EHIC';
+    case '#healthInsuranceCardCredential':
+      return 'HealthInsuranceCard';
     default:
       throw new Error('Invalid credential type');
   }
