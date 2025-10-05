@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 patchedDependencies:
-  '@blockchain-lab-um/did-provider-ebsi':
-    hash: 3ycnj2ohz3qddy5hl2jkh7m3iu
-    path: patches/@blockchain-lab-um__did-provider-ebsi.patch
   '@cef-ebsi/auth-server':
     hash: teeuawws6e3yri2ga47aynxorq
     path: patches/@cef-ebsi__auth-server.patch
@@ -17,6 +14,9 @@ patchedDependencies:
   '@cef-ebsi/verifiable-credential':
     hash: 7uyqs3l7tdbzhpc5zlzepekzpm
     path: patches/@cef-ebsi__verifiable-credential.patch
+  '@cef-ebsi/verifiable-presentation':
+    hash: fyibjqlb736q6j3paq2pdqxzvu
+    path: patches/@cef-ebsi__verifiable-presentation.patch
 
 importers:
 
@@ -72,7 +72,7 @@ importers:
         version: 2.0.4
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
-        version: 7.1.0(ajv@8.17.1)
+        version: 7.1.0(patch_hash=fyibjqlb736q6j3paq2pdqxzvu)(ajv@8.17.1)
       '@fastify/autoload':
         specifier: ^6.0.2
         version: 6.0.2
@@ -363,7 +363,7 @@ importers:
         version: 6.1.0(patch_hash=7uyqs3l7tdbzhpc5zlzepekzpm)
       '@cef-ebsi/verifiable-presentation':
         specifier: 7.1.0
-        version: 7.1.0(ajv@8.17.1)
+        version: 7.1.0(patch_hash=fyibjqlb736q6j3paq2pdqxzvu)(ajv@8.17.1)
       '@fastify/autoload':
         specifier: ^6.0.2
         version: 6.0.2
@@ -6736,7 +6736,7 @@ snapshots:
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/key-did-resolver': 2.0.4
-      '@cef-ebsi/verifiable-presentation': 7.1.0(ajv@8.17.1)
+      '@cef-ebsi/verifiable-presentation': 7.1.0(patch_hash=fyibjqlb736q6j3paq2pdqxzvu)(ajv@8.17.1)
       '@sphereon/pex': 3.3.3
       '@sphereon/pex-models': 2.3.1
       axios: 1.7.7
@@ -6828,7 +6828,7 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@cef-ebsi/verifiable-presentation@7.1.0(ajv@8.17.1)':
+  '@cef-ebsi/verifiable-presentation@7.1.0(patch_hash=fyibjqlb736q6j3paq2pdqxzvu)(ajv@8.17.1)':
     dependencies:
       '@cef-ebsi/ebsi-did-resolver': 4.0.3
       '@cef-ebsi/ebsi-uri': 0.1.0

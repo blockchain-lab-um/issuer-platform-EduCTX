@@ -1,0 +1,15 @@
+diff --git a/dist/index.js b/dist/index.js
+index 449447437bdd2b285791baa067a2180a134954fa..9d9edea9153c26444e55d02e6c77c72b2b79b7e2 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -81,7 +81,9 @@ export async function verifyPresentationJwt(presentation, audience, options) {
+     validateContext(vp["@context"]);
+     validateType(vp.type);
+     const didAuthenticator = await validateHolder(vp, iss, kid, alg, resolver, options.proofPurpose, timeout, options.skipHolderDidResolutionValidation);
+-    await validateCredentials(vp, iss, options);
++    if(!options.skipCredentialVerification) {
++      await validateCredentials(vp, iss, options);
++    }
+     if (didAuthenticator && !options.skipSignatureValidation) {
+         await validateSignature(presentation, resolver, didAuthenticator);
+     }
