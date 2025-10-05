@@ -65,7 +65,7 @@ const revocation: FastifyPluginAsyncJsonSchemaToTs = async (
       const schema = CREDENTIAL_TYPE_TO_SCHEMA.get(JSON.stringify(vcType))!;
 
       const vcPayload = {
-        // TODO: Do we need to add contexts based on requested credential types ?
+        // TODO: Probably should include context for CRLPlain2023Credential
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         id: vcId,
         type: vcType,

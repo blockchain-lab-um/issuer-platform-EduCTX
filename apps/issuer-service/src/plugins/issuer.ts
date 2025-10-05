@@ -138,16 +138,24 @@ const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
       'DiplomaCredential',
     ],
   },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'HealthInsuranceCard',
+    ],
+  },
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","VerifiableAttestation","EducationCredential"]',
-    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/education/education-credential-schema.json',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/education/education-credential-schema.json',
   ],
   [
     '["VerifiableCredential","VerifiableAttestation","EventTicketCredential"]',
-    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/main/schemas/event-ticket-credential-schema.json',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/event-ticket-credential-schema.json',
   ],
   [
     '["VerifiableCredential","VerifiableAttestation","CouponCredential"]',
@@ -180,6 +188,10 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
   [
     '["VerifiableCredential","VerifiableAttestation","DiplomaCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/education/diploma-schema.json',
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","HealthInsuranceCard"]',
+    'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/health-insurance-card.json',
   ],
 ]);
 
