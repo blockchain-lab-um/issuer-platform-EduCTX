@@ -4,6 +4,8 @@ import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
 import type { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
 import issuer from './plugins/issuer.js';
+import { fastifyMiddie } from '@fastify/middie';
+import { paywallMiddleware } from './middlewares/paywall.js';
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -20,6 +22,9 @@ const app: FastifyPluginAsync<AppOptions> = async (
   opts,
 ): Promise<void> => {
   await fastify.register(fastifyPrintRoutes);
+  await fastify.register(fastifyMiddie, { hook: 'onRequest' });
+  // protected routes behind x402 paywall
+  fastify.use(paywallMiddleware() as any);
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
