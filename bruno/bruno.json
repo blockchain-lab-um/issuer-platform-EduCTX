@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "eductx-bruno",
+  "name": "eductx-issuer",
   "type": "collection",
   "ignore": [
     "node_modules",
