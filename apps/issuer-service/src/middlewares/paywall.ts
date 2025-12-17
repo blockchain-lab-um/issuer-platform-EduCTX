@@ -13,6 +13,11 @@ const expressPaywall = paymentMiddleware(
       price: '$0.0001',
       network: 'base-sepolia',
     },
+    '/oidc/create-credential-offer': {
+      // USDC amount in dollars
+      price: '$0.0001',
+      network: 'base-sepolia',
+    },
   },
   {
     url: 'https://x402.org/facilitator',
