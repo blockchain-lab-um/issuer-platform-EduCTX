@@ -23,6 +23,10 @@ import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc';
 import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
 import { johnDoeEuropeanDigitalCredential } from '../../demo-data/johnDoeEducationCredential.js';
 import { johnDoeEHIC } from '../../demo-data/johnDoeEHIC.js';
+import {
+  johnDoeIDCard,
+  johnDoeCreditScore,
+} from '../../demo-data/johnDoeIDAndCredit.js';
 
 // SD-JWT compatible signer that uses the existing did-jwt signers
 const createSDJwtSigner = (keyAlg: string, privateKey: string) => {
@@ -565,6 +569,12 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
             : {}),
           ...(credentialRequest.types.includes('EHIC')
             ? johnDoeEHIC.credentialSubject
+            : {}),
+          ...(credentialRequest.types.includes('IDCardCredential')
+            ? johnDoeIDCard.credentialSubject
+            : {}),
+          ...(credentialRequest.types.includes('CreditScoreCredential')
+            ? johnDoeCreditScore.credentialSubject
             : {}),
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },

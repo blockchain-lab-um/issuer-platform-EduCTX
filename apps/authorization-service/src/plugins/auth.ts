@@ -128,6 +128,22 @@ const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
       'DiplomaCredential',
     ],
   },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'IDCardCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CreditScoreCredential',
+    ],
+  },
 ];
 
 export default fp(async (fastify, _) => {

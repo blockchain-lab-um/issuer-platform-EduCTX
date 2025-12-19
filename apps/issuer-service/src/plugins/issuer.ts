@@ -138,6 +138,22 @@ const SUPPORTED_CREDENTIALS: { format: string; types: string[] }[] = [
       'DiplomaCredential',
     ],
   },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'IDCardCredential',
+    ],
+  },
+  {
+    format: 'jwt_vc_json',
+    types: [
+      'VerifiableCredential',
+      'VerifiableAttestation',
+      'CreditScoreCredential',
+    ],
+  },
 ];
 
 export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
@@ -181,9 +197,27 @@ export const CREDENTIAL_TYPE_TO_SCHEMA: Map<string, string> = new Map([
     '["VerifiableCredential","VerifiableAttestation","DiplomaCredential"]',
     'https://raw.githubusercontent.com/blockchain-lab-um/credential-schema-registry/refs/heads/main/schemas/education/diploma-schema.json',
   ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","IDCardCredential"]',
+    '', // Will be set dynamically in plugin
+  ],
+  [
+    '["VerifiableCredential","VerifiableAttestation","CreditScoreCredential"]',
+    '', // Will be set dynamically in plugin
+  ],
 ]);
 
 export default fp(async (fastify, _) => {
+  // Set local schema URLs
+  CREDENTIAL_TYPE_TO_SCHEMA.set(
+    '["VerifiableCredential","VerifiableAttestation","IDCardCredential"]',
+    `${fastify.config.SERVER_URL}/schemas/id-card-credential-schema.json`,
+  );
+  CREDENTIAL_TYPE_TO_SCHEMA.set(
+    '["VerifiableCredential","VerifiableAttestation","CreditScoreCredential"]',
+    `${fastify.config.SERVER_URL}/schemas/credit-score-credential-schema.json`,
+  );
+
   if (fastify.config.DID_METHOD === 'ebsi' && !fastify.config.EBSI_SUBJECT_ID) {
     throw new Error('EBSI_SUBJECT_ID is required when DID_METHOD is ebsi');
   }

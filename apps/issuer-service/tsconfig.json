@@ -10,9 +10,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "strict": true,
-    "noStrictGenericChecks": false
+    "noStrictGenericChecks": false,
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": ["node_modules", "dist"],
   "watchOptions": {
     "excludeDirectories": ["**/node_modules", "**/dist"]
