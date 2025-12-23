@@ -563,7 +563,6 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         validFrom: issuedAt,
         issued: issuedAt,
         credentialSubject: {
-          ...(cachedData?.credentialSubject ?? {}),
           ...(credentialRequest.types.includes('EuropeanDigitalCredential')
             ? johnDoeEuropeanDigitalCredential.credentialSubject
             : {}),
@@ -576,6 +575,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
           ...(credentialRequest.types.includes('CreditScoreCredential')
             ? johnDoeCreditScore.credentialSubject
             : {}),
+          ...(cachedData?.credentialSubject ?? {}),
           id: accessTokenPayload.sub ?? proofJwt.iss,
         },
         credentialSchema: [
