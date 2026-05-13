@@ -185,10 +185,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         return reply.code(404).send();
       }
 
-      fastify.couponCache.set(request.params.id, {
-        ...couponData,
-        coupons: [],
-      });
+      fastify.couponCache.delete(request.params.id);
 
       return reply.code(204).send();
     },
