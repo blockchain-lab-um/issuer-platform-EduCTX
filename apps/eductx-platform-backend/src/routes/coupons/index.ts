@@ -106,6 +106,92 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
     },
   );
 
+  fastify.post(
+    '/:id/coupons',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+            },
+          },
+          required: ['id'],
+        },
+        body: {
+          type: 'object',
+          properties: {
+            coupons: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+          },
+          required: ['coupons'],
+        },
+      },
+      config: {
+        description: '',
+        response: {},
+      },
+      preValidation: apiKeyAuth,
+    },
+    async (request, reply) => {
+      const couponData = fastify.couponCache.get(request.params.id) as
+        | { coupons: string[] }
+        | undefined;
+
+      if (!couponData) {
+        return reply.code(404).send();
+      }
+
+      const coupons = [...couponData.coupons, ...request.body.coupons];
+
+      fastify.couponCache.set(request.params.id, {
+        ...couponData,
+        coupons,
+      });
+
+      return reply.code(200).send({
+        id: request.params.id,
+        added: request.body.coupons.length,
+        total: coupons.length,
+      });
+    },
+  );
+
+  fastify.delete(
+    '/:id',
+    {
+      schema: {
+        params: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'string',
+            },
+          },
+          required: ['id'],
+        },
+      },
+      config: {
+        description: '',
+        response: {},
+      },
+      preValidation: apiKeyAuth,
+    },
+    async (request, reply) => {
+      if (!fastify.couponCache.get(request.params.id)) {
+        return reply.code(404).send();
+      }
+
+      fastify.couponCache.delete(request.params.id);
+      return reply.code(204).send();
+    },
+  );
+
   fastify.get(
     '/claimed-coupons',
     {
