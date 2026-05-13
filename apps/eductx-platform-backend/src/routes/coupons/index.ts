@@ -157,10 +157,10 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
   );
 
   fastify.delete(
-    '/delete',
+    '/:id',
     {
       schema: {
-        body: {
+        params: {
           type: 'object',
           properties: {
             id: {
@@ -177,7 +177,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (request, reply) => {
-      const couponData = fastify.couponCache.get(request.body.id) as
+      const couponData = fastify.couponCache.get(request.params.id) as
         | { coupons?: string[] }
         | undefined;
 
@@ -185,7 +185,7 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
         return reply.code(404).send();
       }
 
-      fastify.couponCache.set(request.body.id, {
+      fastify.couponCache.set(request.params.id, {
         ...couponData,
         coupons: [],
       });
