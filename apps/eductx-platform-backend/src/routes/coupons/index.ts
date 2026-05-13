@@ -5,73 +5,6 @@ import { apiKeyAuth } from '../../middlewares/apiKeyAuth.js';
 const route: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify,
 ): Promise<void> => {
-  const appendCouponsSchema = {
-    params: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'string',
-        },
-      },
-      required: ['id'],
-    },
-    body: {
-      type: 'object',
-      properties: {
-        coupons: {
-          type: 'array',
-          items: {
-            type: 'string',
-          },
-        },
-      },
-      required: ['coupons'],
-    },
-  } as const;
-
-  const appendCouponsById = (
-    id: string,
-    couponsToAdd: string[],
-    reply: {
-      code: (statusCode: number) => {
-        send: (payload?: unknown) => unknown;
-      };
-    },
-  ) => {
-    const couponData = fastify.couponCache.get(id) as
-      | { coupons?: string[] }
-      | undefined;
-
-    if (!couponData) {
-      return reply.code(404).send();
-    }
-
-    const coupons = [...(couponData.coupons ?? []), ...couponsToAdd];
-
-    fastify.couponCache.set(id, {
-      ...couponData,
-      coupons,
-    });
-
-    return reply.code(200).send({
-      id,
-      added: couponsToAdd.length,
-      total: coupons.length,
-    });
-  };
-
-  const appendCoupons = async (
-    request: {
-      params: { id: string };
-      body: { coupons: string[] };
-    },
-    reply: {
-      code: (statusCode: number) => {
-        send: (payload?: unknown) => unknown;
-      };
-    },
-  ) => appendCouponsById(request.params.id, request.body.coupons, reply);
-
   fastify.get(
     '/',
     {
@@ -199,41 +132,35 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       },
       preValidation: apiKeyAuth,
     },
-    async (request, reply) =>
-      appendCouponsById(request.body.id, request.body.coupons, reply),
-  );
+    async (request, reply) => {
+      const couponData = fastify.couponCache.get(request.body.id) as
+        | { coupons?: string[] }
+        | undefined;
 
-  fastify.post(
-    '/:id/coupons',
-    {
-      schema: appendCouponsSchema,
-      config: {
-        description: '',
-        response: {},
-      },
-      preValidation: apiKeyAuth,
-    },
-    appendCoupons,
-  );
+      if (!couponData) {
+        return reply.code(404).send();
+      }
 
-  fastify.post(
-    '/:id',
-    {
-      schema: appendCouponsSchema,
-      config: {
-        description: '',
-        response: {},
-      },
-      preValidation: apiKeyAuth,
+      const coupons = [...(couponData.coupons ?? []), ...request.body.coupons];
+
+      fastify.couponCache.set(request.body.id, {
+        ...couponData,
+        coupons,
+      });
+
+      return reply.code(200).send({
+        id: request.body.id,
+        added: request.body.coupons.length,
+        total: coupons.length,
+      });
     },
-    appendCoupons,
   );
 
   fastify.delete(
-    '/:id',
+    '/delete',
     {
       schema: {
-        params: {
+        body: {
           type: 'object',
           properties: {
             id: {
@@ -250,15 +177,15 @@ const route: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (request, reply) => {
-      const couponData = fastify.couponCache.get(request.params.id) as
-        | { coupons: string[] }
+      const couponData = fastify.couponCache.get(request.body.id) as
+        | { coupons?: string[] }
         | undefined;
 
       if (!couponData) {
         return reply.code(404).send();
       }
 
-      fastify.couponCache.set(request.params.id, {
+      fastify.couponCache.set(request.body.id, {
         ...couponData,
         coupons: [],
       });
