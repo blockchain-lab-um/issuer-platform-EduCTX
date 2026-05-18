@@ -1,6 +1,7 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import AutoLoad, { type AutoloadPluginOptions } from '@fastify/autoload';
+import { installEbsiAxiosCache } from '@blockchain-lab-um/eductx-platform-shared';
 import type { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 import fastifyPrintRoutes from 'fastify-print-routes';
 import issuer from './plugins/issuer.js';
@@ -29,6 +30,11 @@ const app: FastifyPluginAsync<AppOptions> = async (
     ignorePattern: /(issuer)/,
     options: opts,
     forceESM: true,
+  });
+
+  installEbsiAxiosCache({
+    host: `api-${fastify.config.NETWORK}.ebsi.eu`,
+    logger: fastify.log,
   });
 
   // Load issuer server plugin
