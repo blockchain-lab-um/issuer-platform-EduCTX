@@ -35,3 +35,9 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Dashboard authorization regression
+        run: pnpm test:dashboard-auth
+
+      - name: Email rendering compatibility
+        run: pnpm --filter @blockchain-lab-um/eductx-platform-dashboard test:email
