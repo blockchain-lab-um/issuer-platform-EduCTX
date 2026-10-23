@@ -2,7 +2,7 @@
 
 import React, { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, DialogBackdrop, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
   DocumentPlusIcon,
@@ -211,7 +211,7 @@ export const IssueView = () => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <DialogBackdrop className="fixed inset-0 bg-gray-600 bg-opacity-75" />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
