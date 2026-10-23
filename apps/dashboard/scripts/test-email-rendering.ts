@@ -32,7 +32,7 @@ async function main() {
 
 const timeout = setTimeout(() => {
   console.error('Email rendering timed out');
-  process.exitCode = 1;
+  process.exit(1);
 }, 15000);
 
 main()
