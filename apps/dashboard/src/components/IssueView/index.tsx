@@ -2,7 +2,13 @@
 
 import React, { Fragment, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Dialog, Transition } from '@headlessui/react';
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+} from '@headlessui/react';
 import {
   Bars3Icon,
   DocumentPlusIcon,
@@ -219,7 +225,7 @@ export const IssueView = () => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-600 bg-opacity-75" />
+            <DialogBackdrop className="fixed inset-0 bg-gray-600 bg-opacity-75" />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -230,7 +236,8 @@ export const IssueView = () => {
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white pb-4 pt-5">
+            <DialogPanel className="relative flex w-full max-w-xs flex-1 flex-col bg-white pb-4 pt-5">
+              <DialogTitle className="sr-only">Main navigation</DialogTitle>
               <Transition.Child
                 as={Fragment}
                 enter="ease-in-out duration-300"
@@ -302,7 +309,7 @@ export const IssueView = () => {
                   </Button>
                 </div>
               </div>
-            </div>
+            </DialogPanel>
           </Transition.Child>
           <div className="w-14 flex-shrink-0" aria-hidden="true" />
         </Dialog>

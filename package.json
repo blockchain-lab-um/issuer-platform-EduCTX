@@ -13,6 +13,7 @@
   "workspaces": ["apps/**/*"],
   "scripts": {
     "build": "pnpm -r build",
+    "test:dashboard-auth": "node scripts/test-dashboard-auth.mjs",
     "lint": "pnpm biome check .",
     "lint:fix": "pnpm biome check --write --unsafe .",
     "prepare": "is-ci || husky install"
