@@ -2,7 +2,7 @@
 
 ## Environment
 
-- Node.js v20.18.0
+- Node.js v24.22.1
 - pnpm 9.12.2
 
 ## Running services
