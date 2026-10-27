@@ -51,7 +51,7 @@ check builds all final images and exercises their native modules as the runtime
 user. CI runs it on Linux amd64. Dependency overrides keep pinned EBSI packages
 on the same Axios instance and patch their nested HTTP/crypto dependencies. This
 is a targeted update; other legacy dependency audit findings require separate
-triage, including the remaining elliptic timing advisory (no patched release).
+triage, including the remaining elliptic advisory (no patched release).
 
 ## Ports used by services
 
