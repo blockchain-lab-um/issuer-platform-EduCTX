@@ -16,7 +16,8 @@
     "test:dashboard-auth": "node scripts/test-dashboard-auth.mjs",
     "lint": "pnpm biome check .",
     "lint:fix": "pnpm biome check --write --unsafe .",
-    "prepare": "is-ci || husky install"
+    "prepare": "is-ci || husky install",
+    "test:runtime": "node scripts/test-runtime-dependencies.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
@@ -33,7 +34,7 @@
   },
   "packageManager": "pnpm@9.12.2",
   "engines": {
-    "node": ">=20.18.0"
+    "node": ">=24.22.1 <25"
   },
   "pnpm": {
     "patchedDependencies": {
@@ -42,6 +43,16 @@
       "@cef-ebsi/credential-issuer": "patches/@cef-ebsi__credential-issuer.patch",
       "@cef-ebsi/verifiable-credential": "patches/@cef-ebsi__verifiable-credential.patch"
     },
-    "allowNonAppliedPatches": true
+    "allowNonAppliedPatches": true,
+    "overrides": {
+      "axios": "1.21.0",
+      "form-data": "4.0.6",
+      "elliptic": "6.6.1",
+      "secp256k1": "5.0.2",
+      "pbkdf2": "3.1.7",
+      "sha.js": "2.4.12",
+      "cipher-base": "1.0.6",
+      "@digitalbazaar/http-client>undici": "6.29.1"
+    }
   }
 }

@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Build base image
-docker build -t blockchain-lab-um/eductx-platform-base .
+docker build --pull -t blockchain-lab-um/eductx-platform-base .
 
 # Build issuer service
 docker build -t blockchain-lab-um/eductx-platform-issuer-service apps/issuer-service

@@ -1,7 +1,8 @@
-FROM blockchain-lab-um/eductx-platform-base:latest AS builder
+ARG BASE_IMAGE=blockchain-lab-um/eductx-platform-base:latest
+FROM ${BASE_IMAGE} AS builder
 
 # Production image, copy all the files and run next
-FROM node:20.18.0-alpine AS runner
+FROM node:24.22.1-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

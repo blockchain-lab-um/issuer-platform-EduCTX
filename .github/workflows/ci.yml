@@ -41,3 +41,15 @@ jobs:
 
       - name: Email rendering compatibility
         run: pnpm --filter @blockchain-lab-um/eductx-platform-dashboard test:email
+
+      - name: Runtime dependency compatibility
+        run: pnpm test:runtime
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build and smoke-test all final images
+        run: bash scripts/test-docker-runtime.sh

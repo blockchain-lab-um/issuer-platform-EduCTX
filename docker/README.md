@@ -7,8 +7,51 @@
 - Microsoft Entra ID (Azure AD) -> Can be replaced with different identity provider, but requires code changes.
 - [Uploadthing](https://uploadthing.com/) account
 - Outlook account (for sending emails)
-- Node v20.18.0
+- Node v24.22.1
 - pnpm v9.12.2
+
+## Updating an existing deployment
+
+This branch uses Node 24.22.1 in the shared build image and all five final images.
+After merging, pull `develop` and rebuild from the repository root:
+
+```bash
+bash scripts/docker-build.sh
+```
+
+The script builds the shared base first, then every final image, and stops on a
+failed build. Rebuilding only the base leaves running applications on the old
+runtime. From each existing deployment directory, recreate its running services
+with the existing Compose configuration:
+
+```bash
+docker compose up -d --force-recreate
+```
+
+Use the same Compose file/project name and service selection as the existing
+deployment. Keep the separate x402 deployment stopped. Preserve all existing
+environment values, private keys, DIDs and database volumes; no migration or key
+regeneration is required. Keep the previous image IDs/tags until testing succeeds.
+Test dashboard login, credential issuance/presentation and revocation after the
+restart. Roll back by restoring the previous image tags and recreating those
+services with the same configuration and volumes.
+
+For local packaging checks (no deployment or production credentials):
+
+```bash
+pnpm install --frozen-lockfile
+pnpm build
+pnpm test:runtime
+bash scripts/test-docker-runtime.sh
+```
+
+The runtime check covers multipart HTTP, EBSI Axios sharing/cache behavior,
+credential key/signature compatibility and LevelDB reopen behavior. The Docker
+check builds all final images and exercises their native modules as the runtime
+user. CI runs it on Linux amd64. Dependency overrides keep pinned EBSI packages
+on the same Axios instance and patch their nested HTTP/crypto dependencies. This
+is a targeted update; other legacy dependency audit findings require separate
+triage, including the remaining elliptic advisory (no patched release).
 
 ## Ports used by services
 
