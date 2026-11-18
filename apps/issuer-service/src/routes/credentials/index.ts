@@ -24,9 +24,22 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
 
       // Decode JWTs
       const credentials = issuedCredentialInfo.map((info) => {
-        const credential = info.credential
+        const payload = info.credential
           ? decodeJWT(info.credential.split('~')[0]).payload
           : null;
+
+        // SD-JWT stores the claims at the top level. The list uses a VC envelope.
+        const credential =
+          payload && info.format === 'sd-jwt' && !payload.vc
+            ? {
+                ...payload,
+                vc: {
+                  id: payload.id,
+                  type: info.types,
+                  credentialSubject: payload.credentialSubject,
+                },
+              }
+            : payload;
 
         return {
           ...info,
