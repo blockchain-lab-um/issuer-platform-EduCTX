@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "sourceMap": true,
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es2023",
+    "esModuleInterop": true,
+    "types": ["node"],
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strict": true,
+    "noStrictGenericChecks": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
+  "watchOptions": {
+    "excludeDirectories": ["**/node_modules", "**/dist"]
+  }
+}

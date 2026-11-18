@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "target": "es2023",
+    "declaration": true,
+    "inlineSourceMap": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "incremental": false,
+    "strict": true,
+    "noStrictGenericChecks": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

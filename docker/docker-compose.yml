@@ -1,0 +1,113 @@
+volumes:
+  eductx-issuer-service:
+  eductx-authorization-service:
+  eductx-platform-backend:
+
+networks:
+  default:
+    name: eductx-network
+
+services:
+  dashboard:
+    image: blockchain-lab-um/eductx-platform-dashboard:latest
+    container_name: eductx-platform-dashboard
+    ports:
+      - '3000:3000'
+    environment:
+      # AZURE VARIABLES
+      AZURE_AD_CLIENT_ID: ''
+      AZURE_AD_CLIENT_SECRET: ''
+      AZURE_AD_TENANT_ID: ''
+      # NEXTAUTH VARIABLES
+      NEXTAUTH_SECRET: ''
+      NEXTAUTH_URL: '<eductx_platform_dashboard_url>/api/auth'
+      # PUBLIC APP VARIABLES
+      NEXT_PUBLIC_ISSUER_ENDPOINT: '<eductx_platform_issuer_service_url>'
+      NEXT_PUBLIC_APP_URL: '<eductx_platform_dashboard_url>'
+      NEXT_PUBLIC_BACKEND_API_URL: '<eductx_platform_backend_url>'
+      # PRIVATE APP VARIABLES
+      API_KEY: '<issuer_api_key>'
+      BFF_API_KEY: '<dashboard_server_api_key>'
+      # EMAIL VARIABLES REQUIRED FOR SENDING EMAILS
+      EMAIL_HOST: 'smtp.office365.com'
+      EMAIL_USERNAME: ''
+      EMAIL_PASSWORD: ''
+      # UPLOADTHING
+      UPLOADTHING_TOKEN: ''
+    restart: unless-stopped
+
+  testing-frontend:
+    image: blockchain-lab-um/eductx-platform-testing-frontend:latest
+    container_name: eductx-platform-testing-frontend
+    ports:
+      - '3004:3000'
+    environment:
+      # APP VARIABLES
+      API_KEY: '<issuer_api_key>'
+      NEXT_PUBLIC_BACKEND_API_URL: '<eductx_platform_backend_url>'
+      ISSUER_ENDPOINT: '<eductx_platform_issuer_service_url>'
+    restart: unless-stopped
+
+  issuer-service:
+    image: blockchain-lab-um/eductx-platform-issuer-service:latest
+    container_name: eductx-platform-issuer-service
+    ports:
+      - '3001:3001'
+    environment:
+      VERSION: '1.0.0'
+      NETWORK: 'pilot'
+      KEY_ALG: 'ES256'
+      PORT: '3001'
+      HOST: '0.0.0.0'
+      CONFORMANCE_TEST_ENABLED: 'false'
+      AUTHORIZATION_SERVER_KEY_ALG: 'ES256'
+      # APP VARIABLES
+      DID_METHOD: 'ebsi'
+      PRIVATE_KEY: '<issuer_service_private_key>'
+      EBSI_SUBJECT_ID: '<ebsi_subject_id>'
+      SERVER_URL: '<eductx_platform_issuer_service_url>'
+      AUTHORIZATION_SERVER_URL: '<eductx_platform_authorization_service_url>/oidc'
+      AUTHORIZATION_SERVER_PUBLIC_KEY: '<authorization_service_public_key>'
+      API_KEY: '<issuer_api_key>'
+    restart: unless-stopped
+    volumes:
+      - eductx-issuer-service:/app/db
+
+  authorization-service:
+    image: blockchain-lab-um/eductx-platform-authorization-service:latest
+    container_name: eductx-platform-authorization-service
+    ports:
+      - '3002:3001'
+    environment:
+      VERSION: '1.0.0'
+      NETWORK: 'pilot'
+      KEY_ALG: 'ES256'
+      PORT: '3001'
+      HOST: '0.0.0.0'
+      DID_METHOD: 'key'
+      CONFORMANCE_TEST_ENABLED: 'false'
+      ISSUER_SERVER_KEY_ALG: 'ES256'
+      # APP VARIABLES
+      PRIVATE_KEY: '<authorization_service_private_key>'
+      SERVER_URL: '<eductx_platform_authorization_service_url>'
+      ISSUER_SERVER_URL: '<eductx_platform_issuer_service_url>/oidc'
+      ISSUER_SERVER_PUBLIC_KEY: '<issuer_service_public_key>'
+      API_KEY: '<authorization_service_api_key>'
+    restart: unless-stopped
+    volumes:
+      - eductx-authorization-service:/app/db
+
+  eductx-platform-backend:
+    image: blockchain-lab-um/eductx-platform-backend:latest
+    container_name: eductx-platform-backend
+    ports:
+      - '3003:3001'
+    environment:
+      VERSION: '1.0.0'
+      VERIFIER_SERVER_URL: 'http://authorization-service:3001'
+      # APP VARIABLES
+      VERIFIER_API_KEY: '<authorization_service_api_key>'
+      API_KEY: '<backend_api_key>'
+    restart: unless-stopped
+    volumes:
+      - eductx-platform-backend:/app/db

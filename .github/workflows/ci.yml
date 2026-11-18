@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -13,19 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
-          version: 8.7.6
+          package_json_file: "package.json"
 
       - name: Install node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.17.1
-          registry-url: https://registry.npmjs.org/
-          cache: 'pnpm'
+          node-version-file: '.nvmrc'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -35,3 +35,78 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+      - name: Issued credentials regression
+        run: node scripts/test-issuer-credentials.mjs
+
+      - name: Dashboard authorization regression
+        run: pnpm test:dashboard-auth
+
+      - name: Email rendering compatibility
+        run: pnpm --filter @blockchain-lab-um/eductx-platform-dashboard test:email
+
+      - name: Runtime dependency compatibility
+        run: pnpm test:runtime
+
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      pins: ${{ steps.publish.outputs.pins }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build and smoke-test all final images
+        run: bash scripts/test-docker-runtime.sh
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Publish tested image tags
+        id: publish
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: bash scripts/publish-bclab-images.sh
+
+  deploy:
+    needs: [main, docker]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    environment:
+      name: issuer-platform-eductx
+      url: https://platform2.eductx.org
+    concurrency:
+      group: issuer-platform-eductx-deploy
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Kustomize
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/kustomize.tgz"
+          curl -fsSL --retry 2 -o "$archive" \
+            https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.8.3/kustomize_v5.8.3_linux_amd64.tar.gz
+          printf '%s  %s\n' cb9e31198d3f63b44848bd0afc4c8efc56e6cfef9c93a4a39a211940e6decd61 "$archive" | sha256sum -c -
+          tar -xzf "$archive" -C "$RUNNER_TEMP" kustomize
+
+      - name: Push image digest pins to GitOps
+        env:
+          CLUSTER_REPO_DEPLOY_KEY: ${{ secrets.CLUSTER_REPO_DEPLOY_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          IMAGE_PINS: ${{ needs.docker.outputs.pins }}
+        run: bash scripts/deploy-bclab-images.sh

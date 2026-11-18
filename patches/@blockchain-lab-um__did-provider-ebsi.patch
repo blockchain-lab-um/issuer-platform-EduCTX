@@ -1,0 +1,85 @@
+diff --git a/dist/ebsiDidProvider.js b/dist/ebsiDidProvider.js
+index 30b8bec41a787c7502b4a7750fcfd3d9efa5c75c..379ef0f21d171ae504232b005991b2769ba85f76 100644
+--- a/dist/ebsiDidProvider.js
++++ b/dist/ebsiDidProvider.js
+@@ -45,42 +45,49 @@ export class EbsiDIDProvider extends AbstractIdentifierProvider {
+             kms: this.defaultKms || 'local',
+         });
+         const resolution = await context.agent.resolveDid({ didUrl: did });
+-        if (resolution.didDocument) {
+-            const resolvedVerificationMethod = resolution.didDocument.verificationMethod?.find((vm) => vm.id === kid);
+-            if (!resolvedVerificationMethod) {
+-                throw new Error(`${kid} does not match any key id in resolved did doc's verification method, check provided crv: ${keyType}`);
+-            }
+-            return {
+-                did,
+-                controllerKeyId: kid,
+-                keys: [key],
+-                services: [],
+-            };
+-        }
+-        if (!options?.bearer) {
+-            throw new Error('Bearer token is required for onboarding, it should be passed as options parameter');
+-        }
+-        const { bearer } = options;
+-        const identifier = {
++        console.log(resolution);
++        return {
+             did,
+             controllerKeyId: kid,
+             keys: [key],
+             services: [],
+         };
+-        const keyJwks = {
+-            privateKeyJwk: importedKey.privateKeyJwk,
+-            publicKeyJwk: importedKey.publicKeyJwk,
+-        };
+-        const onboardedResult = await onboard({ bearer, identifier, keyJwks });
+-        if (!onboardedResult) {
+-            throw new Error('Unknown error while creating identifier (onboarding unsuccessful)');
+-        }
+-        if (!onboardedResult.result ||
+-            (onboardedResult.result &&
+-                !onboardedResult.result.startsWith('0x'))) {
+-            throw new Error(`Error while creating identifier: ${JSON.stringify(onboardedResult.error, null, 2)}`);
+-        }
+-        return identifier;
++        // if (resolution.didDocument) {
++        //     const resolvedVerificationMethod = resolution.didDocument.verificationMethod?.find((vm) => vm.id === kid);
++        //     if (!resolvedVerificationMethod) {
++        //         throw new Error(`${kid} does not match any key id in resolved did doc's verification method, check provided crv: ${keyType}`);
++        //     }
++        //     return {
++        //         did,
++        //         controllerKeyId: kid,
++        //         keys: [key],
++        //         services: [],
++        //     };
++        // }
++        // if (!options?.bearer) {
++        //     throw new Error('Bearer token is required for onboarding, it should be passed as options parameter');
++        // }
++        // const { bearer } = options;
++        // const identifier = {
++        //     did,
++        //     controllerKeyId: kid,
++        //     keys: [key],
++        //     services: [],
++        // };
++        // const keyJwks = {
++        //     privateKeyJwk: importedKey.privateKeyJwk,
++        //     publicKeyJwk: importedKey.publicKeyJwk,
++        // };
++        // const onboardedResult = await onboard({ bearer, identifier, keyJwks });
++        // if (!onboardedResult) {
++        //     throw new Error('Unknown error while creating identifier (onboarding unsuccessful)');
++        // }
++        // if (!onboardedResult.result ||
++        //     (onboardedResult.result &&
++        //         !onboardedResult.result.startsWith('0x'))) {
++        //     throw new Error(`Error while creating identifier: ${JSON.stringify(onboardedResult.error, null, 2)}`);
++        // }
++        // return identifier;
+     }
+     async importKey(args) {
+         let jwkThumbprint;
