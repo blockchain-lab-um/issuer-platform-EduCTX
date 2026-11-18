@@ -25,7 +25,7 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
       // Decode JWTs
       const credentials = issuedCredentialInfo.map((info) => {
         const credential = info.credential
-          ? decodeJWT(info.credential).payload
+          ? decodeJWT(info.credential.split('~')[0]).payload
           : null;
 
         return {
