@@ -28,9 +28,14 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
           ? decodeJWT(info.credential.split('~')[0]).payload
           : null;
 
+        const isSdJwt =
+          info.format === 'sd-jwt' || info.credential?.includes('~');
+        const credentialId =
+          payload?.vc?.id ?? (isSdJwt ? payload?.id : undefined);
+
         // SD-JWT stores the claims at the top level. The list uses a VC envelope.
         const credential =
-          payload && info.format === 'sd-jwt' && !payload.vc
+          payload && isSdJwt && !payload.vc
             ? {
                 ...payload,
                 vc: {
@@ -44,8 +49,8 @@ const credentials: FastifyPluginAsyncJsonSchemaToTs = async (
         return {
           ...info,
           credential,
-          isRevoked: credential
-            ? fastify.revocationCache.get(credential.vc.id) !== undefined
+          isRevoked: credentialId
+            ? fastify.revocationCache.get(credentialId) !== undefined
             : false,
         };
       });

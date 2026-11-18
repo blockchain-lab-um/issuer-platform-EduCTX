@@ -8,7 +8,7 @@ import {
   type CreateVerifiableCredentialOptions,
   type EbsiVerifiableAttestation,
 } from '@cef-ebsi/verifiable-credential';
-import { ES256KSigner, ES256Signer } from 'did-jwt';
+import { decodeJWT, ES256KSigner, ES256Signer } from 'did-jwt';
 import * as utils from '@noble/curves/abstract/utils';
 import { CREDENTIAL_TYPE_TO_SCHEMA } from '../../plugins/issuer.js';
 
@@ -37,9 +37,17 @@ const revocation: FastifyPluginAsyncJsonSchemaToTs = async (
       preValidation: apiKeyAuth,
     },
     async (request, reply) => {
-      const credential = fastify.issuedCredentialCache.get(request.params.id);
+      const vcId = request.params.id;
+      // Stored SD-JWTs still use the issuance key in the issued credential cache.
+      const exists =
+        fastify.issuedCredentialCache.get(vcId) ||
+        Object.values(fastify.issuedCredentialCache.all()).some(
+          ({ credential }) =>
+            credential?.includes('~') &&
+            decodeJWT(credential.split('~')[0]).payload.id === vcId,
+        );
 
-      if (!credential) {
+      if (!exists) {
         return reply.code(404).send();
       }
 
@@ -55,7 +63,6 @@ const revocation: FastifyPluginAsyncJsonSchemaToTs = async (
         signer: signer,
       } satisfies EbsiIssuer;
 
-      const vcId = request.params.id;
       const vcType = [
         'VerifiableCredential',
         'VerifiableAttestation',
